@@ -1,5 +1,6 @@
 package org.Garochior.ui;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,10 +16,21 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.Garochior.constants.UiConfig;
+import org.Garochior.model.Card;
+import org.Garochior.model.Deck;
+import org.Garochior.model.Player;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MainMenu {
 
     public void start (Stage stage) throws Exception {
+
+        //Temporare pentru teste
+        Deck cardDeck = new Deck();
+        Player[] players = {new Player(0), new Player(1), new Player(2), new Player(3)};
+
         Screen screen = Screen.getPrimary();
         double screenWidth = screen.getVisualBounds().getWidth();
         double screenHeight = screen.getVisualBounds().getHeight();
@@ -35,12 +47,9 @@ public class MainMenu {
         Button clientBtn = createButton("Join Server");
         Button exitBtn = createButton("Exit");
 
-
-
-
         //Layout with buttons
         VBox layout = new VBox(UiConfig.LAYOUT_SPACING, serverBtn, clientBtn, exitBtn);
-        VBox.setMargin(exitBtn, new javafx.geometry.Insets(UiConfig.LAYOUT_SPACING, 0, 0, 0));
+        VBox.setMargin(exitBtn, new Insets(UiConfig.LAYOUT_SPACING, 0, 0, 0));
         VBox serverLayout = serverLayoutSetup();
         VBox clientLayout = clientLayoutSetup();
         layout.setAlignment(Pos.CENTER);
@@ -58,10 +67,16 @@ public class MainMenu {
         serverBtn.setOnAction(e->{
             System.out.println("Server button clicked");
             setVisibility(serverLayout);
+            for (Player player : players) {
+                List<Card> hand = cardDeck.getPlayerCards(player.id);
+                player.setHand(hand);
+            }
+            System.out.println(Arrays.toString(players));
         });
         clientBtn.setOnAction(e->{
             System.out.println("Client button clicked");
             setVisibility(clientLayout);
+            cardDeck.shuffle();
         });
         exitBtn.setOnAction(e->{
             System.out.println("Exit button clicked");
@@ -89,7 +104,6 @@ public class MainMenu {
 
         return button;
     }
-
     private VBox serverLayoutSetup(){
         VBox serverLayout = new VBox(3);
 
