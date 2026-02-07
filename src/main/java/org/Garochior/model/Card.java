@@ -2,8 +2,8 @@ package org.Garochior.model;
 import org.Garochior.constants.ModelConfig;
 
 public class Card implements CardInterface{
-    int number;
-    CardType type;
+    private final int number;
+    private final CardType type;
 
     public Card(int number, CardType type) {
         this.number = number;

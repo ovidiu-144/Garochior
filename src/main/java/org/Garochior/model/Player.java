@@ -5,7 +5,7 @@ import java.util.List;
 public class Player {
     public int id; //0-4
     public List<Card> hand;
-    public int score;
+    private int score;
     public Card selectedCard;
 
     public Player (int id){
@@ -24,11 +24,27 @@ public class Player {
                 ", hand=" + hand +
                 '}';
     }
+    public int getScore() {
+        return score;
+    }
+    public void updateScore (int points){
+        score += points;
+    }
 
-    public void selectCard (){
+    //verificam daca avem de pus cartea care trebuie, daca nu putem pune orice
+    public boolean hasCard (Card firstCard){
+        for (Card card : hand){
+            if (card.getType().equals(firstCard.getType()))
+                return true;
+        }
+        return false;
+    }
+
+    public Card selectCard (){
         //selecteaza o carte din interfata
         //cartea respectiva va fi salvata in selectedCard
         //si apoi scoasa din mana
+        return null;
     }
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server

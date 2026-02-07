@@ -1,5 +1,7 @@
 package org.Garochior.logic;
 
+import org.Garochior.model.Player;
+
 public class HandsGame extends ValidationLogic{
     @Override
     public String getName() {
@@ -7,7 +9,10 @@ public class HandsGame extends ValidationLogic{
     }
 
     @Override
-    public void updateScore() {
-        // Implementation for updating score in Hands Game
+    public void updateScore(Player player) {
+        //int nextPlayer = nextPlayer();
+        //Scadem 1 de fiecare data cand cineva ia o mana, adica in cazul nostru ar fi urmatoarea persoana
+        player.updateScore(-1);
+        clearSelectedCard();
     }
 }
