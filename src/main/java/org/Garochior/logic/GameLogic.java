@@ -9,4 +9,6 @@ public interface GameLogic {
 
     //ceva sa selectam cartile, pe care le adaugam in lista, ca sa stim ordinea lor, prima carte mereu fiind a jucatorului care a inceput tura
     void validateMove(Player player);
+    int nextPlayer ();
+    boolean isOver();
 }

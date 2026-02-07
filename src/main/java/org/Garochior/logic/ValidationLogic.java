@@ -38,6 +38,7 @@ public abstract class ValidationLogic implements GameLogic{
         }
     }
 
+    @Override
     public int nextPlayer (){
         Card firstCard = selectedCards.getFirst();
         int maxCard = firstCard.getNumber();
@@ -50,6 +51,10 @@ public abstract class ValidationLogic implements GameLogic{
             }
         }
         return player;
+    }
+    @Override
+    public boolean isOver(){
+        return isOver;
     }
 
     //functie care sa goleasca lista de carti selectate dupa fiecare tura
