@@ -1,5 +1,6 @@
 package org.Garochior.ui;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,6 +27,22 @@ import java.util.List;
 public class MainMenu {
 
     public void start (Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
+        AnchorPane root = loader.load();
+
+        // 3. Pune rădăcina într-o scenă
+        Scene scene = new Scene(root);
+
+        // 4. Configurează stage-ul
+        stage.setTitle("Garochior");
+        stage.setScene(scene);
+
+        stage.setMaximized(true);
+
+        stage.show();
+    }
+
+    public void start1 (Stage stage) throws Exception {
 
         //Temporare pentru teste
         Deck cardDeck = new Deck();
@@ -35,12 +52,20 @@ public class MainMenu {
         double screenWidth = screen.getVisualBounds().getWidth();
         double screenHeight = screen.getVisualBounds().getHeight();
 
+        double scaleX = Screen.getPrimary().getOutputScaleX();
+        double scaleY = Screen.getPrimary().getOutputScaleY();
 
+        System.out.println("Screen width: " + screenWidth);
+        System.out.println("Screen height: " + screenHeight);
+        System.out.println("Scale X: " + scaleX);
+        System.out.println("Scale Y: " + scaleY);
+
+        //Background image
         Image img = new Image(getClass().getResourceAsStream("/background/barca_25-26.jpg"));
         ImageView background = new ImageView(img);
 
-        background.setFitHeight(screenHeight);
-        background.setFitWidth(screenWidth);
+//        background.setFitHeight(screenHeight);
+//        background.setFitWidth(screenWidth);
 
         //Buttons creation
         Button serverBtn = createButton("Create Server");
@@ -63,6 +88,7 @@ public class MainMenu {
         HBox mainBox = new HBox(5, layout, secondBox);
         mainBox.setAlignment(Pos.BASELINE_LEFT);
 
+
         //Button actions
         serverBtn.setOnAction(e->{
             System.out.println("Server button clicked");
@@ -83,15 +109,22 @@ public class MainMenu {
             stage.close();
         });
 
-
         //Arranging buttons and background
         StackPane root = new StackPane();
         root.getChildren().addAll(background, mainBox);
 
         //Creating scene
         Scene scene = new Scene(root, screenWidth, screenHeight);
+
+//        //Rescalare la background
+        background.fitWidthProperty().bind(scene.widthProperty());
+        background.fitHeightProperty().bind(scene.heightProperty());
+
+        // Listener pentru a scala fontul global
         stage.setTitle("Ye");
         stage.setScene(scene);
+        //stage.setMaximized(true);
+
         stage.show();
     }
 

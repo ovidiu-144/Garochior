@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="1080" prefWidth="1920" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.Garochior.ui.MainMenuController">
+   <children>
+        <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <image>
+             <Image url="@background/barca_25-26.jpg" />
+          </image>
+        </ImageView>
+      <HBox prefHeight="900.0" prefWidth="689.0">
+         <children>
+            <VBox accessibleRole="IMAGE_VIEW" prefHeight="818.0" prefWidth="559.0" spacing="250.0">`
+               <children>
+                  <Button fx:id="serverBtn" mnemonicParsing="false" onAction="#onServerClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
+                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Create Server" />
+                  <Button fx:id="clientBtn" mnemonicParsing="false" onAction="#onClientClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
+                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Join Server" />
+                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#onExitClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
+                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Exit" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+            <VBox prefHeight="864.0" prefWidth="607.0" spacing="250">
+               <children>
+                  <VBox fx:id="serverLayout" prefHeight="133.0" prefWidth="370.0" visible="false">
+                     <children>
+                        <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="PORT" />
+                              <TextField prefHeight="30" prefWidth="150" />
+                           </children>
+                        </HBox>
+                        <Button mnemonicParsing="false" text="Confirm" />
+                     </children></VBox>
+                  <VBox fx:id="clientLayout" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="PORT" textAlignment="RIGHT" />
+                              <TextField prefHeight="30" prefWidth="150" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="IP" textAlignment="RIGHT" />
+                              <TextField prefHeight="30" prefWidth="150" />
+                           </children>
+                        </HBox>
+                        <Button mnemonicParsing="false" text="Confirm" />
+                     </children></VBox>
+
+               </children></VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

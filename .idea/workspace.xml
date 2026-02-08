@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +23,7 @@
         <option value="module-info" />
         <option value="Enum" />
         <option value="Interface" />
+        <option value="FxmlFile" />
         <option value="Class" />
       </list>
     </option>
@@ -69,6 +72,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\!Garochior\Garochior\src\main\resources" />
       <recent name="C:\!Garochior\Garochior\src\main\resources\background" />
     </key>
   </component>

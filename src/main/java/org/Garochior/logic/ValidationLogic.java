@@ -18,6 +18,9 @@ public abstract class ValidationLogic implements GameLogic{
 
             //prima carte poate fi orice, in acest pas
             selectedCards.add(card);
+
+            //stergem cartea din mana jucatorului
+            player.removeCardFromHand(card);
         }
         else {
             Card firstCard = selectedCards.getFirst();
@@ -26,12 +29,14 @@ public abstract class ValidationLogic implements GameLogic{
             if (!hasCard){
                 Card card = player.selectCard();
                 selectedCards.add(card);
+                player.removeCardFromHand(card);
             }
             //bucla pana cand selecteaza o carte valida
             while (true) {
                 Card card = player.selectCard();
                 if (card.getType() == firstCard.getType()){
                     selectedCards.add(card);
+                    player.removeCardFromHand(card);
                     break;
                 }
             }
