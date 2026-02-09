@@ -14,7 +14,7 @@
         </ImageView>
       <HBox prefHeight="900.0" prefWidth="689.0">
          <children>
-            <VBox accessibleRole="IMAGE_VIEW" prefHeight="818.0" prefWidth="559.0" spacing="250.0">`
+            <VBox accessibleRole="IMAGE_VIEW" prefHeight="818.0" prefWidth="559.0" spacing="250.0">
                <children>
                   <Button fx:id="serverBtn" mnemonicParsing="false" onAction="#onServerClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
                           prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Create Server" />
@@ -33,7 +33,7 @@
                      <children>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="PORT" />
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="PORT" />
                               <TextField prefHeight="30" prefWidth="150" />
                            </children>
                         </HBox>
@@ -43,13 +43,13 @@
                      <children>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="PORT" textAlignment="RIGHT" />
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="PORT" textAlignment="RIGHT" />
                               <TextField prefHeight="30" prefWidth="150" />
                            </children>
                         </HBox>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: yellow;" text="IP" textAlignment="RIGHT" />
+                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="IP" textAlignment="RIGHT" />
                               <TextField prefHeight="30" prefWidth="150" />
                            </children>
                         </HBox>
