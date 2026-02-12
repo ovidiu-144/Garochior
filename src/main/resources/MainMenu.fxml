@@ -16,12 +16,9 @@
          <children>
             <VBox accessibleRole="IMAGE_VIEW" prefHeight="818.0" prefWidth="559.0" spacing="250.0">
                <children>
-                  <Button fx:id="serverBtn" mnemonicParsing="false" onAction="#onServerClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
-                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Create Server" />
-                  <Button fx:id="clientBtn" mnemonicParsing="false" onAction="#onClientClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
-                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Join Server" />
-                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#onExitClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit"
-                          prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Exit" />
+                  <Button fx:id="serverBtn" mnemonicParsing="false" onAction="#onServerClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit" prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Create Server" />
+                  <Button fx:id="clientBtn" mnemonicParsing="false" onAction="#onClientClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit" prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Join Server" />
+                  <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#onExitClicked" onMouseEntered="#onButtonEntered" onMouseExited="#onButtonExit" prefHeight="200" prefWidth="300" style="-fx-background-color: red;" text="Exit" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -29,27 +26,27 @@
             </VBox>
             <VBox prefHeight="864.0" prefWidth="607.0" spacing="250">
                <children>
-                  <VBox fx:id="serverLayout" prefHeight="133.0" prefWidth="370.0" visible="false">
+                  <VBox fx:id="serverLayout" prefHeight="133.0" prefWidth="370.0">
                      <children>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="PORT" />
-                              <TextField prefHeight="30" prefWidth="150" />
+                              <Label alignment="CENTER" prefHeight="40" prefWidth="45.0" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="PORT" textFill="YELLOW" />
+                              <TextField prefHeight="30" prefWidth="138.0" />
                            </children>
                         </HBox>
-                        <Button mnemonicParsing="false" text="Confirm" />
+                        <Button fx:id="confirmServerBtn" mnemonicParsing="false" text="Confirm" onAction="#onConfirmServerClicked"/>
                      </children></VBox>
-                  <VBox fx:id="clientLayout" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="clientLayout" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="PORT" textAlignment="RIGHT" />
+                              <Label alignment="CENTER" prefHeight="40" prefWidth="45" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="PORT" textAlignment="RIGHT" textFill="YELLOW" />
                               <TextField prefHeight="30" prefWidth="150" />
                            </children>
                         </HBox>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30" prefWidth="30" style="-fx-background-color: transparent;" text="IP" textAlignment="RIGHT" />
+                              <Label alignment="CENTER" prefHeight="40" prefWidth="45" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="IP" textAlignment="RIGHT" textFill="YELLOW" />
                               <TextField prefHeight="30" prefWidth="150" />
                            </children>
                         </HBox>

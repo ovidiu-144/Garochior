@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.Garochior.constants.UiConfig;
+import org.Garochior.game.GamePanel;
 
 public class MainMenuController {
     public ImageView background;
@@ -15,6 +16,7 @@ public class MainMenuController {
     public Button exitBtn;
     public Button serverBtn;
     public Button clientBtn;
+    public Button confirmServerBtn;
 
     public void onServerClicked() {
         System.out.println("Server button clicked");
@@ -30,7 +32,7 @@ public class MainMenuController {
         stage.close();
     }
 
-    private void setVisibility (VBox layout) {
+    private void setVisibility(VBox layout) {
         boolean visible = !layout.isVisible();
         layout.setVisible(visible);
     }
@@ -51,4 +53,13 @@ public class MainMenuController {
         );
     }
 
+    public void onConfirmServerClicked(ActionEvent actionEvent) {
+        System.out.println("You will start a server on port " + confirmServerBtn.getText());
+        GamePanel gamePanel = new GamePanel();
+        try {
+            gamePanel.start((Stage) confirmServerBtn.getScene().getWindow());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -2,6 +2,7 @@ package org.Garochior;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.Garochior.game.GamePanel;
 import org.Garochior.ui.MainMenu;
 
 
@@ -16,5 +17,8 @@ public class Main extends Application{
     public void start(Stage stage) throws Exception {
         MainMenu mainMenu = new MainMenu();
         mainMenu.start(stage);
+
+//        GamePanel gamePanel = new GamePanel();
+//        gamePanel.start(stage);
     }
 }

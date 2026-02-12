@@ -17,6 +17,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.Garochior.constants.UiConfig;
+import org.Garochior.graphics.Assets;
 import org.Garochior.model.Card;
 import org.Garochior.model.Deck;
 import org.Garochior.model.Player;
@@ -38,6 +39,9 @@ public class MainMenu {
         stage.setScene(scene);
 
         stage.setMaximized(true);
+
+        /// pentru test sa vedem ca nu crapa
+        Assets.init();
 
         stage.show();
     }

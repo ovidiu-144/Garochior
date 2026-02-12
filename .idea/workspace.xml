@@ -5,9 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/graphics/Assets.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/graphics/SpriteSheet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Sprites/backCards.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/background/table.jpeg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/constants/ModelConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/constants/ModelConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Sprites/Var1/pixel_art_poker_cards_-_card_back_and_extras.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Sprites/selectCards.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Sprites/Var1/pixel_art_poker_cards_-_card_fronts.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Sprites/cards.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,9 +72,10 @@
     "Maven.Garochior [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/!Garochior/Garochior",
+    "last_opened_file_path": "C:/!Garochior/Garochior/src/main/resources/Sprites",
     "onboarding.tips.debug.path": "C:/!Garochior/Garochior/src/main/java/org/example/Main.java",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -69,7 +84,12 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\!Garochior\Garochior\src\main\resources\Sprites" />
+      <recent name="C:\!Garochior\Garochior\src\main\resources\background" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\!Garochior\Garochior\src\main\resources\Sprites" />
       <recent name="C:\!Garochior\Garochior\src\main\resources" />
       <recent name="C:\!Garochior\Garochior\src\main\java\org\Garochior\ui" />
       <recent name="C:\!Garochior\Garochior\src\main\resources\background" />
