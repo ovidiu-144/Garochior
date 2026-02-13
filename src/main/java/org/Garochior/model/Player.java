@@ -1,16 +1,17 @@
 package org.Garochior.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    public int id; //0-4
+    private int id; //0-4
     public List<Card> hand;
     private int score;
     public Card selectedCard;
 
     public Player (int id){
         this.id = id;
-        hand = List.of();
+        hand = new ArrayList<>();
         score = 0;
     }
 
@@ -18,6 +19,7 @@ public class Player {
         this.hand = hand;
     }
 
+    //pentru teste
     @Override
     public String toString() {
         return "Player{" + id +
@@ -49,5 +51,9 @@ public class Player {
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server
         hand.remove(card);
+    }
+
+    public int getId() {
+        return id;
     }
 }

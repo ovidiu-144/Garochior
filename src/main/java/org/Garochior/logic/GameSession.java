@@ -6,13 +6,13 @@ import org.Garochior.model.Player;
 import java.util.List;
 
 public class GameSession {
-    private Player[] players;
+    private List<Player> players;
     private final Deck deck;
     private GameLogic game;
     private int firstPlayer;
     private int currentRound;
 
-    public GameSession (Player[] players, GameLogic game){
+    public GameSession (List<Player> players, GameLogic game){
         this.players = players;
         this.game = game;
         this.deck = new Deck();
@@ -24,23 +24,24 @@ public class GameSession {
     public void startGame(){
         //impartim cartile
         for (int i = 0; i < 4; ++i){
-            players[i].setHand(deck.getPlayerCards(i));
+            players.get(i).setHand(deck.getPlayerCards(i));
+            System.out.println("Player " + i + ": " + players.get(i));
         }
-        while (currentRound < 8){
-            //alege fiecare jucator o carte
-            for (int i = 0; i < 4; ++i){
-                int currentPlayer = (firstPlayer + i) % 4;
-                game.validateMove(players[currentPlayer]);
-            }
-            //Verificam cine ia cartile
-            firstPlayer = game.nextPlayer();
-            //Actualizam scorul
-            game.updateScore(players[firstPlayer]);
-            if (game.isOver()){
-                break;
-            }
-            currentRound++;
-        }
+//        while (currentRound < 8){
+//            //alege fiecare jucator o carte
+//            for (int i = 0; i < 4; ++i){
+//                int currentPlayer = (firstPlayer + i) % 4;
+//                game.validateMove(players.get(currentPlayer));
+//            }
+//            //Verificam cine ia cartile
+//            firstPlayer = game.nextPlayer();
+//            //Actualizam scorul
+//            game.updateScore(players.get(firstPlayer));
+//            if (game.isOver()){
+//                break;
+//            }
+//            currentRound++;
+//        }
     }
     
 

@@ -2,12 +2,14 @@ package org.Garochior.ui;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.Garochior.constants.UiConfig;
 import org.Garochior.game.GamePanel;
+import org.Garochior.game.ServerConfig;
 
 public class MainMenuController {
     public ImageView background;
@@ -17,6 +19,7 @@ public class MainMenuController {
     public Button serverBtn;
     public Button clientBtn;
     public Button confirmServerBtn;
+    public TextField portField;
 
     public void onServerClicked() {
         System.out.println("Server button clicked");
@@ -54,12 +57,36 @@ public class MainMenuController {
     }
 
     public void onConfirmServerClicked(ActionEvent actionEvent) {
-        System.out.println("You will start a server on port " + confirmServerBtn.getText());
-        GamePanel gamePanel = new GamePanel();
+        System.out.println("You will start a server on port " + portField.getText());
+        ServerConfig serverConfig = new ServerConfig();
         try {
-            gamePanel.start((Stage) confirmServerBtn.getScene().getWindow());
-        } catch (Exception e) {
+            serverConfig.initGame((Stage) confirmServerBtn.getScene().getWindow());
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
+
+//        try {
+//            GamePanel serverPanel = new GamePanel();
+//            serverPanel.start((Stage) confirmServerBtn.getScene().getWindow());
+//
+//            for (int i = 1; i < 4; i++) {
+//                Stage newStage = new Stage();
+//
+//                GamePanel gamePanel = new GamePanel();
+//
+//                gamePanel.start(newStage);
+//
+//                // Opțional: Le poziționăm diferit pe ecran ca să nu se suprapună perfect
+////            newStage.setX(100 + (i * 200));
+////            newStage.setY(100 + (i * 50));
+//
+//                newStage.setTitle("Jucător " + (i + 1));
+//                newStage.show();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

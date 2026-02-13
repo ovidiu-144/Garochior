@@ -31,7 +31,7 @@
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
                               <Label alignment="CENTER" prefHeight="40" prefWidth="45.0" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="PORT" textFill="YELLOW" />
-                              <TextField prefHeight="30" prefWidth="138.0" />
+                              <TextField fx:id="portField" prefHeight="30" prefWidth="138.0" />
                            </children>
                         </HBox>
                         <Button fx:id="confirmServerBtn" mnemonicParsing="false" text="Confirm" onAction="#onConfirmServerClicked"/>

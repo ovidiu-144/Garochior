@@ -10,7 +10,7 @@
                     <Image url="@background/table.jpeg" />
                 </image>
             </ImageView>
-            <HBox fx:id="player1Box" alignment="BOTTOM_CENTER" layoutX="23.0" layoutY="845.0" prefHeight="214.0" prefWidth="1920.0" spacing ="45" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="10.0">
+            <HBox fx:id="player1Box" alignment="CENTER" layoutX="23.0" layoutY="845.0" prefHeight="214.0" prefWidth="1920.0" spacing="45" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0">
                  <children>
                      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
@@ -22,5 +22,46 @@
                      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                  </children>
             </HBox>
+
+            <HBox fx:id="player3Box" alignment="CENTER" layoutY="845.0" prefHeight="214.0" prefWidth="1920.0" spacing="45" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="30.0">
+                 <children>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="180" />
+                 </children>
+            </HBox>
+
+            <VBox fx:id="player2Box" alignment="CENTER" prefHeight="500" prefWidth="160.0" spacing="0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0">
+                <children>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="270"/>
+                </children>
+            </VBox>
+
+            <VBox fx:id="player4Box" alignment="CENTER" layoutY="845.0" prefHeight="1080" prefWidth="300" spacing="1" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="30.0">
+                <children>
+                    <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" rotate="90" />
+
+                </children>
+            </VBox>
+
         </children>
 </AnchorPane>
