@@ -1,5 +1,6 @@
 package org.Garochior.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,9 +29,10 @@ public class Deck {
     public List<Card> getDeck (){
         return deck;
     }
-    public List<Card> getPlayerCards(int player){
+    public ArrayList<Card> getPlayerCards(int player){
         //return Arrays.copyOfRange(deck, player * 8, player * 8 + 8)
-        return deck.subList(player * 8, player * 8 + 8);
+
+        return new ArrayList<>(deck.subList(player * 8, player * 8 + 8));
     }
 
     @Override

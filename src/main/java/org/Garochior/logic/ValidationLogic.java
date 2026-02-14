@@ -14,6 +14,8 @@ public abstract class ValidationLogic implements GameLogic{
     public void validateMove(Player player) {
         //avem lista de carti selectate, verificam daca sunt valide pentru jocul respectiv
         if (selectedCards.isEmpty()){
+            System.out.println("Player " + player.getId() + " starts the round, select any card");
+
             //selectam cartea
             Card card = player.selectCard();
 
@@ -25,20 +27,26 @@ public abstract class ValidationLogic implements GameLogic{
         }
         else {
             Card firstCard = selectedCards.getFirst();
+
             boolean hasCard = player.hasCard(firstCard);
 
             if (!hasCard){
+
                 Card card = player.selectCard();
                 selectedCards.add(card);
                 player.removeCardFromHand(card);
             }
-            //bucla pana cand selecteaza o carte valida
-            while (true) {
-                Card card = player.selectCard();
-                if (card.getType() == firstCard.getType()){
-                    selectedCards.add(card);
-                    player.removeCardFromHand(card);
-                    break;
+            else{
+                //Start thread pentru a astepta selectarea unei carti valide
+
+                //bucla pana cand selecteaza o carte valida
+                while (true) {
+                    Card card = player.selectCard();
+                    if (card.getType() == firstCard.getType()){
+                        selectedCards.add(card);
+                        player.removeCardFromHand(card);
+                        break;
+                    }
                 }
             }
         }
@@ -46,6 +54,8 @@ public abstract class ValidationLogic implements GameLogic{
 
     @Override
     public int nextPlayer (){
+        System.out.println(selectedCards);
+
         Card firstCard = selectedCards.getFirst();
         int maxCard = firstCard.getNumber();
         int player = 0;

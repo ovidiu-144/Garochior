@@ -29,20 +29,27 @@ public class GameSession {
         }
     }
     public void startGame(){
+        
+        //aici alt thread
         while (currentRound < 8){
+            System.out.println("Round " + (currentRound + 1));
             for (int i = 0; i < 4; ++i){
                 int currentPlayer = (firstPlayer + i) % 4;
                 players.get(currentPlayer).myTurn = true;
                 game.validateMove(players.get(currentPlayer));
                 players.get(currentPlayer).myTurn = false;
-
-                firstPlayer = game.nextPlayer();
-                game.updateScore(players.get(firstPlayer));
-                if (game.isOver()){
-                    break;
-                }
-                currentRound++;
             }
+            firstPlayer = game.nextPlayer();
+            game.updateScore(players.get(firstPlayer));
+            if (game.isOver()){
+                break;
+            }
+            currentRound++;
+        }
+
+        /// afisam scorurile
+        for (int i = 0; i < 4; ++i){
+            System.out.println("Player " + i + " score: " + players.get(i).getScore());
         }
     }
     

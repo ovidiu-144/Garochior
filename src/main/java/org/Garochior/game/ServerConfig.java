@@ -2,8 +2,7 @@ package org.Garochior.game;
 
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
-import org.Garochior.logic.GameSession;
-import org.Garochior.logic.HandsGame;
+import org.Garochior.logic.*;
 import org.Garochior.model.Player;
 
 import java.util.ArrayList;
@@ -39,17 +38,27 @@ public class ServerConfig {
     }
 
     //metoda infinita pentru a porni jocul, o sa fie apelata dupa ce toti jucatorii s-au conectat
-    public void startGame (){
+    public void startGameType (GameLogic game){
         //testam un GameSession cu HandsGame
-        HandsGame game = new HandsGame();
+        //HandsGame game = new HandsGame();
+        System.out.println("Starting game: " + game.getName());
         GameSession gameSession = new GameSession(players, game);
         gameSession.setHands();
         //setam cartile in mana pentru fiecare player
         for (int i = 0; i < players.size(); ++i){
             uiControllers.get(i).setHand();
         }
-        //gameSession.startGame();
-
+        gameSession.startGame();
+    }
+    public void startGame (){
+        HandsGame game1 = new HandsGame();
+        startGameType(game1);
+        HeartsGame game2 = new HeartsGame();
+        startGameType(game2);
+        QueensGame game3 = new QueensGame();
+        startGameType(game3);
+        KingGame game4 = new KingGame();
+        startGameType(game4);
     }
 
     private void createPlayer(GamePanel gamePanel, Stage stage, int id) throws Exception {
