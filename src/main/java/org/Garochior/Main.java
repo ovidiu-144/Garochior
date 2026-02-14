@@ -17,8 +17,5 @@ public class Main extends Application{
     public void start(Stage stage) throws Exception {
         MainMenu mainMenu = new MainMenu();
         mainMenu.start(stage);
-
-//        GamePanel gamePanel = new GamePanel();
-//        gamePanel.start(stage);
     }
 }

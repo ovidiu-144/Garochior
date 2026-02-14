@@ -2,6 +2,7 @@ package org.Garochior.game;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class GamePanelController {
 
+    public VBox centerVBox;
+    public HBox centerHBox;
     //punem Player-ul aici
     private Player player;
 
@@ -36,17 +39,22 @@ public class GamePanelController {
         setBackCards(player2Box);
         setBackCards(player3Box);
         setBackCards(player4Box);
+        setBackCards(centerVBox);
+        setBackCards(centerHBox);
     }
 
     private void setBackCards (Pane playerBox){
         for (int i = 0; i < playerBox.getChildren().size(); i++) {
             if (playerBox.getChildren().get(i) instanceof ImageView) {
                 ImageView iv = (ImageView) playerBox.getChildren().get(i);
-                if (i < 8) {
+                if (i < 8 && iv.getImage() == null) {
                     iv.setImage(Assets.backCardImages[0]);
                 }
             }
         }
+        //ImageView iv = centerVBox.getChildren().get(0) instanceof ImageView ? (ImageView) centerVBox.getChildren().get(0) : null;
+
+
     }
     private void setCarti (Pane playerBox, int poz){
         for (int i = 0; i < playerBox.getChildren().size(); i++) {
@@ -73,5 +81,19 @@ public class GamePanelController {
                 iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
             }
         }
+    }
+
+    public void handleCardClicked(MouseEvent mouseEvent) {
+        if (!player.myTurn) {
+            System.out.println("It's not your turn!");
+            return;
+        }
+        System.out.println("Card clicked from player: " + player.getId());
+
+        ImageView clickedCard = (ImageView) mouseEvent.getSource();
+        int index = player1Box.getChildren().indexOf(clickedCard);
+        System.out.println("Card clicked at index: " + index);
+        System.out.println("Card is: " + player.hand.get(index));
+        player.setSelectedCard(index);
     }
 }

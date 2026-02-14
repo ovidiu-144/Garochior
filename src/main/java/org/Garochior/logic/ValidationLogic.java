@@ -3,10 +3,11 @@ package org.Garochior.logic;
 import org.Garochior.model.Card;
 import org.Garochior.model.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ValidationLogic implements GameLogic{
-    public List<Card> selectedCards;
+    public List<Card> selectedCards = new ArrayList<>();
     public boolean isOver = false;
     //ceva sa selectam cartile, pe care le adaugam in lista, ca sa stim ordinea lor, prima carte mereu fiind a jucatorului care a inceput tura
     @Override

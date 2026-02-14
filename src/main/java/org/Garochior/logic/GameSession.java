@@ -21,27 +21,29 @@ public class GameSession {
         currentRound = 0;
     }
 
-    public void startGame(){
+    public void setHands(){
         //impartim cartile
         for (int i = 0; i < 4; ++i){
             players.get(i).setHand(deck.getPlayerCards(i));
             System.out.println("Player " + i + ": " + players.get(i));
         }
-//        while (currentRound < 8){
-//            //alege fiecare jucator o carte
-//            for (int i = 0; i < 4; ++i){
-//                int currentPlayer = (firstPlayer + i) % 4;
-//                game.validateMove(players.get(currentPlayer));
-//            }
-//            //Verificam cine ia cartile
-//            firstPlayer = game.nextPlayer();
-//            //Actualizam scorul
-//            game.updateScore(players.get(firstPlayer));
-//            if (game.isOver()){
-//                break;
-//            }
-//            currentRound++;
-//        }
+    }
+    public void startGame(){
+        while (currentRound < 8){
+            for (int i = 0; i < 4; ++i){
+                int currentPlayer = (firstPlayer + i) % 4;
+                players.get(currentPlayer).myTurn = true;
+                game.validateMove(players.get(currentPlayer));
+                players.get(currentPlayer).myTurn = false;
+
+                firstPlayer = game.nextPlayer();
+                game.updateScore(players.get(firstPlayer));
+                if (game.isOver()){
+                    break;
+                }
+                currentRound++;
+            }
+        }
     }
     
 

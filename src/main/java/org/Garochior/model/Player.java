@@ -8,11 +8,13 @@ public class Player {
     public List<Card> hand;
     private int score;
     public Card selectedCard;
+    public boolean myTurn;
 
     public Player (int id){
         this.id = id;
         hand = new ArrayList<>();
         score = 0;
+        myTurn = false;
     }
 
     public void setHand (List<Card> hand){
@@ -31,6 +33,7 @@ public class Player {
     }
     public void updateScore (int points){
         score += points;
+        System.out.println("Player " + id + " score updated: " + score);
     }
 
     //verificam daca avem de pus cartea care trebuie, daca nu putem pune orice
@@ -41,12 +44,19 @@ public class Player {
         }
         return false;
     }
+    public void setSelectedCard (int index){
+        selectedCard = hand.get(index);
+    }
 
     public Card selectCard (){
         //selecteaza o carte din interfata
         //cartea respectiva va fi salvata in selectedCard
         //si apoi scoasa din mana
-        return null;
+        //bucla de selectare a cartii
+        while (selectedCard == null){
+            //asteptam sa fie selectata o carte
+        }
+        return selectedCard;
     }
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server

@@ -2,7 +2,6 @@ package org.Garochior.game;
 
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
-import org.Garochior.logic.GameLogic;
 import org.Garochior.logic.GameSession;
 import org.Garochior.logic.HandsGame;
 import org.Garochior.model.Player;
@@ -44,11 +43,12 @@ public class ServerConfig {
         //testam un GameSession cu HandsGame
         HandsGame game = new HandsGame();
         GameSession gameSession = new GameSession(players, game);
-        gameSession.startGame();
+        gameSession.setHands();
         //setam cartile in mana pentru fiecare player
         for (int i = 0; i < players.size(); ++i){
             uiControllers.get(i).setHand();
         }
+        //gameSession.startGame();
 
     }
 

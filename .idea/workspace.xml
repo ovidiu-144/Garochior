@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
