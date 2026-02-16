@@ -1,5 +1,6 @@
 package org.Garochior.logic;
 
+import javafx.application.Platform;
 import org.Garochior.model.Deck;
 import org.Garochior.model.Player;
 
@@ -28,32 +29,35 @@ public class GameSession {
             System.out.println("Player " + (i + 1 )+ ": " + players.get(i));
         }
     }
-    public void startGame(){
-
+    public void startGame(Runnable onFinish){
         new Thread(() -> {
         //aici alt thread
             while (currentRound < 8){
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
                     int currentPlayer = (firstPlayer + i) % 4;
-                    players.get(currentPlayer).myTurn = true;
+                    players.get(currentPlayer).myTurn.set(true);
                     game.validateMove(players.get(currentPlayer));
-                    players.get(currentPlayer).myTurn = false;
+                    players.get(currentPlayer).myTurn.set(false);
                 }
                 firstPlayer = game.nextPlayer();
                 game.updateScore(players.get(firstPlayer));
                 if (game.isOver()){
+
                     break;
                 }
                 currentRound++;
             }
-
             /// afisam scorurile
             for (int i = 0; i < 4; ++i){
                 System.out.println("Player " + (i + 1) + " score: " + players.get(i).getScore());
             }
-        }).start();
+            if (onFinish != null){
+                Platform.runLater(onFinish);
+            }
 
+
+        }).start();
     }
 
 }

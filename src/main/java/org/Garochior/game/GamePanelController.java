@@ -1,6 +1,9 @@
 package org.Garochior.game;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -18,6 +21,8 @@ public class GamePanelController {
 
     public VBox centerVBox;
     public HBox centerHBox;
+    public Label turnLabel;
+    public Label gameLabel;
     //punem Player-ul aici
     private Player player;
 
@@ -38,23 +43,20 @@ public class GamePanelController {
     public void initialize() {
         System.out.println("GamePanelController initialized");
 
-        player1Cards = new ArrayList<>();
-        for (int i = 0; i < 8; ++i){
-            ImageView iv = new ImageView();
-            iv.setFitWidth(100);
-            iv.setFitHeight(150);
-            iv.setOnMouseClicked(this::handleCardClicked);
-            player1Cards.add(iv);
-            player1Box.getChildren().add(iv);
-        }
-
-
         setBackCards(player1Box);
 //        setBackCards(player2Box);
 //        setBackCards(player3Box);
 //        setBackCards(player4Box);
         setBackCards(centerVBox);
         setBackCards(centerHBox);
+    }
+
+    private ImageView createImage (){
+        ImageView iv = new ImageView();
+        iv.setFitWidth(100);
+        iv.setFitHeight(150);
+        iv.setOnMouseClicked(this::handleCardClicked);
+        return iv;
     }
 
     private void setBackCards (Pane playerBox){
@@ -83,22 +85,66 @@ public class GamePanelController {
         }
     }
     public void setHand (){
+        player1Box.getChildren().clear();
+
         //playerBox1 este playerul principal pentru fiecare
-        for (int i = 0; i < player1Box.getChildren().size(); i++) {
-            if (player1Box.getChildren().get(i) instanceof ImageView) {
-                ImageView iv = (ImageView) player1Box.getChildren().get(i);
-                //i reprezinta pozitia cartii in hand
-                CardType type = player.hand.get(i).getType();
-                int number = player.hand.get(i).getNumber();
-                int typeIndex = type.ordinal(); // 0-3 pentru cele 4 tipuri
-                int numberIndex = number - 7; // 0-7 pentru cărțile de la 7 la A (7=0, 8=1, ..., A=
-                iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        for (int i = 0; i < player.hand.size(); i++) {
+
+            ImageView iv = createImage();
+            player1Box.getChildren().add(iv);
+
+            //i reprezinta pozitia cartii in hand
+            CardType type = player.hand.get(i).getType();
+            int number = player.hand.get(i).getNumber();
+            int typeIndex = type.ordinal(); // 0-3 pentru cele 4 tipuri
+            int numberIndex = number - 7; // 0-7 pentru cărțile de la 7 la A (7=0, 8=1, ..., A=
+            iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        }
+    }
+
+    public void setPlayedCards (Card card, int index){
+        //daca index ul e acelasi cu al meu pun cartea in fata, restu punem in funcite de index u propriu
+        int id = player.getId();
+        CardType type = card.getType();
+        int number = card.getNumber();
+        int typeIndex = type.ordinal(); // 0-3 pentru cele 4 tipuri
+        int numberIndex = number - 7; // 0-7 pentru cărțile de la 7 la A (7=0, 8=1, ..., A=
+
+        if (index == id){
+            ImageView iv = (ImageView) centerVBox.getChildren().get(2);
+            iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        }
+        else if (index == (id + 1) % 4){
+            ImageView iv = (ImageView) centerHBox.getChildren().get(1);
+            iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        }
+        else if (index == (id + 2) % 4){
+            ImageView iv = (ImageView) centerVBox.getChildren().get(0);
+            iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        }
+        else if (index == (id + 3) % 4){
+            ImageView iv = (ImageView) centerHBox.getChildren().get(0);
+            iv.setImage(Assets.cardsImages[typeIndex][numberIndex]);
+        }
+    }
+
+    public void clearPlayedCards (){
+        for (int i = 0; i < centerVBox.getChildren().size(); i++) {
+            if (centerVBox.getChildren().get(i) instanceof ImageView) {
+                ImageView iv = (ImageView) centerVBox.getChildren().get(i);
+                iv.setImage(Assets.backCardImages[0]);
+            }
+        }
+        for (int i = 0; i < centerHBox.getChildren().size(); i++) {
+            if (centerHBox.getChildren().get(i) instanceof ImageView) {
+                ImageView iv = (ImageView) centerHBox.getChildren().get(i);
+                iv.setImage(Assets.backCardImages[0]);
             }
         }
     }
 
     public void handleCardClicked(MouseEvent mouseEvent) {
-        if (!player.myTurn) {
+        if (!player.myTurn.getValue()) {
             System.out.println("It's not your turn!");
             return;
         }
@@ -111,5 +157,14 @@ public class GamePanelController {
         player.setSelectedCard(index);
     }
 
+    public void setTurnLabel (int id){
+        turnLabel.setText("Player " + (id + 1) + "'s turn");
+    }
+    public void setGameLabel (String name){
+        gameLabel.setText(name);
+    }
 
 }
+
+//creeaza scor si nume pe interfata + creeare Tablou
+

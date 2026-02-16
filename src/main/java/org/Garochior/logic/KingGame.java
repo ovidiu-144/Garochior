@@ -6,6 +6,8 @@ import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
 public class KingGame extends ValidationLogic{
+    Card card = new Card(ModelConfig.K, CardType.HEARTS);
+
     @Override
     public String getName() {
         return "King of Hearts Game";
@@ -13,11 +15,13 @@ public class KingGame extends ValidationLogic{
 
     @Override
     public void updateScore(Player player) {
-        Card card = new Card(ModelConfig.K, CardType.HEARTS);
         if (selectedCards.contains(card)){
+            System.out.println("Player " + (player.getId() + 1) + " selected the King of Hearts!");
             player.updateScore(-8);
             isOver = true;
         }
         clearSelectedCard();
+
+        System.out.println(selectedCards);
     }
 }

@@ -1,5 +1,8 @@
 package org.Garochior.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,10 +32,10 @@ public class Deck {
     public List<Card> getDeck (){
         return deck;
     }
-    public ArrayList<Card> getPlayerCards(int player){
+    public ObservableList<Card> getPlayerCards(int player){
         //return Arrays.copyOfRange(deck, player * 8, player * 8 + 8)
 
-        return new ArrayList<>(deck.subList(player * 8, player * 8 + 8));
+        return FXCollections.observableArrayList((deck.subList(player * 8, player * 8 + 8)));
     }
 
     @Override

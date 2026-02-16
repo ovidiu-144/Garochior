@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class ValidationLogic implements GameLogic{
     public List<Card> selectedCards = new ArrayList<>();
     public boolean isOver = false;
+    private int firstPlayer = 0;
     //ceva sa selectam cartile, pe care le adaugam in lista, ca sa stim ordinea lor, prima carte mereu fiind a jucatorului care a inceput tura
     @Override
     public void validateMove(Player player) {
@@ -24,6 +25,7 @@ public abstract class ValidationLogic implements GameLogic{
 
             //stergem cartea din mana jucatorului
             player.removeCardFromHand(card);
+            firstPlayer = player.getId();
         }
         else {
             Card firstCard = selectedCards.getFirst();
@@ -66,7 +68,7 @@ public abstract class ValidationLogic implements GameLogic{
                 player = poz;
             }
         }
-        return player;
+        return (player + firstPlayer) % 4;
     }
     @Override
     public boolean isOver(){

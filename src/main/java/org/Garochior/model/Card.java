@@ -9,6 +9,15 @@ public class Card implements CardInterface{
         this.number = number;
         this.type = type;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Card card = (Card) o;
+
+        return number == card.number && type == card.type;
+    }
 
     @Override
     public int getNumber() {

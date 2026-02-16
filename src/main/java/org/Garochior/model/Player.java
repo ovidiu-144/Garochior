@@ -1,26 +1,35 @@
 package org.Garochior.model;
 
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class Player {
-    private int id; //0-4
-    public ArrayList<Card> hand;
+    private final int id;//0-4
+    private String name;
+    //public ArrayList<Card> hand;
+    public ObservableList<Card> hand;
+
     private int score;
     private Card selectedCard;
-    public boolean myTurn;
+    public BooleanProperty myTurn;
 
     public final Object lockCardSelect = new Object();
-    public final Object lockCardRemove = new Object();
+    //public final Object lockCardRemove = new Object();
 
     public Player (int id){
         this.id = id;
-        hand = new ArrayList<>();
+        hand = FXCollections.observableArrayList();
         score = 0;
-        myTurn = false;
+        myTurn = new javafx.beans.property.SimpleBooleanProperty(false);
     }
 
-    public void setHand (ArrayList<Card> hand){
-        this.hand = hand;
+    public void setHand (ObservableList<Card> hand){
+        this.hand.setAll(hand);
     }
 
     //pentru teste
@@ -78,6 +87,7 @@ public class Player {
     }
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server
+        //hand.remove(card);
         hand.remove(card);
     }
 
