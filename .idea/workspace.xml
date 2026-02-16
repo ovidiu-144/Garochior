@@ -6,16 +6,29 @@
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/CardType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/CardType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/!Garochior/Garochior" value="38yxRc4gzun2m1kGwJvzf3JmJ40" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="chat-panel" value="GPT-5 mini" />
+      <entry key="agent-panel" value="GPT-5 mini" />
+      <entry key="edit-panel" value="GPT-5 mini" />
+    </selectedModels>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -63,6 +76,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/!Garochior/Garochior/src/main/resources/Sprites&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;C:/!Garochior/Garochior/src/main/java/org/example/Main.java&quot;,

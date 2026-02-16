@@ -1,15 +1,16 @@
 package org.Garochior.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Player {
     private int id; //0-4
     public ArrayList<Card> hand;
     private int score;
-    public Card selectedCard;
+    private Card selectedCard;
     public boolean myTurn;
+
+    public final Object lockCardSelect = new Object();
+    public final Object lockCardRemove = new Object();
 
     public Player (int id){
         this.id = id;
@@ -34,7 +35,7 @@ public class Player {
     }
     public void updateScore (int points){
         score += points;
-        System.out.println("Player " + id + " score updated: " + score);
+        System.out.println("Player " + (id + 1) + " score updated: " + score);
     }
 
     //verificam daca avem de pus cartea care trebuie, daca nu putem pune orice
@@ -46,28 +47,34 @@ public class Player {
         return false;
     }
     public void setSelectedCard (int index){
-        selectedCard = hand.get(index);
+        synchronized (lockCardSelect){
+            selectedCard = hand.get(index);
+            lockCardSelect.notifyAll();
+        }
+        //selectedCard = hand.get(index);
     }
 
     public Card selectCard (){
-        //selecteaza o carte din interfata
-        //cartea respectiva va fi salvata in selectedCard
-        //si apoi scoasa din mana
-        //bucla de selectare a cartii
-
-        //alt thread pentru a astepta selectarea
-//        while (selectedCard == null){
-//            //asteptam sa fie selectata o carte
-//        }
+        selectedCard = null;
         /// pentru teste, selectam o carte random din mana
-        Random rand = new Random();
-        int size = hand.size();
-        int n = rand.nextInt(size);
-        System.out.println(n);
+//        Random rand = new Random();
+//        int size = hand.size();
+//        int n = rand.nextInt(size);
+//        System.out.println(n);
+//        System.out.println("Player " + id + " selected card: " + hand.get(n));
+//        return hand.get(n);
+        synchronized (lockCardSelect){
+            while (selectedCard == null){
+                try {
+                    lockCardSelect.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-
-        System.out.println("Player " + id + " selected card: " + hand.get(n));
-        return hand.get(n);
+        System.out.println("Player " + (id + 1) + " selected card: " + selectedCard);
+        return selectedCard;
     }
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server

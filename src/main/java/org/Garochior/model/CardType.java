@@ -1,8 +1,8 @@
 package org.Garochior.model;
 
 public enum CardType {
-    HEARTS,
     DIAMONDS,
     CLUBS,
+    HEARTS,
     SPADES
 }

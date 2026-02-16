@@ -25,33 +25,35 @@ public class GameSession {
         //impartim cartile
         for (int i = 0; i < 4; ++i){
             players.get(i).setHand(deck.getPlayerCards(i));
-            System.out.println("Player " + i + ": " + players.get(i));
+            System.out.println("Player " + (i + 1 )+ ": " + players.get(i));
         }
     }
     public void startGame(){
-        
-        //aici alt thread
-        while (currentRound < 8){
-            System.out.println("Round " + (currentRound + 1));
-            for (int i = 0; i < 4; ++i){
-                int currentPlayer = (firstPlayer + i) % 4;
-                players.get(currentPlayer).myTurn = true;
-                game.validateMove(players.get(currentPlayer));
-                players.get(currentPlayer).myTurn = false;
-            }
-            firstPlayer = game.nextPlayer();
-            game.updateScore(players.get(firstPlayer));
-            if (game.isOver()){
-                break;
-            }
-            currentRound++;
-        }
 
-        /// afisam scorurile
-        for (int i = 0; i < 4; ++i){
-            System.out.println("Player " + i + " score: " + players.get(i).getScore());
-        }
+        new Thread(() -> {
+        //aici alt thread
+            while (currentRound < 8){
+                System.out.println("Round " + (currentRound + 1));
+                for (int i = 0; i < 4; ++i){
+                    int currentPlayer = (firstPlayer + i) % 4;
+                    players.get(currentPlayer).myTurn = true;
+                    game.validateMove(players.get(currentPlayer));
+                    players.get(currentPlayer).myTurn = false;
+                }
+                firstPlayer = game.nextPlayer();
+                game.updateScore(players.get(firstPlayer));
+                if (game.isOver()){
+                    break;
+                }
+                currentRound++;
+            }
+
+            /// afisam scorurile
+            for (int i = 0; i < 4; ++i){
+                System.out.println("Player " + (i + 1) + " score: " + players.get(i).getScore());
+            }
+        }).start();
+
     }
-    
 
 }

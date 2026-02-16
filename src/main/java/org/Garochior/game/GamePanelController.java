@@ -11,6 +11,7 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GamePanelController {
@@ -27,6 +28,7 @@ public class GamePanelController {
     public HBox player3Box;
     public VBox player4Box;
 
+    public List<ImageView> player1Cards;
 
     public void setPlayer (Player player){
         this.player = player;
@@ -35,10 +37,22 @@ public class GamePanelController {
     @FXML
     public void initialize() {
         System.out.println("GamePanelController initialized");
+
+        player1Cards = new ArrayList<>();
+        for (int i = 0; i < 8; ++i){
+            ImageView iv = new ImageView();
+            iv.setFitWidth(100);
+            iv.setFitHeight(150);
+            iv.setOnMouseClicked(this::handleCardClicked);
+            player1Cards.add(iv);
+            player1Box.getChildren().add(iv);
+        }
+
+
         setBackCards(player1Box);
-        setBackCards(player2Box);
-        setBackCards(player3Box);
-        setBackCards(player4Box);
+//        setBackCards(player2Box);
+//        setBackCards(player3Box);
+//        setBackCards(player4Box);
         setBackCards(centerVBox);
         setBackCards(centerHBox);
     }
@@ -96,4 +110,6 @@ public class GamePanelController {
         System.out.println("Card is: " + player.hand.get(index));
         player.setSelectedCard(index);
     }
+
+
 }

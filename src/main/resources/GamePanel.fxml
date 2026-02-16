@@ -12,14 +12,14 @@
             </ImageView>
             <HBox fx:id="player1Box" alignment="CENTER" layoutX="23.0" layoutY="845.0" prefHeight="214.0" prefWidth="1920.0" spacing="45" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0">
                  <children>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
-                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
+<!--                     <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#handleCardClicked"/>-->
                  </children>
             </HBox>
 
