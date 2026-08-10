@@ -1,7 +1,6 @@
 package org.Garochior.game;
 
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -14,7 +13,6 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GamePanelController {
@@ -23,17 +21,11 @@ public class GamePanelController {
     public HBox centerHBox;
     public Label turnLabel;
     public Label gameLabel;
-    //punem Player-ul aici
     private Player player;
 
 
     public ImageView background;
     public HBox player1Box;
-    public VBox player2Box;
-    public HBox player3Box;
-    public VBox player4Box;
-
-    public List<ImageView> player1Cards;
 
     public void setPlayer (Player player){
         this.player = player;
@@ -44,9 +36,6 @@ public class GamePanelController {
         System.out.println("GamePanelController initialized");
 
         setBackCards(player1Box);
-//        setBackCards(player2Box);
-//        setBackCards(player3Box);
-//        setBackCards(player4Box);
         setBackCards(centerVBox);
         setBackCards(centerHBox);
     }
@@ -69,20 +58,6 @@ public class GamePanelController {
             }
         }
         //ImageView iv = centerVBox.getChildren().get(0) instanceof ImageView ? (ImageView) centerVBox.getChildren().get(0) : null;
-
-
-    }
-    private void setCarti (Pane playerBox, int poz){
-        for (int i = 0; i < playerBox.getChildren().size(); i++) {
-            if (playerBox.getChildren().get(i) instanceof ImageView) {
-                ImageView iv = (ImageView) playerBox.getChildren().get(i);
-
-                // În mod normal aici vei folosi logica jocului (ce cărți are jucătorul în mână)
-                if (i < 8) {
-                    iv.setImage(Assets.cardsImages[poz][i]);
-                }
-            }
-        }
     }
     public void setHand (){
         player1Box.getChildren().clear();
@@ -164,6 +139,11 @@ public class GamePanelController {
         gameLabel.setText(name);
     }
 
+    public void showHandTaker(int playerWinnerId) {
+        Platform.runLater(() -> {
+            turnLabel.setText(">>> Player " + (playerWinnerId + 1) + " took the hand! <<<");
+        });
+    }
 }
 
 //creeaza scor si nume pe interfata + creeare Tablou

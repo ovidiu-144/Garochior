@@ -61,7 +61,7 @@ public class ServerConfig {
         GameLogic game = gamesQueue.poll();
         System.out.println("Starting game: " + game.getName());
 
-        GameSession gameSession = new GameSession(players, game);
+        GameSession gameSession = new GameSession(players, game, uiControllers);
         setGameLabels(game.getName());
         gameSession.setHands();
         //setam cartile in mana pentru fiecare player

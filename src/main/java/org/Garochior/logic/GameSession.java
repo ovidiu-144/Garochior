@@ -1,6 +1,7 @@
 package org.Garochior.logic;
 
 import javafx.application.Platform;
+import org.Garochior.game.GamePanelController;
 import org.Garochior.model.Deck;
 import org.Garochior.model.Player;
 
@@ -12,11 +13,23 @@ public class GameSession {
     private GameLogic game;
     private int firstPlayer;
     private int currentRound;
+    private List<GamePanelController> uiControllers;
 
     public GameSession (List<Player> players, GameLogic game){
         this.players = players;
         this.game = game;
         this.deck = new Deck();
+        this.uiControllers = null;
+        deck.shuffle();
+        firstPlayer = 0;
+        currentRound = 0;
+    }
+
+    public GameSession (List<Player> players, GameLogic game, List<GamePanelController> uiControllers){
+        this.players = players;
+        this.game = game;
+        this.deck = new Deck();
+        this.uiControllers = uiControllers;
         deck.shuffle();
         firstPlayer = 0;
         currentRound = 0;
@@ -42,6 +55,22 @@ public class GameSession {
                 }
                 firstPlayer = game.nextPlayer();
                 game.updateScore(players.get(firstPlayer));
+                
+                System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
+                
+                // Afișează pe interfață pe toți jucătorii
+                if (uiControllers != null) {
+                    for (int i = 0; i < 4; ++i) {
+                        uiControllers.get(i).showHandTaker(firstPlayer);
+                    }
+                }
+                
+                try {
+                    Thread.sleep(3000); // Pauza de 3 secunde
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
                 if (game.isOver()){
 
                     break;

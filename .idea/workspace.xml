@@ -3,18 +3,15 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/GamePanelController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/KingGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/KingGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Deck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/GamePanel.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +21,7 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_C:/!Garochior/Garochior" value="38yxRc4gzun2m1kGwJvzf3JmJ40" />
+      <entry key="_C:/Proiecte/Garochior" value="3HihAyrBX5416GvULEBawsaDDBS" />
     </persistenceIdMap>
   </component>
   <component name="CopilotUserSelectedModel">
@@ -63,32 +61,50 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="38yxRc4gzun2m1kGwJvzf3JmJ40" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.Garochior [javafx:run].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Garochior [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Garochior [org.apache.maven.plugins:maven-install-plugin:3.1.2:install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Garochior [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/!Garochior/Garochior/src/main/resources/Sprites&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/!Garochior/Garochior/src/main/java/org/example/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Debug",
+    "Maven.Garochior [javafx:run].executor": "Run",
+    "Maven.Garochior [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
+    "Maven.Garochior [org.apache.maven.plugins:maven-install-plugin:3.1.2:install].executor": "Run",
+    "Maven.Garochior [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Proiecte/Garochior",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/!Garochior/Garochior/src/main/java/org/example/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\!Garochior\Garochior\src\main\resources\Sprites" />
@@ -133,6 +149,14 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -143,6 +167,9 @@
       <updated>1769785606775</updated>
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
