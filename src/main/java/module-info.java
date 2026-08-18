@@ -2,6 +2,7 @@ module org.Garochior.Garochior {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires com.google.gson;
 
     opens org.Garochior to javafx.graphics, javafx.fxml;
     opens org.Garochior.ui to javafx.graphics, javafx.fxml;

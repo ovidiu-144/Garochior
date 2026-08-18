@@ -10,4 +10,7 @@ public class MessageType {
     public static final int HAND_WINNER = 5;
     public static final int GAME_START = 6;
     public static final int GAME_OVER = 7;
+    public static final int ROOM_READY = 8;
+
+//    public static final int NUMBER_OF_PLAYERS = 0;
 }
