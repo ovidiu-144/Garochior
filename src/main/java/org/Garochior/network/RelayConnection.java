@@ -15,17 +15,36 @@ public class RelayConnection {
         void onMessage(JsonObject message);
     }
 
-    public void connect(String roomCode) throws IOException {
+    public void connectAsHost(String roomCode) throws IOException {
+        connect();
+        out.println("CREATE:" + roomCode);
+        waitForConfirmation();
+    }
+
+    public int connectAsClient(String roomCode) throws IOException {
+        connect();
+        out.println("JOIN:" + roomCode);
+        return waitForConfirmation();
+    }
+
+
+    private void connect() throws IOException {
         socket = new Socket(NetworkConfig.RELAY_IP, NetworkConfig.RELAY_PORT);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
 
-        // Primul mesaj e mereu codul camerei
-        out.println(roomCode);
-        System.out.println("Conectat la relay, camera: " + roomCode);
-
-        // Thread separat care ascultă mesaje primite
+    private int waitForConfirmation() throws IOException {
+        String response = in.readLine();
+        if (response.startsWith("ERROR")) {
+            throw new IOException("Relay error: " + response);
+        }
+        int playerId = Integer.parseInt(response.split(":")[2]);
+        System.out.println("Relay confirmation: " + response);
+        // Pornește listener-ul abia după confirmare
         new Thread(this::listenLoop).start();
+
+        return playerId;
     }
 
     private void listenLoop() {

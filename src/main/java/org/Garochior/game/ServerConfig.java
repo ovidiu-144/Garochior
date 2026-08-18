@@ -49,7 +49,7 @@ public class ServerConfig {
         }
 
         relay = new RelayConnection();
-        relay.connect(roomCode);
+        relay.connectAsHost(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
 
         //startGameType();
@@ -109,6 +109,12 @@ public class ServerConfig {
         GameLogic game = gamesQueue.poll();
         System.out.println("Starting game: " + game.getName());
 
+        if (game instanceof ValidationLogic vl) {
+            vl.setOnInvalidCard(playerId -> {
+                relay.send(NetworkMessage.invalidCard(playerId));
+            });
+        }
+
         relay.send(NetworkMessage.gameStart(game.getName()));
         Platform.runLater(() -> {
             uiControllers.get(0).setGameLabel(game.getName());
@@ -137,7 +143,7 @@ public class ServerConfig {
                     if (change.wasRemoved()) {
                         Card removedCard = change.getRemoved().getLast();
                         System.out.println("Card removed from player " + (player.getId() + 1) + ": " + removedCard);
-                        //Platform.runLater(() -> uiControllers.get(player.getId()).setHand());
+                        Platform.runLater(() -> uiControllers.get(player.getId()).setHand());
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
                     }
                 }
@@ -147,7 +153,6 @@ public class ServerConfig {
                     relay.send (NetworkMessage.yourTurn(player.getId()));
 
                     System.out.println("It's now player " + (player.getId() + 1) + "'s turn.");
-//                    relay.send(NetworkMessage.yourTurn(player.getId()));
                     Platform.runLater(() -> {
                        uiControllers.get(0).setTurnLabel(player.getId());
                     });
@@ -168,6 +173,8 @@ public class ServerConfig {
 
                     Card removedCard = change.getRemoved().getLast();
                     Platform.runLater(gamePanelController::setHand);
+                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
+                    relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
 
 //                    for (int i = 0; i < 4; ++i){
 //                        int finalI = i;
@@ -180,6 +187,8 @@ public class ServerConfig {
 //                                uiControllers.get(i).clearPlayedCards();
 //                            }
 //                        });
+                        //relay.send (NetworkMessage.handWinner());
+                        Platform.runLater(gamePanelController::clearPlayedCards);
                         gameEnded = 0;
                     }
                 }

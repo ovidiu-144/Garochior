@@ -76,7 +76,7 @@ public class MainMenuController {
         System.out.println("You will join a server on room " + clientRoomField.getText());
         ClientConfig clientConfig = new ClientConfig();
         try {
-            clientConfig.initGame((Stage) confirmClientBtn.getScene().getWindow(), clientRoomField.getText(), Integer.parseInt(playerIdField.getText()));
+            clientConfig.initGame((Stage) confirmClientBtn.getScene().getWindow(), clientRoomField.getText());
         }
         catch (Exception e){
             e.printStackTrace();

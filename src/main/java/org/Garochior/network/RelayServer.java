@@ -42,10 +42,29 @@ public class RelayServer {
                 while ((line = in.readLine()) != null) {
 
                     if (roomCode == null) {
-                        roomCode = line.trim();
-                        rooms.computeIfAbsent(roomCode, GameRoom::new)
-                                .clients.add(this);
-                        System.out.println("Client joined room: " + roomCode);
+                        String line2 = line.trim();
+
+                        if (line2.startsWith("CREATE:")) {
+                            roomCode = line2.substring(7);
+                            rooms.put(roomCode, new GameRoom(roomCode));
+                            rooms.get(roomCode).clients.add(this);
+                            send("OK:CREATED:0");
+                            System.out.println("Room created: " + roomCode);
+                        }
+                        else if (line2.startsWith("JOIN:")) {
+                            roomCode = line2.substring(5);
+                            GameRoom room = rooms.get(roomCode);
+                            if (room == null) {
+                                send("ERROR:ROOM_NOT_FOUND");
+                                roomCode = null;
+                                System.out.println("Room not found: " + roomCode);
+                            } else {
+                                room.clients.add(this);
+                                int playerId = room.clients.size();
+                                send("OK:JOINED:" + playerId);
+                                System.out.println("Client joined room: " + roomCode);
+                            }
+                        }
                         continue;
                     }
 

@@ -8,15 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/ValidationLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/ui/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" afterDir="false" />
     </list>

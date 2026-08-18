@@ -11,6 +11,7 @@ public class MessageType {
     public static final int GAME_START = 6;
     public static final int GAME_OVER = 7;
     public static final int ROOM_READY = 8;
+    public static final int INVALID_CARD = 9;
 
 //    public static final int NUMBER_OF_PLAYERS = 0;
 }

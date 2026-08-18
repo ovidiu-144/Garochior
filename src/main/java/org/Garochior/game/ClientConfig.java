@@ -17,9 +17,12 @@ public class ClientConfig {
     private RelayConnection relay;
     private int playerId;
 
-    public void initGame (Stage Stage, String roomCode, int playerId) throws Exception {
-        this.playerId = playerId;
+    public void initGame (Stage Stage, String roomCode) throws Exception {
         Assets.init();
+
+        relay = new RelayConnection();
+        this.playerId = relay.connectAsClient(roomCode);
+        System.out.println("Client conectat la relay ca player " + (playerId + 1));
 
         player = new Player(playerId);
         GamePanel gamePanel = new GamePanel();
@@ -32,8 +35,6 @@ public class ClientConfig {
             }
         });
 
-        relay = new RelayConnection();
-        relay.connect(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
 
         //s-a conectat
@@ -74,6 +75,10 @@ public class ClientConfig {
                 Card card = NetworkMessage.getCard(message);
                 Platform.runLater(() -> {
                     uiController.setPlayedCards(card, fromPlayer);
+
+                    if (fromPlayer == playerId) {
+                        uiController.setHand();
+                    }
                 });
             }
 
@@ -98,6 +103,18 @@ public class ClientConfig {
                     // TODO: afișează scorurile finale
                     System.out.println("Joc terminat! Scoruri: " + scores);
                 });
+            }
+
+            case MessageType.INVALID_CARD -> {
+                int targetPlayer = NetworkMessage.getPlayerId(message);
+                if (targetPlayer == playerId) {
+                    // Serverul a respins cartea, selectează din nou
+                    Platform.runLater(() -> {
+                        uiController.setTurnLabel(playerId); // "E tura ta" rămâne
+                    });
+                    // Repornește așteptarea — player.myTurn e încă true
+                    waitForCardSelection();
+                }
             }
         }
 

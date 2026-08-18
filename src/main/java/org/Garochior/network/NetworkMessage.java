@@ -82,12 +82,12 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-//    public static String numberOfPlayers(int number) {
-//        JsonObject obj = new JsonObject();
-//        obj.addProperty("type", MessageType.NUMBER_OF_PLAYERS);
-//        obj.addProperty("number", number);
-//        return obj.toString();
-//    }
+    public static String invalidCard(int playerId) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.INVALID_CARD);
+        obj.addProperty("playerId", playerId);
+        return obj.toString();
+    }
 
     //PARSARE MESAJE
 
