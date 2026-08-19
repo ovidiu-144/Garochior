@@ -8,11 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8e5c4e6-4596-4a92-9e65-de7341f38155" name="Changes" comment="&quot;Prima Varianta de menu&quot;">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
