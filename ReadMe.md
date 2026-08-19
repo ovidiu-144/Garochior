@@ -20,7 +20,8 @@ Sau direct de pe <a href="https://www.oracle.com/java/technologies/downloads/#ja
 
 1. Rulează în PowerShell:
 ```powershell
-winget install Apache.Maven
+winget install Chocolatey.Chocolatey
+choco install maven
 ```
 
 Sau direct de pe <a href="https://maven.apache.org/download.cgi" target="_blank">link</a>
