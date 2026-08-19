@@ -1,37 +1,36 @@
 package org.Garochior.logic;
 
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableIntegerValue;
 import org.Garochior.game.GamePanelController;
 import org.Garochior.model.Deck;
 import org.Garochior.model.Player;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 public class GameSession {
     private List<Player> players;
     private final Deck deck;
     private GameLogic game;
-    private int firstPlayer;
+    public int firstPlayer;
     private int currentRound;
-    private List<GamePanelController> uiControllers;
+    private java.util.function.Consumer<Integer> onHandTaken;
+
+    public void setOnHandTaken(java.util.function.Consumer<Integer> callback) {
+        this.onHandTaken = callback;
+    }
+
 
     public GameSession (List<Player> players, GameLogic game){
         this.players = players;
         this.game = game;
         this.deck = new Deck();
-        this.uiControllers = null;
         deck.shuffle();
         firstPlayer = 0;
-        currentRound = 0;
-    }
 
-    public GameSession (List<Player> players, GameLogic game, List<GamePanelController> uiControllers){
-        this.players = players;
-        this.game = game;
-        this.deck = new Deck();
-        this.uiControllers = uiControllers;
-        deck.shuffle();
-        firstPlayer = 0;
         currentRound = 0;
     }
 
@@ -54,22 +53,20 @@ public class GameSession {
                     players.get(currentPlayer).myTurn.set(false);
                 }
                 firstPlayer = game.nextPlayer();
+
                 game.updateScore(players.get(firstPlayer));
-                
+
+                if (onHandTaken != null) {
+                    onHandTaken.accept(firstPlayer);
+                }
+
                 System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
-                
-                // Afișează pe interfață pe toți jucătorii
-                if (uiControllers != null) {
-                    for (int i = 0; i < 4; ++i) {
-                        uiControllers.get(i).showHandTaker(firstPlayer);
-                    }
-                }
-                
-                try {
-                    Thread.sleep(3000); // Pauza de 3 secunde
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+
+//                try {
+//                    Thread.sleep(3000); // Pauza de 3 secunde
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                }
 
                 if (game.isOver()){
 

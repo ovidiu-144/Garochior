@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.Garochior.constants.UiConfig;
+import org.Garochior.game.ClientConfig;
 import org.Garochior.game.GamePanel;
 import org.Garochior.game.ServerConfig;
 
@@ -19,7 +20,10 @@ public class MainMenuController {
     public Button serverBtn;
     public Button clientBtn;
     public Button confirmServerBtn;
-    public TextField portField;
+    public TextField roomField;
+    public TextField clientRoomField;
+    public Button confirmClientBtn;
+    public TextField playerIdField;
 
     public void onServerClicked() {
         System.out.println("Server button clicked");
@@ -57,36 +61,25 @@ public class MainMenuController {
     }
 
     public void onConfirmServerClicked(ActionEvent actionEvent) {
-        System.out.println("You will start a server on port " + portField.getText());
+        System.out.println("You will start a server on room " + roomField.getText());
         ServerConfig serverConfig = new ServerConfig();
         try {
-            serverConfig.initGame((Stage) confirmServerBtn.getScene().getWindow());
+            serverConfig.initGame((Stage) confirmServerBtn.getScene().getWindow(), roomField.getText());
         }
         catch (Exception e){
             e.printStackTrace();
         }
+    }
 
-//        try {
-//            GamePanel serverPanel = new GamePanel();
-//            serverPanel.start((Stage) confirmServerBtn.getScene().getWindow());
-//
-//            for (int i = 1; i < 4; i++) {
-//                Stage newStage = new Stage();
-//
-//                GamePanel gamePanel = new GamePanel();
-//
-//                gamePanel.start(newStage);
-//
-//                // Opțional: Le poziționăm diferit pe ecran ca să nu se suprapună perfect
-////            newStage.setX(100 + (i * 200));
-////            newStage.setY(100 + (i * 50));
-//
-//                newStage.setTitle("Jucător " + (i + 1));
-//                newStage.show();
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+    public void onConfirmClientClicked(ActionEvent actionEvent) {
+        System.out.println("You will join a server on room " + clientRoomField.getText());
+        ClientConfig clientConfig = new ClientConfig();
+        try {
+            clientConfig.initGame((Stage) confirmClientBtn.getScene().getWindow(), clientRoomField.getText());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

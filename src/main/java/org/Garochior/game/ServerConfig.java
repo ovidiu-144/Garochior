@@ -7,44 +7,92 @@ import org.Garochior.graphics.Assets;
 import org.Garochior.logic.*;
 import org.Garochior.model.Card;
 import org.Garochior.model.Player;
+import org.Garochior.network.MessageType;
+import org.Garochior.network.NetworkMessage;
+import org.Garochior.network.RelayConnection;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class ServerConfig {
-    private List<GamePanelController> uiControllers;
-    private List<Player> players;
-    private Queue<GameLogic> gamesQueue;
-    private boolean isOver = true;
+    private GamePanelController gamePanelController;
+    private final List<Player> players;
+    private final Queue<GameLogic> gamesQueue;
+
+    private RelayConnection relay;
+    private GameSession gameSession;
+
+
+    private int connectedClients = 0;
 
     public ServerConfig() {
-        this.uiControllers = new ArrayList<>();
         this.players = new ArrayList<>();
         this.gamesQueue = new ArrayDeque<>();
     }
 
-    public void initGame (Stage serverStage) throws Exception {
+    public void initGame (Stage serverStage, String roomCode) throws Exception {
         Assets.init();
 
         GamePanel gamePanel = new GamePanel();
         //Player1 este serverul
-        createPlayer(gamePanel, serverStage, 0);
+
+        createPlayer(gamePanel, serverStage);
 
         //Aici o sa treabuiasca sa facem legatura cu clientii, fiecare client cu interfata lui
         //Deocamdata facem doar local
         for (int i = 1; i < 4; ++i){
-            Stage stage = new Stage();
-            createPlayer(gamePanel, stage, i);
+            Player player = new Player(i);
+            players.add(player);
         }
 
-        for (int i = 0; i < 4; ++i){
-            addListenerPlayers(players.get(i), uiControllers.get(i));
-        }
         initGamesQueue();
-        startGameType();
+        setupListeners();
+
+        relay = new RelayConnection();
+        relay.connectAsHost(roomCode);
+        relay.setMessageListener(this::OnMessageReceived);
     }
+
+    private void OnMessageReceived (com.google.gson.JsonObject message){
+        System.out.println("Server received message: " + message);
+
+
+        String type = NetworkMessage.getType(message);
+
+        if (Objects.equals(type, MessageType.ROOM_READY)) {
+            connectedClients++;
+            int playerId = NetworkMessage.getPlayerId(message);
+            System.out.println("Player " + (playerId + 1) + " connected.");
+
+            if (connectedClients == 3) {
+                System.out.println("All players connected. Starting game.");
+                Platform.runLater(() -> {
+                    try {
+                        startGameType();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        }
+
+        if (Objects.equals(type, MessageType.CARD_SELECTED)){
+            int playerId = NetworkMessage.getPlayerId(message);
+
+            Card selectedCard = NetworkMessage.getCard(message);
+
+            int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
+
+            if (cardIndex != - 1) {
+                System.out.println("Card found in hand: " + selectedCard);
+                players.get(playerId).setSelectedCard(cardIndex);
+                gamePanelController.setPlayedCards(selectedCard, playerId);
+            } else {
+                System.out.println("Card not found in hand: " + selectedCard);
+            }
+        }
+    }
+
+
     private void initGamesQueue (){
         gamesQueue.add(new HandsGame());
         gamesQueue.add(new HeartsGame());
@@ -56,71 +104,108 @@ public class ServerConfig {
     public void startGameType (){
         if (gamesQueue.isEmpty()){
             System.out.println("No more games in queue.");
+            List<Integer> scores = new ArrayList<>();
+            for (Player player: players){
+                scores.add(player.getScore());
+            }
+            //aici o sa avem un gameOver dupa cele 4 jocuri
+            //relay.send(NetworkMessage.gameEnd(scores));
+
             return;
         }
         GameLogic game = gamesQueue.poll();
         System.out.println("Starting game: " + game.getName());
 
-        GameSession gameSession = new GameSession(players, game, uiControllers);
-        setGameLabels(game.getName());
+        if (game instanceof ValidationLogic vl) {
+            vl.setOnInvalidCard(playerId -> {
+                relay.send(NetworkMessage.invalidCard(playerId));
+            });
+        }
+
+        relay.send(NetworkMessage.gameStart(game.getName()));
+        Platform.runLater(() -> {
+            gamePanelController.setGameLabel(game.getName());
+        });
+
+        gameSession = new GameSession(players, game);
+
+//        gameSession.firstPlayer.addListener((observable, oldValue, newValue) -> {
+//            Platform.runLater(gamePanelController::clearPlayedCards);
+//            Platform.runLater(() -> gamePanelController.showHandTaker(gameSession.firstPlayer.get()));
+//            relay.send(NetworkMessage.handTaker(gameSession.firstPlayer.get()));
+//        });
+
+        gameSession.setOnHandTaken(playerId -> {
+            Platform.runLater(gamePanelController::clearPlayedCards);
+            Platform.runLater(() -> gamePanelController.showHandTaker(playerId));
+            relay.send(NetworkMessage.handTaker(playerId));
+        });
+
+
         gameSession.setHands();
         //setam cartile in mana pentru fiecare player
-        for (GamePanelController ctrl: uiControllers){
-            ctrl.setHand();
+        for (int i = 0; i < 4; ++i){
+            relay.send(NetworkMessage.setHand(i, players.get(i).hand));
         }
+        Platform.runLater(() -> {
+           gamePanelController.setHand();
+        });
+
+        //trimitem scorul dupa fiecare mini game
+        relay.send (NetworkMessage.gameEnd(getScores()));
         gameSession.startGame(this::startGameType);
     }
 
-
-    private void createPlayer(GamePanel gamePanel, Stage stage, int id) throws Exception {
-        Player player = new Player(id);
-        players.add(player);
-        GamePanelController gamePanelController = gamePanel.start(stage, player);
-        uiControllers.add(gamePanelController);
-    }
-
-    private int gameEnded = 0;
-    private void addListenerPlayers (Player player, GamePanelController gamePanelController){
-        player.hand.addListener((ListChangeListener<Card>) change -> {
+    private void setupListeners() {
+        // Player 0 (serverul) - listener pe hand pentru UI local + relay
+        players.getFirst().hand.addListener((ListChangeListener<Card>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {
-                    gameEnded++;
-                    System.out.println("Card removed from player " + (player.getId() + 1) + ": " + change.getRemoved());
-
                     Card removedCard = change.getRemoved().getLast();
                     Platform.runLater(gamePanelController::setHand);
-
-                    for (int i = 0; i < 4; ++i){
-                        int finalI = i;
-                        Platform.runLater(() -> uiControllers.get(finalI).setPlayedCards(removedCard, player.getId()));
-                    }
-
-                    if (gameEnded == 4){
-                        Platform.runLater(() -> {
-                            for (int i = 0; i < 4; ++i){
-                                uiControllers.get(i).clearPlayedCards();
-                            }
-                        });
-                        gameEnded = 0;
-                    }
+                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, 0));
+                    relay.send(NetworkMessage.cardPlayed(0, removedCard));
                 }
             }
         });
-        player.myTurn.addListener((observable, oldValue, newValue) -> {
+        players.getFirst().myTurn.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                System.out.println("It's now player " + (player.getId() + 1) + "'s turn.");
-                 Platform.runLater(() -> {
-                        for (int i = 0; i < 4; ++i){
-                            uiControllers.get(i).setTurnLabel(player.getId());
-                        }
-                 });
+                Platform.runLater(() -> gamePanelController.setTurnLabel(0));
             }
         });
-    }
-    private void setGameLabels (String name){
-        for (int i = 0; i < 4; ++i){
-            int finalI = i;
-            Platform.runLater(() -> uiControllers.get(finalI).setGameLabel(name));
+
+        for (int i = 1; i < 4; i++) {
+            Player player = players.get(i);
+
+            player.hand.addListener((ListChangeListener<Card>) change -> {
+                while (change.next()) {
+                    if (change.wasRemoved()) {
+                        Card removedCard = change.getRemoved().getLast();
+                        relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
+                    }
+                }
+            });
+
+            player.myTurn.addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    relay.send(NetworkMessage.yourTurn(player.getId()));
+                    Platform.runLater(() -> gamePanelController.setTurnLabel(player.getId()));
+                }
+            });
         }
+    }
+
+    private void createPlayer(GamePanel gamePanel, Stage stage) throws Exception {
+        Player player = new Player(0);
+        players.add(player);
+        gamePanelController = gamePanel.start(stage, player);
+    }
+
+    private List<Integer> getScores() {
+        List<Integer> scores = new ArrayList<>();
+        for (Player player: players) {
+            scores.add(player.getScore());
+        }
+        return scores;
     }
 }

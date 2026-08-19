@@ -15,7 +15,7 @@ public class Player {
     public ObservableList<Card> hand;
 
     private int score;
-    private Card selectedCard;
+    public Card selectedCard;
     public BooleanProperty myTurn;
 
     public final Object lockCardSelect = new Object();
@@ -64,7 +64,7 @@ public class Player {
     }
 
     public Card selectCard (){
-        selectedCard = null;
+
         /// pentru teste, selectam o carte random din mana
 //        Random rand = new Random();
 //        int size = hand.size();
@@ -73,6 +73,7 @@ public class Player {
 //        System.out.println("Player " + id + " selected card: " + hand.get(n));
 //        return hand.get(n);
         synchronized (lockCardSelect){
+            selectedCard = null;
             while (selectedCard == null){
                 try {
                     lockCardSelect.wait();
@@ -81,9 +82,9 @@ public class Player {
                 }
             }
         }
-
         System.out.println("Player " + (id + 1) + " selected card: " + selectedCard);
         return selectedCard;
+//        return selectedCard;
     }
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server
