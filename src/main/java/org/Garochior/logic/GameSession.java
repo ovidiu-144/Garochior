@@ -15,19 +15,21 @@ public class GameSession {
     private List<Player> players;
     private final Deck deck;
     private GameLogic game;
-    public IntegerProperty firstPlayer;
+    public int firstPlayer;
     private int currentRound;
-    private List<GamePanelController> uiControllers;
+    private java.util.function.Consumer<Integer> onHandTaken;
+
+    public void setOnHandTaken(java.util.function.Consumer<Integer> callback) {
+        this.onHandTaken = callback;
+    }
 
 
-
-    public GameSession (List<Player> players, GameLogic game, List<GamePanelController> uiControllers){
+    public GameSession (List<Player> players, GameLogic game){
         this.players = players;
         this.game = game;
         this.deck = new Deck();
-        this.uiControllers = uiControllers;
         deck.shuffle();
-        firstPlayer = new SimpleIntegerProperty(0);
+        firstPlayer = 0;
 
         currentRound = 0;
     }
@@ -45,16 +47,20 @@ public class GameSession {
             while (currentRound < 8){
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
-                    int currentPlayer = (firstPlayer.get() + i) % 4;
+                    int currentPlayer = (firstPlayer + i) % 4;
                     players.get(currentPlayer).myTurn.set(true);
                     game.validateMove(players.get(currentPlayer));
                     players.get(currentPlayer).myTurn.set(false);
                 }
-                firstPlayer.set(game.nextPlayer());
+                firstPlayer = game.nextPlayer();
 
-                game.updateScore(players.get(firstPlayer.get()));
+                game.updateScore(players.get(firstPlayer));
 
-                System.out.println(">>> Player " + (firstPlayer.get() + 1) + " took the hand! <<<");
+                if (onHandTaken != null) {
+                    onHandTaken.accept(firstPlayer);
+                }
+
+                System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
 
 //                try {
 //                    Thread.sleep(3000); // Pauza de 3 secunde

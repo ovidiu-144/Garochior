@@ -113,17 +113,14 @@ public class ClientConfig {
                 });
             }
 
-            case MessageType.GAME_OVER -> {
+            case MessageType.GAME_END -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
                 Platform.runLater(() -> {
                     // TODO: afișează scorurile finale
                     System.out.println("Joc terminat! Scoruri: " + scores);
                 });
             }
-
-
         }
-
     }
 
     private void waitForCardSelection() {

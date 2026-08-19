@@ -14,10 +14,9 @@ import org.Garochior.network.RelayConnection;
 import java.util.*;
 
 public class ServerConfig {
-    private List<GamePanelController> uiControllers;
-    private List<Player> players;
-    private Queue<GameLogic> gamesQueue;
-    private boolean isOver = true;
+    private GamePanelController gamePanelController;
+    private final List<Player> players;
+    private final Queue<GameLogic> gamesQueue;
 
     private RelayConnection relay;
     private GameSession gameSession;
@@ -26,7 +25,6 @@ public class ServerConfig {
     private int connectedClients = 0;
 
     public ServerConfig() {
-        this.uiControllers = new ArrayList<>();
         this.players = new ArrayList<>();
         this.gamesQueue = new ArrayDeque<>();
     }
@@ -37,7 +35,7 @@ public class ServerConfig {
         GamePanel gamePanel = new GamePanel();
         //Player1 este serverul
 
-        createPlayer(gamePanel, serverStage, 0);
+        createPlayer(gamePanel, serverStage);
 
         //Aici o sa treabuiasca sa facem legatura cu clientii, fiecare client cu interfata lui
         //Deocamdata facem doar local
@@ -45,6 +43,9 @@ public class ServerConfig {
             Player player = new Player(i);
             players.add(player);
         }
+
+        initGamesQueue();
+        setupListeners();
 
         relay = new RelayConnection();
         relay.connectAsHost(roomCode);
@@ -66,8 +67,6 @@ public class ServerConfig {
                 System.out.println("All players connected. Starting game.");
                 Platform.runLater(() -> {
                     try {
-                        initGamesQueue();
-                        setupListeners();
                         startGameType();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -86,6 +85,7 @@ public class ServerConfig {
             if (cardIndex != - 1) {
                 System.out.println("Card found in hand: " + selectedCard);
                 players.get(playerId).setSelectedCard(cardIndex);
+                gamePanelController.setPlayedCards(selectedCard, playerId);
             } else {
                 System.out.println("Card not found in hand: " + selectedCard);
             }
@@ -108,7 +108,8 @@ public class ServerConfig {
             for (Player player: players){
                 scores.add(player.getScore());
             }
-            relay.send(NetworkMessage.gameOver(scores));
+            //aici o sa avem un gameOver dupa cele 4 jocuri
+            //relay.send(NetworkMessage.gameEnd(scores));
 
             return;
         }
@@ -123,16 +124,23 @@ public class ServerConfig {
 
         relay.send(NetworkMessage.gameStart(game.getName()));
         Platform.runLater(() -> {
-            uiControllers.get(0).setGameLabel(game.getName());
+            gamePanelController.setGameLabel(game.getName());
         });
 
-        gameSession = new GameSession(players, game, uiControllers);
+        gameSession = new GameSession(players, game);
 
-        gameSession.firstPlayer.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(uiControllers.get(0)::clearPlayedCards);
-            Platform.runLater(() -> uiControllers.get(0).showHandTaker(gameSession.firstPlayer.get()));
-            relay.send(NetworkMessage.handTaker(gameSession.firstPlayer.get()));
+//        gameSession.firstPlayer.addListener((observable, oldValue, newValue) -> {
+//            Platform.runLater(gamePanelController::clearPlayedCards);
+//            Platform.runLater(() -> gamePanelController.showHandTaker(gameSession.firstPlayer.get()));
+//            relay.send(NetworkMessage.handTaker(gameSession.firstPlayer.get()));
+//        });
+
+        gameSession.setOnHandTaken(playerId -> {
+            Platform.runLater(gamePanelController::clearPlayedCards);
+            Platform.runLater(() -> gamePanelController.showHandTaker(playerId));
+            relay.send(NetworkMessage.handTaker(playerId));
         });
+
 
         gameSession.setHands();
         //setam cartile in mana pentru fiecare player
@@ -140,80 +148,64 @@ public class ServerConfig {
             relay.send(NetworkMessage.setHand(i, players.get(i).hand));
         }
         Platform.runLater(() -> {
-           uiControllers.get(0).setHand();
+           gamePanelController.setHand();
         });
 
+        //trimitem scorul dupa fiecare mini game
+        relay.send (NetworkMessage.gameEnd(getScores()));
         gameSession.startGame(this::startGameType);
     }
-    private void setupListeners(){
-        addListenerPlayers(players.get(0), uiControllers.get(0));
 
-        for  (int i = 1; i < 4; ++i){
+    private void setupListeners() {
+        // Player 0 (serverul) - listener pe hand pentru UI local + relay
+        players.getFirst().hand.addListener((ListChangeListener<Card>) change -> {
+            while (change.next()) {
+                if (change.wasRemoved()) {
+                    Card removedCard = change.getRemoved().getLast();
+                    Platform.runLater(gamePanelController::setHand);
+                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, 0));
+                    relay.send(NetworkMessage.cardPlayed(0, removedCard));
+                }
+            }
+        });
+        players.getFirst().myTurn.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> gamePanelController.setTurnLabel(0));
+            }
+        });
+
+        for (int i = 1; i < 4; i++) {
             Player player = players.get(i);
+
             player.hand.addListener((ListChangeListener<Card>) change -> {
                 while (change.next()) {
                     if (change.wasRemoved()) {
                         Card removedCard = change.getRemoved().getLast();
-                        System.out.println("Card removed from player " + (player.getId() + 1) + ": " + removedCard);
-                        Platform.runLater(() -> uiControllers.get(player.getId()).setHand());
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
                     }
                 }
             });
+
             player.myTurn.addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    relay.send (NetworkMessage.yourTurn(player.getId()));
-
-                    System.out.println("It's now player " + (player.getId() + 1) + "'s turn.");
-                    Platform.runLater(() -> {
-                       uiControllers.get(0).setTurnLabel(player.getId());
-                    });
+                    relay.send(NetworkMessage.yourTurn(player.getId()));
+                    Platform.runLater(() -> gamePanelController.setTurnLabel(player.getId()));
                 }
             });
         }
     }
 
-
-//    private int gameEnded = 0;
-//   if (gameEnded == 4){
-//        Platform.runLater(gamePanelController::clearPlayedCards);
-//        Platform.runLater(() -> gamePanelController.showHandTaker(player.getId()));
-//
-//        relay.send(NetworkMessage.handTaker(player.getId()));
-//        gameEnded = 0;
-//    }
-
-
-    private void addListenerPlayers (Player player, GamePanelController gamePanelController){
-        player.hand.addListener((ListChangeListener<Card>) change -> {
-            while (change.next()) {
-                if (change.wasRemoved()) {
-//                    gameEnded++;
-                    System.out.println("Card removed from player " + (player.getId() + 1) + ": " + change.getRemoved());
-
-                    Card removedCard = change.getRemoved().getLast();
-                    Platform.runLater(gamePanelController::setHand);
-                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
-                    relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
-                }
-            }
-        });
-        player.myTurn.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                System.out.println("It's now player " + (player.getId() + 1) + "'s turn.");
-                 Platform.runLater(() -> {
-                            gamePanelController.setTurnLabel(player.getId());
-                 });
-            }
-        });
-
-
-
-    }
-    private void createPlayer(GamePanel gamePanel, Stage stage, int id) throws Exception {
-        Player player = new Player(id);
+    private void createPlayer(GamePanel gamePanel, Stage stage) throws Exception {
+        Player player = new Player(0);
         players.add(player);
-        GamePanelController gamePanelController = gamePanel.start(stage, player);
-        uiControllers.add(gamePanelController);
+        gamePanelController = gamePanel.start(stage, player);
+    }
+
+    private List<Integer> getScores() {
+        List<Integer> scores = new ArrayList<>();
+        for (Player player: players) {
+            scores.add(player.getScore());
+        }
+        return scores;
     }
 }

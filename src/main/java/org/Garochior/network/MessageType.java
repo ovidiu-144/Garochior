@@ -5,7 +5,6 @@ public class MessageType {
 
     public static final String SET_HAND = "SET_HAND";
     public static final String YOUR_TURN = "YOUR_TURN";
-    public static final String PLAY_CARD = "PLAY_CARD";
 
     //clientul alege cartea, si o sa avem card_selected iar serverul trimite card_played catre toti ceilalti daca este buna, daca nu, trimite invalid_card catre clientul care a ales cartea
     public static final String CARD_SELECTED = "CARD_SELECTED";
@@ -15,7 +14,10 @@ public class MessageType {
     public static final String HAND_TAKER = "HAND_TAKER";
 
     public static final String GAME_START = "GAME_START";
+    public static final String GAME_END = "GAME_END";
     public static final String GAME_OVER = "GAME_OVER";
+
+
 
     //pentru conectarea clientilor
     public static final String ROOM_READY = "ROOM_READY";

@@ -76,14 +76,15 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String gameOver(List<Integer> scores) {
+    public static String gameEnd(List<Integer> scores) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.GAME_OVER);
+        obj.addProperty("type", MessageType.GAME_END);
         JsonArray arr = new JsonArray();
         for (int score : scores) arr.add(score);
         obj.add("scores", arr);
         return obj.toString();
     }
+
 
     public static String roomReady(int playerId) {
         JsonObject obj = new JsonObject();
