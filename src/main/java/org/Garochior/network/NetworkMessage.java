@@ -62,10 +62,9 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-
-    public static String handWinner(int playerId) {
+    public static String handTaker(int playerId) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.HAND_WINNER);
+        obj.addProperty("type", MessageType.HAND_TAKER);
         obj.addProperty("playerId", playerId);
         return obj.toString();
     }
@@ -86,22 +85,12 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String playCard(int playerId, int cardIndex) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.PLAY_CARD);
-        obj.addProperty("playerId", playerId);
-        obj.addProperty("cardIndex", cardIndex);
-        return obj.toString();
-    }
-
     public static String roomReady(int playerId) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.ROOM_READY);
         obj.addProperty("playerId", playerId);
         return obj.toString();
     }
-
-
 
     //PARSARE MESAJE
 

@@ -12,9 +12,12 @@ public class MessageType {
     public static final String CARD_PLAYED = "CARD_PLAYED";
     public static final String INVALID_CARD = "INVALID_CARD";
 
-    public static final String HAND_WINNER = "HAND_WINNER";
+    public static final String HAND_TAKER = "HAND_TAKER";
+
     public static final String GAME_START = "GAME_START";
     public static final String GAME_OVER = "GAME_OVER";
+
+    //pentru conectarea clientilor
     public static final String ROOM_READY = "ROOM_READY";
 
 //    public static final int NUMBER_OF_PLAYERS = 0;

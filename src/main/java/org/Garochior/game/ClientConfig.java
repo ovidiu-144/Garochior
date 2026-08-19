@@ -97,10 +97,11 @@ public class ClientConfig {
                 }
             }
 
-            case MessageType.HAND_WINNER -> {
+            case MessageType.HAND_TAKER -> {
                 int winnerId = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
                     uiController.showHandTaker(winnerId);
+                    uiController.clearPlayedCards();
                 });
             }
 

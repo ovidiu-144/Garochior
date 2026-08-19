@@ -12,11 +12,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ClientConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/game/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/logic/GameSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/MessageType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/NetworkMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/Garochior/network/RelayServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
