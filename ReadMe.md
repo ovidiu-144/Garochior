@@ -9,7 +9,7 @@
 ```powershell
 winget install EclipseAdoptium.Temurin.21.JDK
 ```
-Sau direct de pe [link](https://www.oracle.com/java/technologies/downloads/#java21)
+Sau direct de pe <a href="https://www.oracle.com/java/technologies/downloads/#java21" target="_blank">link</a>
 
 3. Închide și redeschide PowerShell
 4. Verifică: `java -version`
@@ -22,7 +22,9 @@ Sau direct de pe [link](https://www.oracle.com/java/technologies/downloads/#java
 ```powershell
 winget install Apache.Maven
 ```
-Sau direct de pe [link](https://maven.apache.org/download.cgi)
+
+Sau direct de pe <a href="https://maven.apache.org/download.cgi" target="_blank">link</a>
+
 2. Închide și redeschide PowerShell
 3. Verifică: `mvn -version`
 
