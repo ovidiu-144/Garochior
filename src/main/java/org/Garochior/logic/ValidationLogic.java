@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ValidationLogic implements GameLogic{
+
+    //callback pentru cartea selectata
+    private java.util.function.Consumer<Integer> onInvalidCard;
+
     public List<Card> selectedCards = new ArrayList<>();
     public boolean isOver = false;
     private int firstPlayer = 0;
     //ceva sa selectam cartile, pe care le adaugam in lista, ca sa stim ordinea lor, prima carte mereu fiind a jucatorului care a inceput tura
+
+    public void setOnInvalidCard(java.util.function.Consumer<Integer> callback) {
+        this.onInvalidCard = callback;
+    }
+
     @Override
     public void validateMove(Player player) {
         //avem lista de carti selectate, verificam daca sunt valide pentru jocul respectiv
@@ -49,6 +58,10 @@ public abstract class ValidationLogic implements GameLogic{
                         player.removeCardFromHand(card);
                         break;
                     }
+                    if (onInvalidCard != null) {
+                        onInvalidCard.accept(player.getId());
+                    }
+                    System.out.println("Player " + player.getId() + " selected invalid card: " + card + ", must follow suit: " + firstCard.getType());
                 }
             }
         }
