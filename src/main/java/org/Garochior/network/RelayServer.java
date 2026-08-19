@@ -9,15 +9,21 @@ public class RelayServer {
 
     static class GameRoom {
         String code;
+        ClientConnection host;
         List<ClientConnection> clients = new CopyOnWriteArrayList<>();
 
         GameRoom(String code) { this.code = code; }
 
-        void broadcast(String message) {
+        void sendToHost(String message) {
+            if (host != null) host.send(message);
+        }
+
+        void sendToClients(String message) {
             for (ClientConnection client : clients) {
                 client.send(message);
             }
         }
+
     }
 
     static class ClientConnection {
@@ -46,9 +52,20 @@ public class RelayServer {
 
                         if (line2.startsWith("CREATE:")) {
                             roomCode = line2.substring(7);
-                            rooms.put(roomCode, new GameRoom(roomCode));
-                            rooms.get(roomCode).clients.add(this);
-                            send("OK:CREATED:0");
+                            GameRoom room = rooms.get(roomCode);
+
+                            if (room != null) {
+                                send("ERROR:ROOM_ALREADY_EXISTS");
+                                roomCode = null;
+                                System.out.println("Room already exists: " + roomCode);
+                                continue;
+                            }
+
+                            GameRoom newRoom = new GameRoom(roomCode);
+                            newRoom.host = this;
+                            rooms.put(roomCode, newRoom);
+
+                            send("OK:CREATED:0"); // este player 0 pentru host
                             System.out.println("Room created: " + roomCode);
                         }
                         else if (line2.startsWith("JOIN:")) {
@@ -71,7 +88,12 @@ public class RelayServer {
                     GameRoom room = rooms.get(roomCode);
                     if (room != null) {
                         System.out.println("[" + roomCode + "] " + line);
-                        room.broadcast(line);
+                        //Clientii trimit doar la Server, iar Serverul trimite doar la clienti
+                        if (this == room.host) {
+                            room.sendToClients(line);
+                        } else {
+                            room.sendToHost(line);
+                        }
                     }
                 }
             } catch (IOException e) {

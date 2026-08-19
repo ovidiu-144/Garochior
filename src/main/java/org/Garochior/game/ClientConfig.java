@@ -43,7 +43,9 @@ public class ClientConfig {
     }
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
-        int type = NetworkMessage.getType(message);
+        System.out.println("Client received message: " + message);
+
+        String type = NetworkMessage.getType(message);
 
         switch (type) {
             case MessageType.SET_HAND -> {
@@ -63,9 +65,10 @@ public class ClientConfig {
                 int targetPlayer = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
                     uiController.setTurnLabel(targetPlayer);
-                    // Activează tura doar dacă e a noastră
+                    // Activează tura doar dacă e a noastra
                     if (targetPlayer == playerId) {
                         player.myTurn.set(true);
+                        waitForCardSelection();
                     }
                 });
             }
@@ -74,12 +77,24 @@ public class ClientConfig {
                 int fromPlayer = NetworkMessage.getPlayerId(message);
                 Card card = NetworkMessage.getCard(message);
                 Platform.runLater(() -> {
-                    uiController.setPlayedCards(card, fromPlayer);
-
                     if (fromPlayer == playerId) {
+                        player.hand.remove(card);
                         uiController.setHand();
+                        player.myTurn.set(false);
                     }
+                    uiController.setPlayedCards(card, fromPlayer);
                 });
+            }
+
+            case MessageType.INVALID_CARD -> {
+                int targetPlayer = NetworkMessage.getPlayerId(message);
+                if (targetPlayer == playerId) {
+                    // Serverul a respins cartea, selectează din nou
+                    Platform.runLater(() -> {
+                        uiController.setTurnLabel(playerId); //
+                    });
+                    waitForCardSelection();
+                }
             }
 
             case MessageType.HAND_WINNER -> {
@@ -105,27 +120,27 @@ public class ClientConfig {
                 });
             }
 
-            case MessageType.INVALID_CARD -> {
-                int targetPlayer = NetworkMessage.getPlayerId(message);
-                if (targetPlayer == playerId) {
-                    // Serverul a respins cartea, selectează din nou
-                    Platform.runLater(() -> {
-                        uiController.setTurnLabel(playerId); // "E tura ta" rămâne
-                    });
-                    // Repornește așteptarea — player.myTurn e încă true
-                    waitForCardSelection();
-                }
-            }
+
         }
 
     }
 
     private void waitForCardSelection() {
         new Thread(() -> {
-            Card selected = player.selectCard();
-            int index = player.hand.indexOf(selected);
-            relay.send(NetworkMessage.playCard(playerId, index));
-            player.myTurn.set(false);
+            // Așteaptă click de la user
+            synchronized (player.lockCardSelect) {
+                player.selectedCard = null;
+                while (player.selectedCard == null) {
+                    try {
+                        player.lockCardSelect.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // Trimite cartea la server — NU o scoate din mână
+            Card selected = player.selectedCard;
+            relay.send(NetworkMessage.cardSelected(playerId, selected));
         }).start();
     }
 }

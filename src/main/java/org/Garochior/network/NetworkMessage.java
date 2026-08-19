@@ -35,6 +35,16 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
+    /// Asta este trimis de client
+    public static String cardSelected(int playerId, Card card) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.CARD_SELECTED);
+        obj.addProperty("playerId", playerId);
+        obj.addProperty("number", card.getNumber());
+        obj.addProperty("cardType", card.getType().name());
+        return obj.toString();
+    }
+
     public static String cardPlayed(int playerId, Card card) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.CARD_PLAYED);
@@ -43,6 +53,15 @@ public final class NetworkMessage {
         obj.addProperty("cardType", card.getType().name());
         return obj.toString();
     }
+
+    ///Trimis de server catre clientul care a ales cartea gresita
+    public static String invalidCard(int playerId) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.INVALID_CARD);
+        obj.addProperty("playerId", playerId);
+        return obj.toString();
+    }
+
 
     public static String handWinner(int playerId) {
         JsonObject obj = new JsonObject();
@@ -82,12 +101,7 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String invalidCard(int playerId) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.INVALID_CARD);
-        obj.addProperty("playerId", playerId);
-        return obj.toString();
-    }
+
 
     //PARSARE MESAJE
 
@@ -95,8 +109,8 @@ public final class NetworkMessage {
         return JsonParser.parseString(message).getAsJsonObject();
     }
 
-    public static int getType(JsonObject obj) {
-        return obj.get("type").getAsInt();
+    public static String getType(JsonObject obj) {
+        return obj.get("type").getAsString();
     }
 
     public static int getPlayerId(JsonObject obj) {
@@ -117,9 +131,6 @@ public final class NetworkMessage {
         return new Card(number, type);
     }
 
-//    public static int getNumberOfPlayers(JsonObject obj) {
-//        return obj.get("number").getAsInt();
-//    }
 
     public static List<Card> getCards(JsonObject obj) {
         List<Card> cards = new ArrayList<>();

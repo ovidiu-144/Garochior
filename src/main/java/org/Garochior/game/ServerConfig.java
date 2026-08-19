@@ -11,10 +11,7 @@ import org.Garochior.network.MessageType;
 import org.Garochior.network.NetworkMessage;
 import org.Garochior.network.RelayConnection;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class ServerConfig {
     private List<GamePanelController> uiControllers;
@@ -56,9 +53,12 @@ public class ServerConfig {
     }
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
-        int type = NetworkMessage.getType(message);
+        System.out.println("Server received message: " + message);
 
-        if (type == MessageType.ROOM_READY) {
+
+        String type = NetworkMessage.getType(message);
+
+        if (Objects.equals(type, MessageType.ROOM_READY)) {
             connectedClients++;
             int playerId = NetworkMessage.getPlayerId(message);
             System.out.println("Player " + (playerId + 1) + " connected.");
@@ -77,12 +77,19 @@ public class ServerConfig {
             }
         }
 
-        if (type == MessageType.PLAY_CARD){
+        if (Objects.equals(type, MessageType.CARD_SELECTED)){
             int playerId = NetworkMessage.getPlayerId(message);
-            int cardIndex = NetworkMessage.getCardIndex(message);
-            System.out.println("Player " + (playerId + 1) + " played card index: " + cardIndex);
 
-            players.get(playerId).setSelectedCard(cardIndex);
+            Card selectedCard = NetworkMessage.getCard(message);
+
+            int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
+
+            if (cardIndex != - 1) {
+                System.out.println("Card found in hand: " + selectedCard);
+                players.get(playerId).setSelectedCard(cardIndex);
+            } else {
+                System.out.println("Card not found in hand: " + selectedCard);
+            }
         }
     }
 

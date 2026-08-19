@@ -42,8 +42,8 @@ public class RelayConnection {
         int playerId = Integer.parseInt(response.split(":")[2]);
         System.out.println("Relay confirmation: " + response);
         // Pornește listener-ul abia după confirmare
-        new Thread(this::listenLoop).start();
 
+        new Thread(this::listenLoop).start();
         return playerId;
     }
 

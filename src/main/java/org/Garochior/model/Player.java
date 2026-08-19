@@ -15,7 +15,7 @@ public class Player {
     public ObservableList<Card> hand;
 
     private int score;
-    private Card selectedCard;
+    public Card selectedCard;
     public BooleanProperty myTurn;
 
     public final Object lockCardSelect = new Object();

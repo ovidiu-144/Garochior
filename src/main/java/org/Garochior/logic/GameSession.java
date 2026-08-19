@@ -65,11 +65,11 @@ public class GameSession {
                     }
                 }
                 
-                try {
-                    Thread.sleep(3000); // Pauza de 3 secunde
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+//                try {
+//                    Thread.sleep(3000); // Pauza de 3 secunde
+//                } catch (InterruptedException e) {
+//                    Thread.currentThread().interrupt();
+//                }
 
                 if (game.isOver()){
 
