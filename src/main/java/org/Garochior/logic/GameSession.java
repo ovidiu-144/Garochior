@@ -42,7 +42,7 @@ public class GameSession {
         }
     }
     public void startGame(Runnable onFinish){
-        new Thread(() -> {
+        Thread gameThread = new Thread(() -> {
         //aici alt thread
             while (currentRound < 8){
                 System.out.println("Round " + (currentRound + 1));
@@ -83,7 +83,9 @@ public class GameSession {
             }
 
 
-        }).start();
+        });
+        gameThread.setDaemon(true);
+        gameThread.start();
     }
 
 }

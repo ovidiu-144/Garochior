@@ -10,6 +10,12 @@ public class RelayConnection {
     private PrintWriter out;
     private BufferedReader in;
     private MessageListener listener;
+    private int player;
+
+
+    public void setPlayer(int player) {
+        this.player = player;
+    }
 
     public interface MessageListener {
         void onMessage(JsonObject message);
@@ -32,6 +38,11 @@ public class RelayConnection {
         socket = new Socket(NetworkConfig.RELAY_IP, NetworkConfig.RELAY_PORT);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Se închide aplicatia, deconectare de la relay...");
+            disconnect();
+        }));
     }
 
     private int waitForConfirmation() throws IOException {
@@ -43,7 +54,10 @@ public class RelayConnection {
         System.out.println("Relay confirmation: " + response);
         // Pornește listener-ul abia după confirmare
 
-        new Thread(this::listenLoop).start();
+        Thread listenerThread = new Thread(this::listenLoop);
+        listenerThread.setDaemon(true);
+        listenerThread.start();
+
         return playerId;
     }
 
@@ -51,12 +65,20 @@ public class RelayConnection {
         try {
             String line;
             while ((line = in.readLine()) != null) {
+                if (line.startsWith("{\"type\":\"PING\"")) {
+                    out.println("{\"type\":\"PING2\",\"Player\":" + player + "}");
+                    continue;
+                }
                 if (listener != null) {
                     listener.onMessage(NetworkMessage.parse(line));
                 }
             }
         } catch (IOException e) {
-            System.out.println("Conexiunea la relay s-a închis.");
+            System.out.println("Eroare la citire: " + e.getMessage());
+        }
+        finally {
+            System.out.println("Conexiunea la relay s-a inchis.");
+            disconnect();
         }
     }
 
@@ -72,7 +94,11 @@ public class RelayConnection {
 
     public void disconnect() {
         try {
-            if (socket != null) socket.close();
+            if (out != null) out.close();
+            if (in != null) in.close();
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

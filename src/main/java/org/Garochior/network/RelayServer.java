@@ -11,8 +11,50 @@ public class RelayServer {
         String code;
         ClientConnection host;
         List<ClientConnection> clients = new CopyOnWriteArrayList<>();
+        volatile boolean active = true;
 
-        GameRoom(String code) { this.code = code; }
+        GameRoom(String code) {
+            this.code = code;
+            startHeartbeat();
+        }
+
+        void stop() {
+            active = false;
+        }
+
+        private void startHeartbeat() {
+            new Thread(() -> {
+                while (active) {
+                    try {
+                        Thread.sleep(5000); // ping la fiecare 5 secunde
+                        if (!active) break;
+                        if (host != null) {
+                            if (!host.pingReceived) {
+                                System.out.println("Host timeout, closing connection.");
+                                host.socket.close();
+                            } else {
+                                host.pingReceived = false;
+                                long timestamp = System.currentTimeMillis();
+                                host.send("{\"type\":\"PING\",\"ts\":" + timestamp + "}");
+                            }
+
+                        }
+                        for (ClientConnection client : clients) {
+                            if (!client.pingReceived) {
+                                System.out.println("Client timeout, closing connection.");
+                                client.socket.close();
+                            } else {
+                                client.pingReceived = false;
+                                long timestamp = System.currentTimeMillis();
+                                client.send("{\"type\":\"PING\",\"ts\":" + timestamp + "}");
+                            }
+                        }
+                    } catch (InterruptedException | IOException e) {
+                        break;
+                    }
+                }
+            }).start();
+        }
 
         void sendToHost(String message) {
             if (host != null) host.send(message);
@@ -30,6 +72,9 @@ public class RelayServer {
         Socket socket;
         PrintWriter out;
         String roomCode;
+
+        public volatile boolean pingReceived = true;
+
 
         ClientConnection(Socket socket) throws IOException {
             this.socket = socket;
@@ -86,8 +131,13 @@ public class RelayServer {
                     }
 
                     GameRoom room = rooms.get(roomCode);
+
                     if (room != null) {
                         System.out.println("[" + roomCode + "] " + line);
+                        if (line.startsWith("{\"type\":\"PING2\"")) {
+                            pingReceived = true;
+                            continue;
+                        }
                         //Clientii trimit doar la Server, iar Serverul trimite doar la clienti
                         if (this == room.host) {
                             room.sendToClients(line);
@@ -101,7 +151,21 @@ public class RelayServer {
             } finally {
                 if (roomCode != null) {
                     GameRoom room = rooms.get(roomCode);
-                    if (room != null) room.clients.remove(this);
+                    if (room != null) {
+                        if (this == room.host) {
+                            // Host disconnected, remove the room
+                            room.sendToClients("{\"type\":\"HOST_DISCONNECTED\"}");
+                            room.stop();
+                            rooms.remove(roomCode);
+                            System.out.println("Host disconnected, room removed: " + roomCode);
+                        } else {
+                            // Client disconnected, remove from clients list
+                            room.sendToHost("{\"type\":\"CLIENT_DISCONNECTED\"}");
+//                            room.sendToClients("{\"type\":\"CLIENT_DISCONNECTED\"}");
+                            room.clients.remove(this);
+                            System.out.println("Client disconnected from room: " + roomCode);
+                        }
+                    }
                 }
             }
         }

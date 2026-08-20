@@ -1,6 +1,7 @@
 package org.Garochior.game;
 
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
 import org.Garochior.logic.*;
@@ -22,6 +23,7 @@ public class ClientConfig {
 
         relay = new RelayConnection();
         this.playerId = relay.connectAsClient(roomCode);
+        relay.setPlayer(playerId);
         System.out.println("Client conectat la relay ca player " + (playerId + 1));
 
         player = new Player(playerId);
@@ -120,11 +122,24 @@ public class ClientConfig {
                     System.out.println("Joc terminat! Scoruri: " + scores);
                 });
             }
+
+            case MessageType.HOST_DISCONNECTED -> {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Conexiune pierdută");
+                    alert.setHeaderText("Host-ul s-a deconectat");
+                    alert.setContentText("Jocul s-a încheiat.");
+                    alert.showAndWait();
+
+
+
+                });
+            }
         }
     }
 
     private void waitForCardSelection() {
-        new Thread(() -> {
+        Thread waitThread = new Thread(() -> {
             // Așteaptă click de la user
             synchronized (player.lockCardSelect) {
                 player.selectedCard = null;
@@ -139,6 +154,9 @@ public class ClientConfig {
             // Trimite cartea la server — NU o scoate din mână
             Card selected = player.selectedCard;
             relay.send(NetworkMessage.cardSelected(playerId, selected));
-        }).start();
+        });
+        waitThread.setDaemon(true);
+        waitThread.start();
+
     }
 }

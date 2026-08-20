@@ -2,6 +2,7 @@ package org.Garochior.game;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
 import org.Garochior.logic.*;
@@ -50,6 +51,8 @@ public class ServerConfig {
         relay = new RelayConnection();
         relay.connectAsHost(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
+
+        relay.setPlayer(0);
     }
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
@@ -58,36 +61,53 @@ public class ServerConfig {
 
         String type = NetworkMessage.getType(message);
 
-        if (Objects.equals(type, MessageType.ROOM_READY)) {
-            connectedClients++;
-            int playerId = NetworkMessage.getPlayerId(message);
-            System.out.println("Player " + (playerId + 1) + " connected.");
+        switch (type){
+            case MessageType.ROOM_READY -> {
+                connectedClients++;
+                int playerId = NetworkMessage.getPlayerId(message);
+                System.out.println("Player " + (playerId + 1) + " connected.");
 
-            if (connectedClients == 3) {
-                System.out.println("All players connected. Starting game.");
-                Platform.runLater(() -> {
-                    try {
-                        startGameType();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+                System.out.println("Connected clients: " + connectedClients);
+
+                if (connectedClients == 3) {
+                    System.out.println("All players connected. Starting game.");
+                    Platform.runLater(() -> {
+                        try {
+                            startGameType();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
             }
-        }
 
-        if (Objects.equals(type, MessageType.CARD_SELECTED)){
-            int playerId = NetworkMessage.getPlayerId(message);
+            case MessageType.CARD_SELECTED -> {
+                int playerId = NetworkMessage.getPlayerId(message);
 
-            Card selectedCard = NetworkMessage.getCard(message);
+                Card selectedCard = NetworkMessage.getCard(message);
 
-            int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
+                int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
 
-            if (cardIndex != - 1) {
-                System.out.println("Card found in hand: " + selectedCard);
-                players.get(playerId).setSelectedCard(cardIndex);
-                gamePanelController.setPlayedCards(selectedCard, playerId);
-            } else {
-                System.out.println("Card not found in hand: " + selectedCard);
+                if (cardIndex != - 1) {
+                    System.out.println("Card found in hand: " + selectedCard);
+                    players.get(playerId).setSelectedCard(cardIndex);
+                    gamePanelController.setPlayedCards(selectedCard, playerId);
+                } else {
+                    System.out.println("Card not found in hand: " + selectedCard);
+                }
+            }
+
+            case MessageType.CLIENT_DISCONNECTED -> {
+                //int playerId = NetworkMessage.getPlayerId(message);
+                int playerId = 10;
+                System.out.println("Player " + (playerId + 1) + " disconnected.");
+                // Handle player disconnection logic here
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Jucător deconectat");
+                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat. Jocul se va încheia.");
+                    alert.show();
+                });
             }
         }
     }
@@ -128,12 +148,6 @@ public class ServerConfig {
         });
 
         gameSession = new GameSession(players, game);
-
-//        gameSession.firstPlayer.addListener((observable, oldValue, newValue) -> {
-//            Platform.runLater(gamePanelController::clearPlayedCards);
-//            Platform.runLater(() -> gamePanelController.showHandTaker(gameSession.firstPlayer.get()));
-//            relay.send(NetworkMessage.handTaker(gameSession.firstPlayer.get()));
-//        });
 
         gameSession.setOnHandTaken(playerId -> {
             Platform.runLater(gamePanelController::clearPlayedCards);
