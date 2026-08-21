@@ -9,7 +9,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GameScene {
-
     public void start (Stage stage) throws Exception {
         Screen screen = Screen.getPrimary();
         double screenWidth = screen.getVisualBounds().getWidth();

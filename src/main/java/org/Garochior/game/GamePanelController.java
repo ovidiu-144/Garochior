@@ -1,6 +1,7 @@
 package org.Garochior.game;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -21,11 +22,18 @@ public class GamePanelController {
     public HBox centerHBox;
     public Label turnLabel;
     public Label gameLabel;
+    public VBox pauseMenu;
     private Player player;
 
 
     public ImageView background;
     public HBox player1Box;
+
+    private Runnable onDisconnect;
+
+    public void setOnDisconnect(Runnable callback) {
+        this.onDisconnect = callback;
+    }
 
     public void setPlayer (Player player){
         this.player = player;
@@ -38,6 +46,18 @@ public class GamePanelController {
         setBackCards(player1Box);
         setBackCards(centerVBox);
         setBackCards(centerHBox);
+
+        Platform.runLater(() -> {
+            pauseMenu.getScene().setOnKeyPressed(event -> {
+                if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                    if (!pauseMenu.isVisible()) {
+                        onEscClicked(new ActionEvent());
+                    } else {
+                        onResumeClicked(new ActionEvent());
+                    }
+                }
+            });
+        });
     }
 
     private ImageView createImage (){
@@ -143,6 +163,24 @@ public class GamePanelController {
         Platform.runLater(() -> {
             turnLabel.setText(">>> Player " + (playerWinnerId + 1) + " took the hand! <<<");
         });
+    }
+
+    @FXML
+    public void onEscClicked(ActionEvent actionEvent) {
+        pauseMenu.setVisible(true);
+    }
+
+    @FXML
+    public void onResumeClicked(ActionEvent actionEvent) {
+        pauseMenu.setVisible(false);
+    }
+
+    @FXML
+    public void onDisconnectClicked(ActionEvent actionEvent) {
+        pauseMenu.setVisible(false);
+        if (onDisconnect != null) {
+            onDisconnect.run();
+        }
     }
 }
 

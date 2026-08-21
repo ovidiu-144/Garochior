@@ -4,8 +4,14 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.Label?>
+
+<?import javafx.scene.control.Button?>
+
+
+
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.Garochior.game.GamePanelController">
+
     <ImageView fx:id="background" fitHeight="1207.0" fitWidth="1920.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0"
                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <image>
@@ -39,4 +45,28 @@
         </HBox>
         <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
     </VBox>
+
+
+    <Button text="ESC" onAction="#onEscClicked"
+            AnchorPane.topAnchor="30.0" AnchorPane.rightAnchor="30.0"
+            style="-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white;
+                   -fx-font-size: 18px; -fx-padding: 8 20 8 20; -fx-background-radius: 10;" />
+
+    <!-- Pause Menu Overlay -->
+    <VBox fx:id="pauseMenu" visible="false" alignment="CENTER" spacing="20"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          style="-fx-background-color: rgba(0,0,0,0.7);">
+        <Label text="Meniu"
+               style="-fx-font-size: 48px; -fx-text-fill: white; -fx-font-weight: bold;" />
+        <Button text="Continuă" onAction="#onResumeClicked"
+                prefWidth="250" prefHeight="60"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;
+                       -fx-font-size: 20px; -fx-background-radius: 10;" />
+        <Button text="Deconectare" onAction="#onDisconnectClicked"
+                prefWidth="250" prefHeight="60"
+                style="-fx-background-color: #f44336; -fx-text-fill: white;
+                       -fx-font-size: 20px; -fx-background-radius: 10;" />
+    </VBox>
+
 </AnchorPane>

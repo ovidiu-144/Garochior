@@ -22,6 +22,8 @@ public class ServerConfig {
     private RelayConnection relay;
     private GameSession gameSession;
 
+    private GamePanel gamePanel;
+
 
     private int connectedClients = 0;
 
@@ -33,7 +35,7 @@ public class ServerConfig {
     public void initGame (Stage serverStage, String roomCode) throws Exception {
         Assets.init();
 
-        GamePanel gamePanel = new GamePanel();
+        gamePanel = new GamePanel();
         //Player1 este serverul
 
         createPlayer(gamePanel, serverStage);
@@ -51,8 +53,14 @@ public class ServerConfig {
         relay = new RelayConnection();
         relay.connectAsHost(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
-
         relay.setPlayer(0);
+
+        //listener pentru deconectare
+        relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
+            disconnect();
+            relay.isDisconnected.set(false);
+        });
+
     }
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
@@ -207,12 +215,15 @@ public class ServerConfig {
                 }
             });
         }
+
     }
 
     private void createPlayer(GamePanel gamePanel, Stage stage) throws Exception {
         Player player = new Player(0);
         players.add(player);
         gamePanelController = gamePanel.start(stage, player);
+
+        gamePanelController.setOnDisconnect(this::disconnect);
     }
 
     private List<Integer> getScores() {
@@ -221,5 +232,15 @@ public class ServerConfig {
             scores.add(player.getScore());
         }
         return scores;
+    }
+
+    private void disconnect() {
+        try {
+            players.clear();
+            gamesQueue.clear();
+            gamePanel.returnToMainMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

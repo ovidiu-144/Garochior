@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
-import org.Garochior.logic.*;
 import org.Garochior.model.Card;
 import org.Garochior.model.Player;
 import org.Garochior.network.MessageType;
@@ -14,9 +13,11 @@ import java.util.List;
 
 public class ClientConfig {
     private Player player;
-    private GamePanelController uiController;
+    private GamePanelController gamePanelController;
     private RelayConnection relay;
     private int playerId;
+
+    private GamePanel gamePanel;
 
     public void initGame (Stage Stage, String roomCode) throws Exception {
         Assets.init();
@@ -27,8 +28,10 @@ public class ClientConfig {
         System.out.println("Client conectat la relay ca player " + (playerId + 1));
 
         player = new Player(playerId);
-        GamePanel gamePanel = new GamePanel();
-        uiController = gamePanel.start(Stage, player);
+        gamePanel = new GamePanel();
+
+        gamePanelController = gamePanel.start(Stage, player);
+        gamePanelController.setOnDisconnect(this::disconnect);
 
         player.myTurn.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -41,6 +44,12 @@ public class ClientConfig {
 
         //s-a conectat
         relay.send (NetworkMessage.roomReady(playerId));
+
+        relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
+           disconnect();
+           relay.isDisconnected.set(false);
+        });
+
         System.out.println("Client conectat la relay ca player " + (playerId + 1));
     }
 
@@ -58,7 +67,7 @@ public class ClientConfig {
                     List<Card> cards = NetworkMessage.getCards(message);
                     Platform.runLater(() -> {
                         player.hand.setAll(cards);
-                        uiController.setHand();
+                        gamePanelController.setHand();
                     });
                 }
             }
@@ -66,7 +75,7 @@ public class ClientConfig {
             case MessageType.YOUR_TURN -> {
                 int targetPlayer = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
-                    uiController.setTurnLabel(targetPlayer);
+                    gamePanelController.setTurnLabel(targetPlayer);
                     // Activează tura doar dacă e a noastra
                     if (targetPlayer == playerId) {
                         player.myTurn.set(true);
@@ -81,10 +90,10 @@ public class ClientConfig {
                 Platform.runLater(() -> {
                     if (fromPlayer == playerId) {
                         player.hand.remove(card);
-                        uiController.setHand();
+                        gamePanelController.setHand();
                         player.myTurn.set(false);
                     }
-                    uiController.setPlayedCards(card, fromPlayer);
+                    gamePanelController.setPlayedCards(card, fromPlayer);
                 });
             }
 
@@ -93,7 +102,7 @@ public class ClientConfig {
                 if (targetPlayer == playerId) {
                     // Serverul a respins cartea, selectează din nou
                     Platform.runLater(() -> {
-                        uiController.setTurnLabel(playerId); //
+                        gamePanelController.setTurnLabel(playerId); //
                     });
                     waitForCardSelection();
                 }
@@ -102,16 +111,16 @@ public class ClientConfig {
             case MessageType.HAND_TAKER -> {
                 int winnerId = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
-                    uiController.showHandTaker(winnerId);
-                    uiController.clearPlayedCards();
+                    gamePanelController.showHandTaker(winnerId);
+                    gamePanelController.clearPlayedCards();
                 });
             }
 
             case MessageType.GAME_START -> {
                 String gameName = NetworkMessage.getGameName(message);
                 Platform.runLater(() -> {
-                    uiController.setGameLabel(gameName);
-                    uiController.clearPlayedCards();
+                    gamePanelController.setGameLabel(gameName);
+                    gamePanelController.clearPlayedCards();
                 });
             }
 
@@ -131,7 +140,7 @@ public class ClientConfig {
                     alert.setContentText("Jocul s-a încheiat.");
                     alert.showAndWait();
 
-
+                    disconnect();
 
                 });
             }
@@ -157,6 +166,14 @@ public class ClientConfig {
         });
         waitThread.setDaemon(true);
         waitThread.start();
-
     }
+
+    private void disconnect() {
+        try {
+            gamePanel.returnToMainMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

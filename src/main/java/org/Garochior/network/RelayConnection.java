@@ -1,6 +1,7 @@
 package org.Garochior.network;
 
 import com.google.gson.JsonObject;
+import javafx.beans.property.BooleanProperty;
 
 import java.io.*;
 import java.net.*;
@@ -11,6 +12,8 @@ public class RelayConnection {
     private BufferedReader in;
     private MessageListener listener;
     private int player;
+
+    public BooleanProperty isDisconnected = new javafx.beans.property.SimpleBooleanProperty(false);
 
 
     public void setPlayer(int player) {
@@ -101,6 +104,8 @@ public class RelayConnection {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            isDisconnected.set(true);
         }
     }
 }
