@@ -57,8 +57,10 @@ public class ServerConfig {
 
         //listener pentru deconectare
         relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
-            disconnect();
-            relay.isDisconnected.set(false);
+            if (newValue) {
+                disconnect();
+                //relay.isDisconnected.set(false);
+            }
         });
 
     }
@@ -235,12 +237,15 @@ public class ServerConfig {
     }
 
     private void disconnect() {
-        try {
-            players.clear();
-            gamesQueue.clear();
-            gamePanel.returnToMainMenu();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(() -> {
+            try {
+                relay.disconnect();
+                players.clear();
+                gamesQueue.clear();
+                gamePanel.returnToMainMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

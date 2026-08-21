@@ -46,8 +46,9 @@ public class ClientConfig {
         relay.send (NetworkMessage.roomReady(playerId));
 
         relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
-           disconnect();
-           relay.isDisconnected.set(false);
+            if (newValue) {
+                disconnect();
+            }
         });
 
         System.out.println("Client conectat la relay ca player " + (playerId + 1));
@@ -169,11 +170,14 @@ public class ClientConfig {
     }
 
     private void disconnect() {
-        try {
-            gamePanel.returnToMainMenu();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Platform.runLater(() -> {
+            try {
+                relay.disconnect();
+                gamePanel.returnToMainMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }
