@@ -6,11 +6,11 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class RelayServer {
-
     static class GameRoom {
         String code;
         ClientConnection host;
-        List<ClientConnection> clients = new CopyOnWriteArrayList<>();
+        //List<ClientConnection> clients = new CopyOnWriteArrayList<>();
+        ClientConnection[] clients = new ClientConnection[3];
         volatile boolean active = true;
 
         GameRoom(String code) {
@@ -40,6 +40,7 @@ public class RelayServer {
 
                         }
                         for (ClientConnection client : clients) {
+                            if (client == null) continue;
                             if (!client.pingReceived) {
                                 System.out.println("Client timeout, closing connection.");
                                 client.socket.close();
@@ -62,10 +63,56 @@ public class RelayServer {
 
         void sendToClients(String message) {
             for (ClientConnection client : clients) {
+                if (client == null) continue;
                 client.send(message);
             }
         }
 
+        public synchronized int addClient (ClientConnection client) {
+            for (int i = 0; i < 3; i++) {
+                if (clients[i] == null) {
+                    clients[i] = client;
+                    return i + 1; // 0 este host ul
+                }
+            }
+            return -1;
+        }
+
+        public synchronized void removeClient(ClientConnection client) {
+            for (int i = 0; i < 3; i++) {
+                if (clients[i] == client) {
+                    clients[i] = null;
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public static String getPlayers(GameRoom room) {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("OK:PLAYERS:");
+
+        if (room == null){
+            builder.append("0,0,0,0");
+            return builder.toString();
+        }
+
+        builder.append("1,"); //hostul este mereu prezent
+
+        for (int i = 0; i < 3; i++) {
+            if (room.clients[i] == null) {
+                builder.append("0"); // este liber locul
+            } else {
+                builder.append("1"); // este ocupat locul
+            }
+            if (i < 2) {
+                builder.append(",");
+            }
+        }
+//            builder.append("]}");
+        return builder.toString();
     }
 
     static class ClientConnection {
@@ -100,7 +147,7 @@ public class RelayServer {
                             GameRoom room = rooms.get(roomCode);
 
                             if (room != null) {
-                                send("ERROR:ROOM_ALREADY_EXISTS");
+                                send("{\"type\":\"ROOM_EXISTS\"}");
                                 roomCode = null;
                                 System.out.println("Room already exists: " + roomCode);
                                 continue;
@@ -113,16 +160,21 @@ public class RelayServer {
                             send("OK:CREATED:0"); // este player 0 pentru host
                             System.out.println("Room created: " + roomCode);
                         }
+                        else if (line2.startsWith("GET_PLAYERS:")) {
+                            roomCode = line2.substring(12);
+                            GameRoom room = rooms.get(roomCode);
+                            send(getPlayers(room));
+                            System.out.println("Sent players info for room: " + roomCode);
+                        }
                         else if (line2.startsWith("JOIN:")) {
                             roomCode = line2.substring(5);
                             GameRoom room = rooms.get(roomCode);
                             if (room == null) {
-                                send("ERROR:ROOM_NOT_FOUND");
+                                send("{\"type\":\"ROOM_NOT_FOUND\"}");
                                 roomCode = null;
                                 System.out.println("Room not found: " + roomCode);
                             } else {
-                                room.clients.add(this);
-                                int playerId = room.clients.size();
+                                int playerId = room.addClient(this);
                                 send("OK:JOINED:" + playerId);
                                 System.out.println("Client joined room: " + roomCode);
                             }
@@ -132,12 +184,13 @@ public class RelayServer {
 
                     GameRoom room = rooms.get(roomCode);
 
+                    //partea de heartbeat, daca nu primeste ping2 de la client, il inchide
                     if (room != null) {
-                        System.out.println("[" + roomCode + "] " + line);
                         if (line.startsWith("{\"type\":\"PING2\"")) {
                             pingReceived = true;
                             continue;
                         }
+                        System.out.println("[" + roomCode + "] " + line);
                         //Clientii trimit doar la Server, iar Serverul trimite doar la clienti
                         if (this == room.host) {
                             room.sendToClients(line);
@@ -162,7 +215,7 @@ public class RelayServer {
                             // Client disconnected, remove from clients list
                             room.sendToHost("{\"type\":\"CLIENT_DISCONNECTED\"}");
 //                            room.sendToClients("{\"type\":\"CLIENT_DISCONNECTED\"}");
-                            room.clients.remove(this);
+                            room.removeClient(this);
                             System.out.println("Client disconnected from room: " + roomCode);
                         }
                     }

@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 
 public class RelayConnection {
@@ -33,10 +34,33 @@ public class RelayConnection {
 
     public int connectAsClient(String roomCode) throws IOException {
         connect();
+//        out.println("GET_PLAYERS:" + roomCode); //doar pentru test ase
+//        waitForConfirmation();
+
         out.println("JOIN:" + roomCode);
-        return waitForConfirmation();
+        String playerIdStr = waitForConfirmation();
+
+        return Integer.parseInt(playerIdStr);
     }
 
+    public int[] connectForPlayers(String roomCode) throws IOException {
+        connect();
+        out.println("GET_PLAYERS:" + roomCode);
+
+        String response = in.readLine();
+        socket.close();
+
+        // "1,1,0,0" → [1, 1, 0, 0]
+        String playersIds = response.split(":")[2];
+        String[] parts = playersIds.split(",");
+
+
+        int[] players = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            players[i] = Integer.parseInt(parts[i].trim());
+        }
+        return players;
+    }
 
     private void connect() throws IOException {
         socket = new Socket(NetworkConfig.RELAY_IP, NetworkConfig.RELAY_PORT);
@@ -49,20 +73,27 @@ public class RelayConnection {
         }));
     }
 
-    private int waitForConfirmation() throws IOException {
+    private String waitForConfirmation() throws IOException {
         String response = in.readLine();
+        System.out.println(response);
+
         if (response.startsWith("ERROR")) {
             throw new IOException("Relay error: " + response);
         }
-        int playerId = Integer.parseInt(response.split(":")[2]);
-        System.out.println("Relay confirmation: " + response);
-        // Pornește listener-ul abia după confirmare
+        if (response.startsWith("OK")) {
+            String playerIdStr = response.split(":")[2];
+            //int playerId = Integer.parseInt(response.split(":")[2]);
 
-        Thread listenerThread = new Thread(this::listenLoop);
-        listenerThread.setDaemon(true);
-        listenerThread.start();
+            System.out.println("Relay confirmation: " + response);
+            // Pornește listener-ul abia după confirmare
 
-        return playerId;
+            Thread listenerThread = new Thread(this::listenLoop);
+            listenerThread.setDaemon(true);
+            listenerThread.start();
+
+            return playerIdStr;
+        }
+        return "0";
     }
 
     private void listenLoop() {

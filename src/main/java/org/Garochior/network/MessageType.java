@@ -21,6 +21,8 @@ public class MessageType {
     public static final String HOST_DISCONNECTED = "HOST_DISCONNECTED";
     public static final String CLIENT_DISCONNECTED = "CLIENT_DISCONNECTED";
 
+    public static final String ROOM_FOUND = "ROOM_FOUND";
+    public static final String ROOM_NOT_FOUND = "ROOM_NOT_FOUND";
 
     //pentru conectarea clientilor
     public static final String ROOM_READY = "ROOM_READY";

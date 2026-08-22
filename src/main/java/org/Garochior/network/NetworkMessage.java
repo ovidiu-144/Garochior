@@ -115,6 +115,10 @@ public final class NetworkMessage {
         return obj.get("gameName").getAsString();
     }
 
+    public static String getRoomPlayers (JsonObject obj) {
+        return obj.get("players").getAsString();
+    }
+
     public static Card getCard(JsonObject obj) {
         int number = obj.get("number").getAsInt();
         CardType type = CardType.valueOf(obj.get("cardType").getAsString());

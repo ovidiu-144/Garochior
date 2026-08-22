@@ -9,6 +9,8 @@ import org.Garochior.model.Player;
 import org.Garochior.network.MessageType;
 import org.Garochior.network.NetworkMessage;
 import org.Garochior.network.RelayConnection;
+
+import java.io.IOException;
 import java.util.List;
 
 public class ClientConfig {
@@ -144,6 +146,18 @@ public class ClientConfig {
                     disconnect();
 
                 });
+            }
+
+            case MessageType.ROOM_FOUND -> {
+//                Platform.runLater(() -> {
+//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                    alert.setTitle("Room Found");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Room found successfully.");
+//                    alert.showAndWait();
+//                });
+                String players = NetworkMessage.getRoomPlayers(message);
+                System.out.println("Room found with players: " + players);
             }
         }
     }
