@@ -29,6 +29,9 @@ public class ServerConfig {
     private boolean started = false;
 
     private int currentPlayer = 0;
+    private List<PlayedCard> currentPlayedCards = new ArrayList<>();
+
+    record PlayedCard(int playerId, Card card) {}
 
     public ServerConfig() {
         this.players = new ArrayList<>();
@@ -145,8 +148,13 @@ public class ServerConfig {
         //TODO:
         // ii trimitem scorul
 
-        //TODO:
+
         // ii trimitem cartile jucate in runda curenta
+        for (PlayedCard currentPlayedCard : currentPlayedCards) {
+            int playerIdPlayed = currentPlayedCard.playerId;
+            Card cardPlayed = currentPlayedCard.card;
+            relay.send(NetworkMessage.cardPlayed(playerIdPlayed, cardPlayed));
+        }
     }
 
     private void initGamesQueue (){
@@ -208,39 +216,38 @@ public class ServerConfig {
 
     private void setupListeners() {
         // Player 0 (serverul) - listener pe hand pentru UI local + relay
-        players.getFirst().hand.addListener((ListChangeListener<Card>) change -> {
-            while (change.next()) {
-                if (change.wasRemoved()) {
-                    Card removedCard = change.getRemoved().getLast();
-                    Platform.runLater(gamePanelController::setHand);
-                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, 0));
-                    relay.send(NetworkMessage.cardPlayed(0, removedCard));
-                }
-            }
-        });
-        players.getFirst().myTurn.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> gamePanelController.setTurnLabel(0));
-            }
-        });
-
-        for (int i = 1; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             Player player = players.get(i);
+            boolean isHost = (i == 0); // Player 0 is the host
 
             player.hand.addListener((ListChangeListener<Card>) change -> {
                 while (change.next()) {
                     if (change.wasRemoved()) {
                         Card removedCard = change.getRemoved().getLast();
+                        currentPlayedCards.add(new PlayedCard(player.getId(), removedCard));
+                        if (currentPlayedCards.size() == 4) {
+                            currentPlayedCards.clear();
+                        }
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
+
+                        //e host ul
+                        if (isHost) {
+                            Platform.runLater(gamePanelController::setHand);
+                            Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
+                        }
                     }
                 }
             });
 
             player.myTurn.addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    relay.send(NetworkMessage.yourTurn(player.getId()));
-                    Platform.runLater(() -> gamePanelController.setTurnLabel(player.getId()));
                     currentPlayer = player.getId();
+                    System.out.println("myTurn changed for player: " + player.getId() + " isHost: " + isHost);
+                    Platform.runLater(() -> {
+                        System.out.println("Updating turnLabel for player: " + player.getId());
+                        gamePanelController.setTurnLabel(player.getId());
+                    });
+                    relay.send(NetworkMessage.yourTurn(player.getId()));
                 }
             });
         }
