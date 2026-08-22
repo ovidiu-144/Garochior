@@ -1,5 +1,6 @@
 package org.Garochior.ui;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,7 +9,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GameScene {
-
     public void start (Stage stage) throws Exception {
         Screen screen = Screen.getPrimary();
         double screenWidth = screen.getVisualBounds().getWidth();
@@ -27,6 +27,14 @@ public class GameScene {
 
         stage.setTitle("Ye");
         stage.setScene(scene);
+
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Fereastra a fost inchisa de jucator. Opresc aplicatia...");
+            Platform.exit();
+            System.exit(0);
+            // Add any additional cleanup code here
+        });
+
         stage.show();
     }
 }

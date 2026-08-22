@@ -5,6 +5,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableIntegerValue;
 import org.Garochior.game.GamePanelController;
+import org.Garochior.model.Card;
 import org.Garochior.model.Deck;
 import org.Garochior.model.Player;
 
@@ -22,7 +23,6 @@ public class GameSession {
     public void setOnHandTaken(java.util.function.Consumer<Integer> callback) {
         this.onHandTaken = callback;
     }
-
 
     public GameSession (List<Player> players, GameLogic game){
         this.players = players;
@@ -42,7 +42,7 @@ public class GameSession {
         }
     }
     public void startGame(Runnable onFinish){
-        new Thread(() -> {
+        Thread gameThread = new Thread(() -> {
         //aici alt thread
             while (currentRound < 8){
                 System.out.println("Round " + (currentRound + 1));
@@ -83,7 +83,12 @@ public class GameSession {
             }
 
 
-        }).start();
+        });
+        gameThread.setDaemon(true);
+        gameThread.start();
     }
 
+    public String getGameName () {
+        return game.getName();
+    }
 }

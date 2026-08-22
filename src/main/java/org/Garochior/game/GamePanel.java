@@ -6,9 +6,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
 import org.Garochior.model.Player;
+import org.Garochior.ui.MainMenu;
 
 public class GamePanel {
+        private Stage stage;
+
         public GamePanelController start (Stage stage, Player player) throws Exception {
+                this.stage = stage;
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/GamePanel.fxml"));
                 AnchorPane root = loader.load();
 
@@ -25,10 +30,11 @@ public class GamePanel {
 
                 stage.setMaximized(true);
 
-                /// pentru test sa vedem ca nu crapa
-                /// Assets.init();
-
                 stage.show();
                 return gameCtrl;
+    }
+    public void returnToMainMenu() throws Exception {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.start(stage);
     }
 }

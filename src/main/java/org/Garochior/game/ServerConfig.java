@@ -2,6 +2,7 @@ package org.Garochior.game;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
 import org.Garochior.logic.*;
@@ -21,8 +22,16 @@ public class ServerConfig {
     private RelayConnection relay;
     private GameSession gameSession;
 
+    private GamePanel gamePanel;
+
 
     private int connectedClients = 0;
+    private boolean started = false;
+
+    private int currentPlayer = 0;
+    private List<PlayedCard> currentPlayedCards = new ArrayList<>();
+
+    record PlayedCard(int playerId, Card card) {}
 
     public ServerConfig() {
         this.players = new ArrayList<>();
@@ -32,7 +41,7 @@ public class ServerConfig {
     public void initGame (Stage serverStage, String roomCode) throws Exception {
         Assets.init();
 
-        GamePanel gamePanel = new GamePanel();
+        gamePanel = new GamePanel();
         //Player1 este serverul
 
         createPlayer(gamePanel, serverStage);
@@ -50,48 +59,103 @@ public class ServerConfig {
         relay = new RelayConnection();
         relay.connectAsHost(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
+
+        //listener pentru deconectare
+        relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                disconnect();
+            }
+        });
+
     }
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
         System.out.println("Server received message: " + message);
 
-
         String type = NetworkMessage.getType(message);
 
-        if (Objects.equals(type, MessageType.ROOM_READY)) {
-            connectedClients++;
-            int playerId = NetworkMessage.getPlayerId(message);
-            System.out.println("Player " + (playerId + 1) + " connected.");
+        switch (type){
+            case MessageType.ROOM_READY -> {
+                connectedClients++;
+                int playerId = NetworkMessage.getPlayerId(message);
+                System.out.println("Player " + (playerId + 1) + " connected.");
 
-            if (connectedClients == 3) {
-                System.out.println("All players connected. Starting game.");
-                Platform.runLater(() -> {
-                    try {
-                        startGameType();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+                System.out.println("Connected clients: " + connectedClients);
+
+                if (connectedClients == 3 && !started) {
+
+                    System.out.println("All players connected. Starting game.");
+                    Platform.runLater(() -> {
+                        try {
+                            startGameType();
+                            started = true;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+                else if (started) {
+                    setupReconnectPlayer(playerId);
+                }
+
             }
-        }
 
-        if (Objects.equals(type, MessageType.CARD_SELECTED)){
-            int playerId = NetworkMessage.getPlayerId(message);
+            case MessageType.CARD_SELECTED -> {
+                int playerId = NetworkMessage.getPlayerId(message);
 
-            Card selectedCard = NetworkMessage.getCard(message);
+                Card selectedCard = NetworkMessage.getCard(message);
 
-            int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
+                int cardIndex = players.get(playerId).hand.indexOf(selectedCard);
 
-            if (cardIndex != - 1) {
-                System.out.println("Card found in hand: " + selectedCard);
-                players.get(playerId).setSelectedCard(cardIndex);
-                gamePanelController.setPlayedCards(selectedCard, playerId);
-            } else {
-                System.out.println("Card not found in hand: " + selectedCard);
+                if (cardIndex != - 1) {
+                    System.out.println("Card found in hand: " + selectedCard);
+                    players.get(playerId).setSelectedCard(cardIndex);
+                    gamePanelController.setPlayedCards(selectedCard, playerId);
+                } else {
+                    System.out.println("Card not found in hand: " + selectedCard);
+                }
+            }
+
+            case MessageType.CLIENT_DISCONNECTED -> {
+                //int playerId = NetworkMessage.getPlayerId(message);
+                connectedClients--;
+                int playerId = NetworkMessage.getPlayerId(message);
+
+                //TODO: activeaza AiMode pentru playerul care s-a deconectat
+
+
+
+                System.out.println("Player " + (playerId + 1) + " disconnected.");
+                // Handle player disconnection logic here
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Jucător deconectat");
+                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
+                    alert.show();
+                });
             }
         }
     }
 
+    private void setupReconnectPlayer (int playerId){
+        //ii trimitem ca a inceput jocul
+        relay.send(NetworkMessage.gameStart(gameSession.getGameName()));
+        //ii trimitem cartile pe care le are
+        relay.send(NetworkMessage.setHand(playerId, players.get(playerId).hand));
+        //ii trimitem a cui e randul
+        relay.send(NetworkMessage.yourTurn(currentPlayer)); // firstPlayer
+
+        //TODO:
+        // ii trimitem scorul
+
+
+        // ii trimitem cartile jucate in runda curenta
+        for (PlayedCard currentPlayedCard : currentPlayedCards) {
+            int playerIdPlayed = currentPlayedCard.playerId;
+            Card cardPlayed = currentPlayedCard.card;
+            relay.send(NetworkMessage.cardPlayed(playerIdPlayed, cardPlayed));
+        }
+    }
 
     private void initGamesQueue (){
         gamesQueue.add(new HandsGame());
@@ -129,12 +193,6 @@ public class ServerConfig {
 
         gameSession = new GameSession(players, game);
 
-//        gameSession.firstPlayer.addListener((observable, oldValue, newValue) -> {
-//            Platform.runLater(gamePanelController::clearPlayedCards);
-//            Platform.runLater(() -> gamePanelController.showHandTaker(gameSession.firstPlayer.get()));
-//            relay.send(NetworkMessage.handTaker(gameSession.firstPlayer.get()));
-//        });
-
         gameSession.setOnHandTaken(playerId -> {
             Platform.runLater(gamePanelController::clearPlayedCards);
             Platform.runLater(() -> gamePanelController.showHandTaker(playerId));
@@ -158,47 +216,50 @@ public class ServerConfig {
 
     private void setupListeners() {
         // Player 0 (serverul) - listener pe hand pentru UI local + relay
-        players.getFirst().hand.addListener((ListChangeListener<Card>) change -> {
-            while (change.next()) {
-                if (change.wasRemoved()) {
-                    Card removedCard = change.getRemoved().getLast();
-                    Platform.runLater(gamePanelController::setHand);
-                    Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, 0));
-                    relay.send(NetworkMessage.cardPlayed(0, removedCard));
-                }
-            }
-        });
-        players.getFirst().myTurn.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                Platform.runLater(() -> gamePanelController.setTurnLabel(0));
-            }
-        });
-
-        for (int i = 1; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             Player player = players.get(i);
+            boolean isHost = (i == 0); // Player 0 is the host
 
             player.hand.addListener((ListChangeListener<Card>) change -> {
                 while (change.next()) {
                     if (change.wasRemoved()) {
                         Card removedCard = change.getRemoved().getLast();
+                        currentPlayedCards.add(new PlayedCard(player.getId(), removedCard));
+                        if (currentPlayedCards.size() == 4) {
+                            currentPlayedCards.clear();
+                        }
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
+
+                        //e host ul
+                        if (isHost) {
+                            Platform.runLater(gamePanelController::setHand);
+                            Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
+                        }
                     }
                 }
             });
 
             player.myTurn.addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
+                    currentPlayer = player.getId();
+                    System.out.println("myTurn changed for player: " + player.getId() + " isHost: " + isHost);
+                    Platform.runLater(() -> {
+                        System.out.println("Updating turnLabel for player: " + player.getId());
+                        gamePanelController.setTurnLabel(player.getId());
+                    });
                     relay.send(NetworkMessage.yourTurn(player.getId()));
-                    Platform.runLater(() -> gamePanelController.setTurnLabel(player.getId()));
                 }
             });
         }
+
     }
 
     private void createPlayer(GamePanel gamePanel, Stage stage) throws Exception {
         Player player = new Player(0);
         players.add(player);
         gamePanelController = gamePanel.start(stage, player);
+
+        gamePanelController.setOnDisconnect(this::disconnect);
     }
 
     private List<Integer> getScores() {
@@ -207,5 +268,18 @@ public class ServerConfig {
             scores.add(player.getScore());
         }
         return scores;
+    }
+
+    private void disconnect() {
+        Platform.runLater(() -> {
+            try {
+                relay.disconnect();
+                players.clear();
+                gamesQueue.clear();
+                gamePanel.returnToMainMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

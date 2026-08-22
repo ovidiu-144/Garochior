@@ -30,22 +30,41 @@
                      <children>
                         <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                            <children>
-                              <Label alignment="CENTER" prefHeight="34.0" prefWidth="57.0" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="ROOM" textFill="YELLOW" />
+                              <Label alignment="CENTER" prefHeight="34.0" prefWidth="57.0" style="-fx-background-color: transparent; -fx-font-family: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="ROOM" textFill="YELLOW" />
                               <TextField fx:id="roomField" prefHeight="30" prefWidth="138.0" />
                            </children>
                         </HBox>
                         <Button fx:id="confirmServerBtn" mnemonicParsing="false" onAction="#onConfirmServerClicked" text="Confirm" />
                      </children></VBox>
-                  <VBox fx:id="clientLayout" prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
-                           <children>
-                              <Label alignment="CENTER" prefHeight="34.0" prefWidth="57.0" style="-fx-background-color: transparent; -fx-font: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;" text="ROOM" textAlignment="RIGHT" textFill="YELLOW" />
-                              <TextField fx:id="clientRoomField" prefHeight="30" prefWidth="150" />
-                           </children>
-                        </HBox>
-                        <Button fx:id="confirmClientBtn" mnemonicParsing="false" onAction="#onConfirmClientClicked" text="Confirm" />
-                     </children></VBox>
+                  <VBox fx:id="clientLayout" prefHeight="300.0" prefWidth="370.0" spacing="15" visible="false">
+                     <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
+                        <Label alignment="CENTER" prefHeight="34.0" prefWidth="57.0"
+                               style="-fx-background-color: transparent; -fx-font-family: Arial; -fx-font-weight: BOLD; -fx-font-size: 16;"
+                               text="ROOM" textFill="YELLOW" />
+                        <TextField fx:id="clientRoomField" prefHeight="30" prefWidth="150" />
+                        <Button fx:id="searchRoomBtn" mnemonicParsing="false" onAction="#onSearchRoomClicked" text="Search" />
+                     </HBox>
+
+                     <!-- Cele 4 sloturi de jucători -->
+                     <HBox fx:id="playerSlots" spacing="10" alignment="CENTER_LEFT" visible="false">
+                        <Button fx:id="player0Btn" userData="0" prefWidth="80" prefHeight="80" text="HOST"
+                                onAction="#onConfirmServerClicked"
+                                style="-fx-background-color: #888; -fx-text-fill: white; -fx-font-size: 12px;
+                       -fx-background-radius: 10;" disable="true" />
+                        <Button fx:id="player1Btn" prefWidth="80" prefHeight="80" text="Liber"
+                                onAction="#onSlotClicked" userData="1"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                       -fx-background-radius: 10;" />
+                        <Button fx:id="player2Btn" prefWidth="80" prefHeight="80" text="Liber"
+                                onAction="#onSlotClicked" userData="2"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                       -fx-background-radius: 10;" />
+                        <Button fx:id="player3Btn" prefWidth="80" prefHeight="80" text="Liber"
+                                onAction="#onSlotClicked" userData="3"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                       -fx-background-radius: 10;" />
+                     </HBox>
+                  </VBox>
 
                </children></VBox>
          </children>

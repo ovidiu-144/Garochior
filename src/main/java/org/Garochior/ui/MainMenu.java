@@ -1,5 +1,6 @@
 package org.Garochior.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,6 +38,13 @@ public class MainMenu {
         // 4. Configurează stage-ul
         stage.setTitle("Garochior");
         stage.setScene(scene);
+
+        stage.setOnCloseRequest(event -> {
+            System.out.println("Fereastra a fost inchisa de jucator. Opresc aplicatia...");
+            Platform.exit();
+            System.exit(0);
+            // Add any additional cleanup code here
+        });
 
         stage.setMaximized(true);
 
