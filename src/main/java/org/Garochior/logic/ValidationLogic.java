@@ -27,7 +27,7 @@ public abstract class ValidationLogic implements GameLogic{
             System.out.println("Player " + player.getId() + " starts the round, select any card");
 
             //selectam cartea
-            Card card = player.selectCard();
+            Card card = player.selectCard(null);
 
             //prima carte poate fi orice, in acest pas
             selectedCards.add(card);
@@ -43,7 +43,7 @@ public abstract class ValidationLogic implements GameLogic{
 
             if (!hasCard){
 
-                Card card = player.selectCard();
+                Card card = player.selectCard(firstCard);
                 selectedCards.add(card);
                 player.removeCardFromHand(card);
             }
@@ -52,7 +52,7 @@ public abstract class ValidationLogic implements GameLogic{
 
                 //bucla pana cand selecteaza o carte valida
                 while (true) {
-                    Card card = player.selectCard();
+                    Card card = player.selectCard(firstCard);
                     if (card.getType() == firstCard.getType()){
                         selectedCards.add(card);
                         player.removeCardFromHand(card);
@@ -61,7 +61,7 @@ public abstract class ValidationLogic implements GameLogic{
                     if (onInvalidCard != null) {
                         onInvalidCard.accept(player.getId());
                     }
-                    System.out.println("Player " + player.getId() + " selected invalid card: " + card + ", must follow suit: " + firstCard.getType());
+                    System.out.println("Player " + (player.getId() + 1) + " selected invalid card: " + card + ", must follow suit: " + firstCard.getType());
                 }
             }
         }

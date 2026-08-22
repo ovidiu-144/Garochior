@@ -7,6 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
 
 public class Player {
     private final int id;//0-4
@@ -19,7 +21,8 @@ public class Player {
     public BooleanProperty myTurn;
 
     public final Object lockCardSelect = new Object();
-    //public final Object lockCardRemove = new Object();
+
+    public boolean AiMode = false;
 
     public Player (int id){
         this.id = id;
@@ -63,29 +66,102 @@ public class Player {
         //selectedCard = hand.get(index);
     }
 
-    public Card selectCard (){
-
-        /// pentru teste, selectam o carte random din mana
-//        Random rand = new Random();
-//        int size = hand.size();
-//        int n = rand.nextInt(size);
-//        System.out.println(n);
-//        System.out.println("Player " + id + " selected card: " + hand.get(n));
-//        return hand.get(n);
+    public Card selectCard (Card firstCard){
         synchronized (lockCardSelect){
             selectedCard = null;
+            if (AiMode){
+                //sa para ca gandeste
+
+                //Ai ul meu frumi
+                try {
+                    Thread.sleep(1500);
+                    selectedCard = selectAiCard(firstCard);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             while (selectedCard == null){
                 try {
                     lockCardSelect.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                if (AiMode){
+                    //sa para ca gandeste
+
+                    //Ai ul meu frumi
+                    try {
+                        Thread.sleep(1500);
+                        selectedCard = selectAiCard(firstCard);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
         System.out.println("Player " + (id + 1) + " selected card: " + selectedCard);
         return selectedCard;
-//        return selectedCard;
     }
+
+    private Card selectAiCard(Card firstCard) {
+        if (firstCard == null) {
+            return hand.stream()
+                    .min(Comparator.comparingInt(Card::getNumber))
+                    .orElse(hand.getFirst());
+        }
+
+        if (!hasCard(firstCard.getType())) {
+            return hand.stream()
+                    .max(Comparator.comparingInt(Card::getNumber))
+                    .orElse(hand.getFirst());
+        }
+
+        return hand.stream()
+                .filter(c -> c.getType() == firstCard.getType())
+                .min(Comparator.comparingInt(Card::getNumber))
+                .orElse(hand.getFirst());
+    }
+
+//    private Card selecteSmallestPossibleCard (Card firstCard){
+//        Card card = null;
+//
+//        for (Card c: hand){
+//            if (c.getType() == firstCard.getType()){
+//                if (card == null || c.getNumber() < card.getNumber()){
+//                    card = c;
+//                }
+//            }
+//        }
+//        return card;
+//    }
+
+    private boolean hasCard (CardType cardType){
+        for (Card c : hand){
+            if (c.getType() == cardType)
+                return true;
+        }
+        return false;
+    }
+
+
+
+    public Card selectRandomCard (){
+        //pauza pentru a simula timpul de gandire al AI-ului
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Random rand = new Random();
+        int size = hand.size();
+        int n = rand.nextInt(size);
+        System.out.println("Player " + (id + 1) + " selected card: " + hand.get(n));
+        return hand.get(n);
+    }
+
     public void removeCardFromHand (Card card){
         //scoate cartea din mana dupa ce a fost validata de server
         //hand.remove(card);

@@ -121,23 +121,32 @@ public class ServerConfig {
                 connectedClients--;
                 int playerId = NetworkMessage.getPlayerId(message);
 
+                Player player = players.get(playerId);
                 //TODO: activeaza AiMode pentru playerul care s-a deconectat
 
+                player.AiMode = true;
 
+                synchronized (player.lockCardSelect) {
+                    player.lockCardSelect.notifyAll();
+                }
+
+                //player.selectCard(null);
 
                 System.out.println("Player " + (playerId + 1) + " disconnected.");
                 // Handle player disconnection logic here
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Jucător deconectat");
-                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
-                    alert.show();
-                });
+//                Platform.runLater(() -> {
+//                    Alert alert = new Alert(Alert.AlertType.WARNING);
+//                    alert.setTitle("Jucător deconectat");
+//                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
+//                    alert.show();
+//                });
             }
         }
     }
 
     private void setupReconnectPlayer (int playerId){
+        players.get(playerId).AiMode = false;
+
         //ii trimitem ca a inceput jocul
         relay.send(NetworkMessage.gameStart(gameSession.getGameName()));
         //ii trimitem cartile pe care le are
@@ -229,11 +238,11 @@ public class ServerConfig {
                             currentPlayedCards.clear();
                         }
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
+                        Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
 
                         //e host ul
                         if (isHost) {
                             Platform.runLater(gamePanelController::setHand);
-                            Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
                         }
                     }
                 }
