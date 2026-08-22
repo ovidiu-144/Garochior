@@ -88,4 +88,7 @@ public class GameSession {
         gameThread.start();
     }
 
+    public String getGameName () {
+        return game.getName();
+    }
 }

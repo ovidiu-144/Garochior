@@ -21,12 +21,13 @@ public class ClientConfig {
 
     private GamePanel gamePanel;
 
-    public void initGame (Stage Stage, String roomCode) throws Exception {
+    public void initGame (Stage Stage, String roomCode, int playerId) throws Exception {
         Assets.init();
 
         relay = new RelayConnection();
-        this.playerId = relay.connectAsClient(roomCode);
-        relay.setPlayer(playerId);
+        relay.connectAsClient(roomCode, playerId);
+        this.playerId = playerId;
+
         System.out.println("Client conectat la relay ca player " + (playerId + 1));
 
         player = new Player(playerId);
@@ -146,18 +147,6 @@ public class ClientConfig {
                     disconnect();
 
                 });
-            }
-
-            case MessageType.ROOM_FOUND -> {
-//                Platform.runLater(() -> {
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//                    alert.setTitle("Room Found");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Room found successfully.");
-//                    alert.showAndWait();
-//                });
-                String players = NetworkMessage.getRoomPlayers(message);
-                System.out.println("Room found with players: " + players);
             }
         }
     }

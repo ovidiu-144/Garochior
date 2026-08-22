@@ -26,6 +26,9 @@ public class ServerConfig {
 
 
     private int connectedClients = 0;
+    private boolean started = false;
+
+    private int currentPlayer = 0;
 
     public ServerConfig() {
         this.players = new ArrayList<>();
@@ -53,13 +56,11 @@ public class ServerConfig {
         relay = new RelayConnection();
         relay.connectAsHost(roomCode);
         relay.setMessageListener(this::OnMessageReceived);
-        relay.setPlayer(0);
 
         //listener pentru deconectare
         relay.isDisconnected.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 disconnect();
-                //relay.isDisconnected.set(false);
             }
         });
 
@@ -67,7 +68,6 @@ public class ServerConfig {
 
     private void OnMessageReceived (com.google.gson.JsonObject message){
         System.out.println("Server received message: " + message);
-
 
         String type = NetworkMessage.getType(message);
 
@@ -79,16 +79,22 @@ public class ServerConfig {
 
                 System.out.println("Connected clients: " + connectedClients);
 
-                if (connectedClients == 3) {
+                if (connectedClients == 3 && !started) {
+
                     System.out.println("All players connected. Starting game.");
                     Platform.runLater(() -> {
                         try {
                             startGameType();
+                            started = true;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
                 }
+                else if (started) {
+                    setupReconnectPlayer(playerId);
+                }
+
             }
 
             case MessageType.CARD_SELECTED -> {
@@ -109,19 +115,39 @@ public class ServerConfig {
 
             case MessageType.CLIENT_DISCONNECTED -> {
                 //int playerId = NetworkMessage.getPlayerId(message);
-                int playerId = 10;
+                connectedClients--;
+                int playerId = NetworkMessage.getPlayerId(message);
+
+                //TODO: activeaza AiMode pentru playerul care s-a deconectat
+
+
+
                 System.out.println("Player " + (playerId + 1) + " disconnected.");
                 // Handle player disconnection logic here
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Jucător deconectat");
-                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat. Jocul se va încheia.");
+                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
                     alert.show();
                 });
             }
         }
     }
 
+    private void setupReconnectPlayer (int playerId){
+        //ii trimitem ca a inceput jocul
+        relay.send(NetworkMessage.gameStart(gameSession.getGameName()));
+        //ii trimitem cartile pe care le are
+        relay.send(NetworkMessage.setHand(playerId, players.get(playerId).hand));
+        //ii trimitem a cui e randul
+        relay.send(NetworkMessage.yourTurn(currentPlayer)); // firstPlayer
+
+        //TODO:
+        // ii trimitem scorul
+
+        //TODO:
+        // ii trimitem cartile jucate in runda curenta
+    }
 
     private void initGamesQueue (){
         gamesQueue.add(new HandsGame());
@@ -214,6 +240,7 @@ public class ServerConfig {
                 if (newValue) {
                     relay.send(NetworkMessage.yourTurn(player.getId()));
                     Platform.runLater(() -> gamePanelController.setTurnLabel(player.getId()));
+                    currentPlayer = player.getId();
                 }
             });
         }

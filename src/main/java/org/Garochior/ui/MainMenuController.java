@@ -88,7 +88,7 @@ public class MainMenuController {
         System.out.println("You will join a server on room " + clientRoomField.getText() + " as player " + playerId);
         ClientConfig clientConfig = new ClientConfig();
         try {
-            clientConfig.initGame((Stage) clicked.getScene().getWindow(), clientRoomField.getText());
+            clientConfig.initGame((Stage) clicked.getScene().getWindow(), clientRoomField.getText(), playerId);
             // TODO urmmeaza sa transmit id ul
         }
         catch (Exception e){

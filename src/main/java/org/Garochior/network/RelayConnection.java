@@ -13,14 +13,17 @@ public class RelayConnection {
     private PrintWriter out;
     private BufferedReader in;
     private MessageListener listener;
-    private int player;
+    private int playerId;
 
     public BooleanProperty isDisconnected = new javafx.beans.property.SimpleBooleanProperty(false);
 
-
-    public void setPlayer(int player) {
-        this.player = player;
+    public RelayConnection() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Se închide aplicatia, deconectare de la relay...");
+            disconnect();
+        }));
     }
+
 
     public interface MessageListener {
         void onMessage(JsonObject message);
@@ -28,52 +31,48 @@ public class RelayConnection {
 
     public void connectAsHost(String roomCode) throws IOException {
         connect();
+        playerId = 0; // Host is always player 0
         out.println("CREATE:" + roomCode);
         waitForConfirmation();
     }
 
-    public int connectAsClient(String roomCode) throws IOException {
+    public void connectAsClient(String roomCode, int playerId) throws IOException {
+        this.playerId = playerId;
         connect();
 //        out.println("GET_PLAYERS:" + roomCode); //doar pentru test ase
 //        waitForConfirmation();
-
-        out.println("JOIN:" + roomCode);
-        String playerIdStr = waitForConfirmation();
-
-        return Integer.parseInt(playerIdStr);
+        out.println("JOIN:" + roomCode + ":" + playerId);
+        waitForConfirmation();
+//        String playerIdStr = waitForConfirmation();
+//
+//        return Integer.parseInt(playerIdStr);
     }
 
     public int[] connectForPlayers(String roomCode) throws IOException {
-        connect();
-        out.println("GET_PLAYERS:" + roomCode);
+        try (Socket tempSocket = new Socket(NetworkConfig.RELAY_IP, NetworkConfig.RELAY_PORT);
+             PrintWriter tempOut = new PrintWriter(tempSocket.getOutputStream(), true);
+             BufferedReader tempIn = new BufferedReader(new InputStreamReader(tempSocket.getInputStream()))) {
 
-        String response = in.readLine();
-        socket.close();
+            tempOut.println("GET_PLAYERS:" + roomCode);
+            String response = tempIn.readLine();
 
-        // "1,1,0,0" → [1, 1, 0, 0]
-        String playersIds = response.split(":")[2];
-        String[] parts = playersIds.split(",");
-
-
-        int[] players = new int[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            players[i] = Integer.parseInt(parts[i].trim());
+            String playersIds = response.split(":")[2];
+            String[] parts = playersIds.split(",");
+            int[] players = new int[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                players[i] = Integer.parseInt(parts[i].trim());
+            }
+            return players;
         }
-        return players;
     }
 
     private void connect() throws IOException {
         socket = new Socket(NetworkConfig.RELAY_IP, NetworkConfig.RELAY_PORT);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Se închide aplicatia, deconectare de la relay...");
-            disconnect();
-        }));
     }
 
-    private String waitForConfirmation() throws IOException {
+    private void waitForConfirmation() throws IOException {
         String response = in.readLine();
         System.out.println(response);
 
@@ -81,7 +80,7 @@ public class RelayConnection {
             throw new IOException("Relay error: " + response);
         }
         if (response.startsWith("OK")) {
-            String playerIdStr = response.split(":")[2];
+//            String playerIdStr = response.split(":")[2];
             //int playerId = Integer.parseInt(response.split(":")[2]);
 
             System.out.println("Relay confirmation: " + response);
@@ -91,9 +90,9 @@ public class RelayConnection {
             listenerThread.setDaemon(true);
             listenerThread.start();
 
-            return playerIdStr;
+            //return playerIdStr;
         }
-        return "0";
+        //return "0";
     }
 
     private void listenLoop() {
@@ -101,7 +100,7 @@ public class RelayConnection {
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.startsWith("{\"type\":\"PING\"")) {
-                    out.println("{\"type\":\"PING2\",\"Player\":" + player + "}");
+                    out.println("{\"type\":\"PING2\",\"Player\":" + playerId + "}");
                     continue;
                 }
                 if (listener != null) {

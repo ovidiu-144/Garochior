@@ -9,7 +9,6 @@ public class RelayServer {
     static class GameRoom {
         String code;
         ClientConnection host;
-        //List<ClientConnection> clients = new CopyOnWriteArrayList<>();
         ClientConnection[] clients = new ClientConnection[3];
         volatile boolean active = true;
 
@@ -68,23 +67,18 @@ public class RelayServer {
             }
         }
 
-        public synchronized int addClient (ClientConnection client) {
-            for (int i = 0; i < 3; i++) {
-                if (clients[i] == null) {
-                    clients[i] = client;
-                    return i + 1; // 0 este host ul
-                }
-            }
-            return -1;
+        public synchronized void addClient (ClientConnection client, int playerId) {
+            clients[playerId - 1] = client;
         }
 
-        public synchronized void removeClient(ClientConnection client) {
+        public synchronized int removeClient(ClientConnection client) {
             for (int i = 0; i < 3; i++) {
                 if (clients[i] == client) {
                     clients[i] = null;
-                    break;
+                    return i + 1;
                 }
             }
+            return -1;
         }
 
     }
@@ -142,8 +136,12 @@ public class RelayServer {
                     if (roomCode == null) {
                         String line2 = line.trim();
 
-                        if (line2.startsWith("CREATE:")) {
-                            roomCode = line2.substring(7);
+                        String[] parts = line2.split(":");
+                        // out.println("JOIN:" + roomCode + ":" + playerId);
+                        String command = parts[0];
+
+                        if (Objects.equals(command, "CREATE")) {
+                            roomCode = parts[1];
                             GameRoom room = rooms.get(roomCode);
 
                             if (room != null) {
@@ -157,24 +155,26 @@ public class RelayServer {
                             newRoom.host = this;
                             rooms.put(roomCode, newRoom);
 
-                            send("OK:CREATED:0"); // este player 0 pentru host
+                            send("OK:CREATED"); // este player 0 pentru host
                             System.out.println("Room created: " + roomCode);
                         }
-                        else if (line2.startsWith("GET_PLAYERS:")) {
-                            roomCode = line2.substring(12);
-                            GameRoom room = rooms.get(roomCode);
+                        else if (Objects.equals(command, "GET_PLAYERS")) {
+                            String code  = parts[1];
+                            GameRoom room = rooms.get(code);
                             send(getPlayers(room));
+                            socket.close();
                             System.out.println("Sent players info for room: " + roomCode);
                         }
-                        else if (line2.startsWith("JOIN:")) {
-                            roomCode = line2.substring(5);
+                        else if (Objects.equals(command, "JOIN")) {
+                            roomCode = parts[1];
                             GameRoom room = rooms.get(roomCode);
                             if (room == null) {
                                 send("{\"type\":\"ROOM_NOT_FOUND\"}");
                                 roomCode = null;
                                 System.out.println("Room not found: " + roomCode);
                             } else {
-                                int playerId = room.addClient(this);
+                                int playerId = Integer.parseInt(parts[2]);
+                                room.addClient(this, playerId);
                                 send("OK:JOINED:" + playerId);
                                 System.out.println("Client joined room: " + roomCode);
                             }
@@ -212,10 +212,11 @@ public class RelayServer {
                             rooms.remove(roomCode);
                             System.out.println("Host disconnected, room removed: " + roomCode);
                         } else {
+                            int playerId = room.removeClient(this);
                             // Client disconnected, remove from clients list
-                            room.sendToHost("{\"type\":\"CLIENT_DISCONNECTED\"}");
+                            room.sendToHost("{\"type\":\"CLIENT_DISCONNECTED\", \"playerId\":" + playerId + "}");
 //                            room.sendToClients("{\"type\":\"CLIENT_DISCONNECTED\"}");
-                            room.removeClient(this);
+
                             System.out.println("Client disconnected from room: " + roomCode);
                         }
                     }
