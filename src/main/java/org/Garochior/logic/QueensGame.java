@@ -15,14 +15,17 @@ public class QueensGame extends ValidationLogic{
     @Override
     public void updateScore(Player player) {
         //int queen = ModelConfig.Q;
+        int numberOfQueens = 0;
+
         for (Card card : selectedCards){
             if (card.getNumber() == ModelConfig.Q){
-                totalQueens++;
+                numberOfQueens++;
             }
         }
+        totalQueens += numberOfQueens;
         if (totalQueens == 4)
             isOver = true;
-        player.updateScore(-(totalQueens * 2));
+        player.updateScore(-(numberOfQueens * 2));
         clearSelectedCard();
     }
 }

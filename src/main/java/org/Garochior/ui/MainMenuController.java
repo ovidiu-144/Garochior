@@ -12,7 +12,10 @@ import org.Garochior.constants.UiConfig;
 import org.Garochior.game.ClientConfig;
 import org.Garochior.game.GamePanel;
 import org.Garochior.game.ServerConfig;
+import org.Garochior.model.Player;
 import org.Garochior.network.RelayConnection;
+
+import javax.print.attribute.standard.Finishings;
 
 public class MainMenuController {
     public ImageView background;
@@ -96,6 +99,18 @@ public class MainMenuController {
         catch (Exception e){
             e.printStackTrace();
         }
+
+//        try {
+//            serverConfig = new ServerConfig();
+//            serverConfig.initGame("a", this);
+//            GamePanel gamePanel = new GamePanel();
+//            Player hostPlayer = new Player(0); // Host is always human
+//            gamePanel.start((Stage) confirmServerBtn.getScene().getWindow(), hostPlayer);
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
+
     }
 
     public void onStartServerClicked(ActionEvent actionEvent) {
@@ -105,9 +120,9 @@ public class MainMenuController {
         //verificam daca test = "AI"
         boolean[] aiPlayers = new boolean[4];
         aiPlayers[0] = false; // Host is always human
-        aiPlayers[1] = player2BtnSv.getText().equals("AI");
-        aiPlayers[2] = player3BtnSv.getText().equals("AI");
-        aiPlayers[3] = player4BtnSv.getText().equals("AI");
+        aiPlayers[1] = player2BtnSv.getText().equals("AI") || player2BtnSv.getText().equals("Set AI");
+        aiPlayers[2] = player3BtnSv.getText().equals("AI") || player3BtnSv.getText().equals("Set AI");
+        aiPlayers[3] = player4BtnSv.getText().equals("AI") || player4BtnSv.getText().equals("Set AI");
 
         try {
             serverConfig.startGame((Stage) confirmServerBtn.getScene().getWindow(), aiPlayers);

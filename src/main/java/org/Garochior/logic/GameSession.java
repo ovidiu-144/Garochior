@@ -19,6 +19,7 @@ public class GameSession {
     public int firstPlayer;
     private int currentRound;
     private java.util.function.Consumer<Integer> onHandTaken;
+    private boolean isTablou = false;
 
     public void setOnHandTaken(java.util.function.Consumer<Integer> callback) {
         this.onHandTaken = callback;
@@ -58,11 +59,19 @@ public class GameSession {
                     throw new RuntimeException(e);
                 }
 
-                firstPlayer = game.nextPlayer();
+                if (game instanceof TablouGame tg) {
+
+
+                }
+                else {
+                    firstPlayer = game.nextPlayer();
+                    game.updateScore(players.get(firstPlayer));
+                    ///TODO gandeste cum ar trebui sa dai update la scor
+
+                }
 
 
 
-                game.updateScore(players.get(firstPlayer));
 
                 if (onHandTaken != null) {
                     onHandTaken.accept(firstPlayer);

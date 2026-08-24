@@ -2,7 +2,6 @@ package org.Garochior.game;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.Garochior.graphics.Assets;
 import org.Garochior.logic.*;
@@ -29,6 +28,7 @@ public class ServerConfig {
 
     private int connectedClients = 0;
     private boolean started = false;
+    private boolean isTablou = false;
 
     private int currentPlayer = 0;
     private final List<PlayedCard> currentPlayedCards = new ArrayList<>();
@@ -73,6 +73,7 @@ public class ServerConfig {
         for  (int i = 1; i < 4; ++i){
             players.get(i).AiMode = aiPlayers[i];
         }
+        players.getFirst().AiMode = true; // Host is always AI for testing purposes
 
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
@@ -105,7 +106,6 @@ public class ServerConfig {
                 else {
                     Platform.runLater(() -> mainMenuController.clientConnected(playerId));
                 }
-
             }
 
             case MessageType.CLIENT_DISCONNECTED -> {
@@ -142,7 +142,7 @@ public class ServerConfig {
                 if (cardIndex != - 1) {
                     System.out.println("Card found in hand: " + selectedCard);
                     players.get(playerId).setSelectedCard(cardIndex);
-                    gamePanelController.setPlayedCards(selectedCard, playerId);
+                    gamePanelController.setPlayedCards(selectedCard, playerId, isTablou);
                 } else {
                     System.out.println("Card not found in hand: " + selectedCard);
                 }
@@ -173,6 +173,7 @@ public class ServerConfig {
     }
 
     private void initGamesQueue (){
+        gamesQueue.add(new TablouGame());
         gamesQueue.add(new HandsGame());
         gamesQueue.add(new HeartsGame());
         gamesQueue.add(new QueensGame());
@@ -195,10 +196,21 @@ public class ServerConfig {
         GameLogic game = gamesQueue.poll();
         System.out.println("Starting game: " + game.getName());
 
+        if (game instanceof TablouGame tg) {
+            tg.setOnInvalidCard(playerId -> {
+                relay.send(NetworkMessage.invalidCard(playerId));
+            });
+            gamePanelController.setTablouMode(true);
+            isTablou = true;
+        }
+
+
         if (game instanceof ValidationLogic vl) {
             vl.setOnInvalidCard(playerId -> {
                 relay.send(NetworkMessage.invalidCard(playerId));
             });
+            gamePanelController.setTablouMode(false);
+            isTablou = false;
         }
 
         relay.send(NetworkMessage.gameStart(game.getName()));
@@ -226,6 +238,8 @@ public class ServerConfig {
 
         //trimitem scorul dupa fiecare mini game
         relay.send (NetworkMessage.gameEnd(getScores()));
+
+
         gameSession.startGame(this::startGameType);
     }
 
@@ -244,7 +258,7 @@ public class ServerConfig {
                             currentPlayedCards.clear();
                         }
                         relay.send(NetworkMessage.cardPlayed(player.getId(), removedCard));
-                        Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId()));
+                        Platform.runLater(() -> gamePanelController.setPlayedCards(removedCard, player.getId(), isTablou));
 
                         //e host ul
                         if (isHost) {

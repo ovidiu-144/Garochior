@@ -97,7 +97,8 @@ public class ClientConfig {
                         gamePanelController.setHand();
                         player.myTurn.set(false);
                     }
-                    gamePanelController.setPlayedCards(card, fromPlayer);
+                    //TODO isTablou modificat printr un mesaj, ca sa stie clientul
+                    gamePanelController.setPlayedCards(card, fromPlayer, false);
                 });
             }
 

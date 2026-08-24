@@ -65,6 +65,12 @@ public class Player {
         }
         //selectedCard = hand.get(index);
     }
+    public void setSelectedCard (Card card){
+        synchronized (lockCardSelect){
+            selectedCard = card;
+            lockCardSelect.notifyAll();
+        }
+    }
 
     public Card selectCard (Card firstCard){
         synchronized (lockCardSelect){
@@ -74,8 +80,9 @@ public class Player {
 
                 //Ai ul meu frumi
                 try {
-                    Thread.sleep(1500);
-                    selectedCard = selectAiCard(firstCard);
+                    Thread.sleep(1000);
+//                    selectedCard = selectAiCard(firstCard);
+                    selectedCard = selectRandomCard();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -93,9 +100,9 @@ public class Player {
 
                     //Ai ul meu frumi
                     try {
-                        Thread.sleep(1500);
+                        //Thread.sleep(1500);
                         selectedCard = selectAiCard(firstCard);
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -150,11 +157,7 @@ public class Player {
 
     public Card selectRandomCard (){
         //pauza pentru a simula timpul de gandire al AI-ului
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         Random rand = new Random();
         int size = hand.size();
         int n = rand.nextInt(size);
