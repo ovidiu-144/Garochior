@@ -15,7 +15,7 @@ public class TablouGame implements GameLogic {
 
     private int playerTurn = 0;
 
-    private static int playerOver = 4;
+    private int playerOver = 4;
     private boolean[] playerGotScore = new boolean[4];
 
     private java.util.function.Consumer<Integer> onInvalidCard;
@@ -26,9 +26,7 @@ public class TablouGame implements GameLogic {
     public TablouGame() {
         //adaugam initial toate J-urile in lista de carti pentru jocul Tablou
         for (int i = 0; i < 4; ++i){
-            for (int j = 1; j <= 13; ++j){
-                tablouCards.add(new Card(ModelConfig.J, CardType.values()[i]));
-            }
+            tablouCards.add(new Card(ModelConfig.J, CardType.values()[i]));
         }
     }
 
@@ -125,6 +123,6 @@ public class TablouGame implements GameLogic {
 
     @Override
     public boolean isOver() {
-        return false;
+        return playerOver <= 0;
     }
 }

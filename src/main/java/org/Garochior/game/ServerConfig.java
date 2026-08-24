@@ -73,7 +73,7 @@ public class ServerConfig {
         for  (int i = 1; i < 4; ++i){
             players.get(i).AiMode = aiPlayers[i];
         }
-        players.getFirst().AiMode = true; // Host is always AI for testing purposes
+//        players.getFirst().AiMode = true; // Host is always AI for testing purposes
 
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
@@ -202,6 +202,8 @@ public class ServerConfig {
             });
             gamePanelController.setTablouMode(true);
             isTablou = true;
+            relay.send(NetworkMessage.isTablouGame(isTablou));
+
         }
 
 
@@ -211,6 +213,7 @@ public class ServerConfig {
             });
             gamePanelController.setTablouMode(false);
             isTablou = false;
+            relay.send(NetworkMessage.isTablouGame(isTablou));
         }
 
         relay.send(NetworkMessage.gameStart(game.getName()));

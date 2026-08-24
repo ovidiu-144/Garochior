@@ -20,6 +20,7 @@ public class ClientConfig {
     private int playerId;
 
     private GamePanel gamePanel;
+    private boolean isTablou = false;
 
     public void initGame (Stage Stage, String roomCode, int playerId) throws Exception {
         Assets.init();
@@ -92,13 +93,14 @@ public class ClientConfig {
                 int fromPlayer = NetworkMessage.getPlayerId(message);
                 Card card = NetworkMessage.getCard(message);
                 Platform.runLater(() -> {
+
                     if (fromPlayer == playerId) {
                         player.hand.remove(card);
                         gamePanelController.setHand();
                         player.myTurn.set(false);
                     }
                     //TODO isTablou modificat printr un mesaj, ca sa stie clientul
-                    gamePanelController.setPlayedCards(card, fromPlayer, false);
+                    gamePanelController.setPlayedCards(card, fromPlayer, isTablou);
                 });
             }
 
@@ -127,6 +129,11 @@ public class ClientConfig {
                     gamePanelController.setGameLabel(gameName);
                     gamePanelController.clearPlayedCards();
                 });
+            }
+
+            case MessageType.TABLOU_GAME -> {
+                isTablou = NetworkMessage.getIsTablouGame(message);
+                gamePanelController.setTablouMode(isTablou);
             }
 
             case MessageType.GAME_END -> {

@@ -93,6 +93,13 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
+    public static String isTablouGame (boolean isTablouGame) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.TABLOU_GAME);
+        obj.addProperty("isTablouGame", isTablouGame);
+        return obj.toString();
+    }
+
     //PARSARE MESAJE
 
     public static JsonObject parse(String message) {
@@ -145,5 +152,9 @@ public final class NetworkMessage {
             scores.add(arr.get(i).getAsInt());
         }
         return scores;
+    }
+
+    public static boolean getIsTablouGame (JsonObject obj) {
+        return obj.get("isTablouGame").getAsBoolean();
     }
 }

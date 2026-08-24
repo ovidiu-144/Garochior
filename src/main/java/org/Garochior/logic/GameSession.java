@@ -33,6 +33,9 @@ public class GameSession {
         firstPlayer = 0;
 
         currentRound = 0;
+        if (game instanceof TablouGame) {
+            isTablou = true;
+        }
     }
 
     public void setHands(){
@@ -44,7 +47,9 @@ public class GameSession {
     }
     public void startGame(Runnable onFinish){
         Thread gameThread = new Thread(() -> {
-            while (currentRound < 8){
+            int maxRounds = isTablou ? 40 : 8;
+
+            while (currentRound < maxRounds){
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
                     int currentPlayer = (firstPlayer + i) % 4;
@@ -59,21 +64,12 @@ public class GameSession {
                     throw new RuntimeException(e);
                 }
 
-                if (game instanceof TablouGame tg) {
-
-
-                }
-                else {
+                if (!isTablou){
                     firstPlayer = game.nextPlayer();
                     game.updateScore(players.get(firstPlayer));
-                    ///TODO gandeste cum ar trebui sa dai update la scor
-
                 }
 
-
-
-
-                if (onHandTaken != null) {
+                if (!isTablou && onHandTaken != null) {
                     onHandTaken.accept(firstPlayer);
                 }
 
@@ -98,7 +94,6 @@ public class GameSession {
             if (onFinish != null){
                 Platform.runLater(onFinish);
             }
-
 
         });
         gameThread.setDaemon(true);
