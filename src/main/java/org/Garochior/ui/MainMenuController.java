@@ -34,6 +34,16 @@ public class MainMenuController {
     public Button player3Btn;
     //boxu lor
     public HBox playerSlots;
+    public HBox serverSlots;
+    public Button player2BtnSv;
+    public Button player3BtnSv;
+    public Button player4BtnSv;
+    public Button startServerBtn;
+    public Button cancelServerBtn;
+
+    private ServerConfig serverConfig;
+
+    ///-------Main menu buttons
 
     public void onServerClicked() {
         System.out.println("Server button clicked");
@@ -70,16 +80,85 @@ public class MainMenuController {
         );
     }
 
+    ///-------Server side
+
+
     public void onConfirmServerClicked(ActionEvent actionEvent) {
         System.out.println("You will start a server on room " + roomField.getText());
-        ServerConfig serverConfig = new ServerConfig();
+        serverSlots.setVisible(true);
+        startServerBtn.setVisible(true);
+        cancelServerBtn.setVisible(true);
+
+        serverConfig = new ServerConfig();
         try {
-            serverConfig.initGame((Stage) confirmServerBtn.getScene().getWindow(), roomField.getText());
+            serverConfig.initGame(roomField.getText(), this);
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    public void onStartServerClicked(ActionEvent actionEvent) {
+        serverSlots.setVisible(false);
+        startServerBtn.setVisible(false);
+
+        //verificam daca test = "AI"
+        boolean[] aiPlayers = new boolean[4];
+        aiPlayers[0] = false; // Host is always human
+        aiPlayers[1] = player2BtnSv.getText().equals("AI");
+        aiPlayers[2] = player3BtnSv.getText().equals("AI");
+        aiPlayers[3] = player4BtnSv.getText().equals("AI");
+
+        try {
+            serverConfig.startGame((Stage) confirmServerBtn.getScene().getWindow(), aiPlayers);
+            System.out.println("Starting server with AI players: " + java.util.Arrays.toString(aiPlayers));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void onCancelServerClicked(ActionEvent actionEvent) {
+        serverSlots.setVisible(false);
+        startServerBtn.setVisible(false);
+        cancelServerBtn.setVisible(false);
+
+        serverConfig.disconnect();
+    }
+
+    public void onAddAiClientClicked(ActionEvent actionEvent) {
+        Button playerBtn = (Button) actionEvent.getSource();
+        playerBtn.setText("AI");
+        playerBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;" +
+                "-fx-font-size: 12px; -fx-background-radius: 10;");
+    }
+
+
+    public void clientConnected (int playerId){
+
+        Button[] serverSlotsButtons = {null, player2BtnSv, player3BtnSv, player4BtnSv};
+
+        System.out.println("Client connected as player " + playerId);
+
+        Button playerBtn = serverSlotsButtons[playerId];
+        playerBtn.setDisable(true);
+        playerBtn.setText("Player");
+        playerBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;" +
+                "-fx-font-size: 12px; -fx-background-radius: 10;");
+    }
+
+    public void clientDisconnected (int playerId){
+        Button[] serverSlotsButtons = {null, player2BtnSv, player3BtnSv, player4BtnSv};
+        System.out.println("Client disconnected from player " + playerId + "Setting slot back to Set Ai");
+
+        Button playerBtn = serverSlotsButtons[playerId];
+        playerBtn.setDisable(false);
+        playerBtn.setText("Set AI");
+        playerBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px");
+    }
+
+    ///-------Client side
+
 
     public void onSlotClicked(ActionEvent actionEvent) {
         Button clicked = (Button) actionEvent.getSource();
@@ -89,7 +168,6 @@ public class MainMenuController {
         ClientConfig clientConfig = new ClientConfig();
         try {
             clientConfig.initGame((Stage) clicked.getScene().getWindow(), clientRoomField.getText(), playerId);
-            // TODO urmmeaza sa transmit id ul
         }
         catch (Exception e){
             e.printStackTrace();

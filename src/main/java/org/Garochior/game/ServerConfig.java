@@ -11,11 +11,13 @@ import org.Garochior.model.Player;
 import org.Garochior.network.MessageType;
 import org.Garochior.network.NetworkMessage;
 import org.Garochior.network.RelayConnection;
+import org.Garochior.ui.MainMenuController;
 
 import java.util.*;
 
 public class ServerConfig {
-    private GamePanelController gamePanelController;
+    private GamePanelController gamePanelController = null;
+    private MainMenuController mainMenuController;
     private final List<Player> players;
     private final Queue<GameLogic> gamesQueue;
 
@@ -29,7 +31,7 @@ public class ServerConfig {
     private boolean started = false;
 
     private int currentPlayer = 0;
-    private List<PlayedCard> currentPlayedCards = new ArrayList<>();
+    private final List<PlayedCard> currentPlayedCards = new ArrayList<>();
 
     record PlayedCard(int playerId, Card card) {}
 
@@ -38,17 +40,11 @@ public class ServerConfig {
         this.gamesQueue = new ArrayDeque<>();
     }
 
-    public void initGame (Stage serverStage, String roomCode) throws Exception {
+    public void initGame (String roomCode, MainMenuController mainMenuController) throws Exception {
+        this.mainMenuController = mainMenuController;
         Assets.init();
 
-        gamePanel = new GamePanel();
-        //Player1 este serverul
-
-        createPlayer(gamePanel, serverStage);
-
-        //Aici o sa treabuiasca sa facem legatura cu clientii, fiecare client cu interfata lui
-        //Deocamdata facem doar local
-        for (int i = 1; i < 4; ++i){
+        for (int i = 0; i < 4; ++i){
             Player player = new Player(i);
             players.add(player);
         }
@@ -69,6 +65,29 @@ public class ServerConfig {
 
     }
 
+    public void startGame (Stage serverStage, boolean[] aiPlayers) throws Exception {
+        gamePanel = new GamePanel();
+
+        System.out.println("Starting server with AI players: " + Arrays.toString(aiPlayers));
+        //setam daca sunt AI
+        for  (int i = 1; i < 4; ++i){
+            players.get(i).AiMode = aiPlayers[i];
+        }
+
+        gamePanelController = gamePanel.start(serverStage, players.getFirst());
+        gamePanelController.setOnDisconnect(this::disconnect);
+
+        Platform.runLater(() -> {
+            try {
+                startGameType();
+                started = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+
     private void OnMessageReceived (com.google.gson.JsonObject message){
         System.out.println("Server received message: " + message);
 
@@ -76,28 +95,41 @@ public class ServerConfig {
 
         switch (type){
             case MessageType.ROOM_READY -> {
-                connectedClients++;
                 int playerId = NetworkMessage.getPlayerId(message);
                 System.out.println("Player " + (playerId + 1) + " connected.");
-
                 System.out.println("Connected clients: " + connectedClients);
 
-                if (connectedClients == 3 && !started) {
-
-                    System.out.println("All players connected. Starting game.");
-                    Platform.runLater(() -> {
-                        try {
-                            startGameType();
-                            started = true;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-                else if (started) {
+                if (started) {
                     setupReconnectPlayer(playerId);
                 }
+                else {
+                    Platform.runLater(() -> mainMenuController.clientConnected(playerId));
+                }
 
+            }
+
+            case MessageType.CLIENT_DISCONNECTED -> {
+                int playerId = NetworkMessage.getPlayerId(message);
+
+                if (!started) {
+                    Platform.runLater(() -> mainMenuController.clientDisconnected(playerId));
+                }
+                Player player = players.get(playerId);
+
+                player.AiMode = true;
+
+                synchronized (player.lockCardSelect) {
+                    player.lockCardSelect.notifyAll();
+                }
+
+                System.out.println("Player " + (playerId + 1) + " disconnected.");
+                // Handle player disconnection logic here
+//                Platform.runLater(() -> {
+//                    Alert alert = new Alert(Alert.AlertType.WARNING);
+//                    alert.setTitle("Jucător deconectat");
+//                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
+//                    alert.show();
+//                });
             }
 
             case MessageType.CARD_SELECTED -> {
@@ -114,32 +146,6 @@ public class ServerConfig {
                 } else {
                     System.out.println("Card not found in hand: " + selectedCard);
                 }
-            }
-
-            case MessageType.CLIENT_DISCONNECTED -> {
-                //int playerId = NetworkMessage.getPlayerId(message);
-                connectedClients--;
-                int playerId = NetworkMessage.getPlayerId(message);
-
-                Player player = players.get(playerId);
-                //TODO: activeaza AiMode pentru playerul care s-a deconectat
-
-                player.AiMode = true;
-
-                synchronized (player.lockCardSelect) {
-                    player.lockCardSelect.notifyAll();
-                }
-
-                //player.selectCard(null);
-
-                System.out.println("Player " + (playerId + 1) + " disconnected.");
-                // Handle player disconnection logic here
-//                Platform.runLater(() -> {
-//                    Alert alert = new Alert(Alert.AlertType.WARNING);
-//                    alert.setTitle("Jucător deconectat");
-//                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
-//                    alert.show();
-//                });
             }
         }
     }
@@ -263,14 +269,6 @@ public class ServerConfig {
 
     }
 
-    private void createPlayer(GamePanel gamePanel, Stage stage) throws Exception {
-        Player player = new Player(0);
-        players.add(player);
-        gamePanelController = gamePanel.start(stage, player);
-
-        gamePanelController.setOnDisconnect(this::disconnect);
-    }
-
     private List<Integer> getScores() {
         List<Integer> scores = new ArrayList<>();
         for (Player player: players) {
@@ -279,13 +277,15 @@ public class ServerConfig {
         return scores;
     }
 
-    private void disconnect() {
+    public void disconnect() {
         Platform.runLater(() -> {
             try {
                 relay.disconnect();
                 players.clear();
                 gamesQueue.clear();
-                gamePanel.returnToMainMenu();
+
+                if (gamePanel != null)
+                    gamePanel.returnToMainMenu();
             } catch (Exception e) {
                 e.printStackTrace();
             }
