@@ -43,7 +43,6 @@ public class GameSession {
     }
     public void startGame(Runnable onFinish){
         Thread gameThread = new Thread(() -> {
-        //aici alt thread
             while (currentRound < 8){
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
@@ -52,7 +51,16 @@ public class GameSession {
                     game.validateMove(players.get(currentPlayer));
                     players.get(currentPlayer).myTurn.set(false);
                 }
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 firstPlayer = game.nextPlayer();
+
+
 
                 game.updateScore(players.get(firstPlayer));
 
