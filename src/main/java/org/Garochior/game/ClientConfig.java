@@ -20,6 +20,7 @@ public class ClientConfig {
     private int playerId;
 
     private GamePanel gamePanel;
+    private boolean isTablou = false;
 
     public void initGame (Stage Stage, String roomCode, int playerId) throws Exception {
         Assets.init();
@@ -92,12 +93,14 @@ public class ClientConfig {
                 int fromPlayer = NetworkMessage.getPlayerId(message);
                 Card card = NetworkMessage.getCard(message);
                 Platform.runLater(() -> {
+
                     if (fromPlayer == playerId) {
                         player.hand.remove(card);
                         gamePanelController.setHand();
                         player.myTurn.set(false);
                     }
-                    gamePanelController.setPlayedCards(card, fromPlayer);
+                    //TODO isTablou modificat printr un mesaj, ca sa stie clientul
+                    gamePanelController.setPlayedCards(card, fromPlayer, isTablou);
                 });
             }
 
@@ -128,11 +131,39 @@ public class ClientConfig {
                 });
             }
 
+            case MessageType.TABLOU_GAME -> {
+                isTablou = NetworkMessage.getIsTablouGame(message);
+                gamePanelController.clearTablouPlayedCards();
+                gamePanelController.setTablouMode(isTablou);
+            }
+
             case MessageType.GAME_END -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
+
                 Platform.runLater(() -> {
-                    // TODO: afișează scorurile finale
+                    // Actualizare scor
+                    int score = scores.get(playerId);
+                    ///Actualizare interfata cu scorul stanga sus sau ceva la stilu
+                    System.out.println("Joc terminat! Scorul tau:  " + score );
+                });
+            }
+
+            case MessageType.GAME_CYCLE_END -> {
+                List<Integer> scores = NetworkMessage.getScores(message);
+                Platform.runLater(() -> {
+                    //TODO Tabel cu scoruri
+                    System.out.println("Jocuri terminate!" + scores );
+                });
+            }
+
+            case MessageType.GAME_OVER -> {
+                List<Integer> scores = NetworkMessage.getScores(message);
+                int winner = NetworkMessage.getWinner(message);
+                Platform.runLater(() -> {
+                    // TODO: afișează scorurile finale + interfata de back
                     System.out.println("Joc terminat! Scoruri: " + scores);
+                    System.out.println("Winner: " + winner);
+                    disconnect();
                 });
             }
 

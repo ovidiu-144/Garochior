@@ -8,6 +8,10 @@ import org.Garochior.model.Player;
 public class KingGame extends ValidationLogic{
     Card card = new Card(ModelConfig.K, CardType.HEARTS);
 
+    public KingGame(int playerTurn) {
+        super(playerTurn);
+    }
+
     @Override
     public String getName() {
         return "King of Hearts Game";

@@ -7,8 +7,6 @@
 
 <?import javafx.scene.control.Button?>
 
-
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.Garochior.game.GamePanelController">
 
@@ -52,6 +50,12 @@
             style="-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white;
                    -fx-font-size: 18px; -fx-padding: 8 20 8 20; -fx-background-radius: 10;" />
 
+
+
+    <VBox fx:id="tabouGridBox" visible="true" alignment="CENTER" spacing="10"
+          AnchorPane.topAnchor="100.0" AnchorPane.bottomAnchor="100.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    </VBox>
     <!-- Pause Menu Overlay -->
     <VBox fx:id="pauseMenu" visible="false" alignment="CENTER" spacing="20"
           AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
@@ -68,5 +72,4 @@
                 style="-fx-background-color: #f44336; -fx-text-fill: white;
                        -fx-font-size: 20px; -fx-background-radius: 10;" />
     </VBox>
-
 </AnchorPane>

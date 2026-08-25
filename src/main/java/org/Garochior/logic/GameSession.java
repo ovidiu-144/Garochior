@@ -19,6 +19,7 @@ public class GameSession {
     public int firstPlayer;
     private int currentRound;
     private java.util.function.Consumer<Integer> onHandTaken;
+    private boolean isTablou = false;
 
     public void setOnHandTaken(java.util.function.Consumer<Integer> callback) {
         this.onHandTaken = callback;
@@ -32,6 +33,9 @@ public class GameSession {
         firstPlayer = 0;
 
         currentRound = 0;
+        if (game instanceof TablouGame) {
+            isTablou = true;
+        }
     }
 
     public void setHands(){
@@ -43,8 +47,9 @@ public class GameSession {
     }
     public void startGame(Runnable onFinish){
         Thread gameThread = new Thread(() -> {
-        //aici alt thread
-            while (currentRound < 8){
+            int maxRounds = isTablou ? 40 : 8;
+
+            while (currentRound < maxRounds){
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
                     int currentPlayer = (firstPlayer + i) % 4;
@@ -52,15 +57,24 @@ public class GameSession {
                     game.validateMove(players.get(currentPlayer));
                     players.get(currentPlayer).myTurn.set(false);
                 }
-                firstPlayer = game.nextPlayer();
 
-                game.updateScore(players.get(firstPlayer));
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
-                if (onHandTaken != null) {
+                if (!isTablou){
+                    firstPlayer = game.nextPlayer();
+                    game.updateScore(players.get(firstPlayer));
+                    System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
+                }
+
+                if (!isTablou && onHandTaken != null) {
                     onHandTaken.accept(firstPlayer);
                 }
 
-                System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
+
 
 //                try {
 //                    Thread.sleep(3000); // Pauza de 3 secunde
@@ -81,7 +95,6 @@ public class GameSession {
             if (onFinish != null){
                 Platform.runLater(onFinish);
             }
-
 
         });
         gameThread.setDaemon(true);
