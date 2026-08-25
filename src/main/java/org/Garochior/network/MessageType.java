@@ -16,7 +16,8 @@ public class MessageType {
 
     public static final String GAME_START = "GAME_START";
     public static final String GAME_END = "GAME_END";
-    public static final String GAME_OVER = "GAME_OVER";  //cand se termina un ciclu de 4 jocuri
+    public static final String GAME_CYCLE_END = "GAME_CYCLE_END";
+    public static final String GAME_OVER = "GAME_OVER";  //cand se termina toate jocurile
 
     //pentru deconectarea cuiva
     public static final String HOST_DISCONNECTED = "HOST_DISCONNECTED";

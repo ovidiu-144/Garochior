@@ -65,12 +65,6 @@ public class Player {
         }
         //selectedCard = hand.get(index);
     }
-    public void setSelectedCard (Card card){
-        synchronized (lockCardSelect){
-            selectedCard = card;
-            lockCardSelect.notifyAll();
-        }
-    }
 
     public Card selectCard (Card firstCard){
         synchronized (lockCardSelect){
@@ -109,7 +103,7 @@ public class Player {
 
             }
         }
-        System.out.println("Player " + (id + 1) + " selected card: " + selectedCard);
+        //System.out.println("Player " + (id + 1) + " selected card: " + selectedCard);
         return selectedCard;
     }
 
@@ -161,7 +155,7 @@ public class Player {
         Random rand = new Random();
         int size = hand.size();
         int n = rand.nextInt(size);
-        System.out.println("Player " + (id + 1) + " selected card: " + hand.get(n));
+        //System.out.println("Player " + (id + 1) + " selected card: " + hand.get(n));
         return hand.get(n);
     }
 

@@ -23,7 +23,8 @@ public class TablouGame implements GameLogic {
         this.onInvalidCard = callback;
     }
 
-    public TablouGame() {
+    public TablouGame(int playerTurn) {
+        this.playerTurn = playerTurn;
         //adaugam initial toate J-urile in lista de carti pentru jocul Tablou
         for (int i = 0; i < 4; ++i){
             tablouCards.add(new Card(ModelConfig.J, CardType.values()[i]));
@@ -78,7 +79,7 @@ public class TablouGame implements GameLogic {
                     if (onInvalidCard != null) {
                         onInvalidCard.accept(player.getId());
                     }
-                    System.out.println("Player " + (player.getId() + 1) + " selected invalid card: " + card);
+                    //System.out.println("Player " + (player.getId() + 1) + " selected invalid card: " + card);
 
                 }
             }

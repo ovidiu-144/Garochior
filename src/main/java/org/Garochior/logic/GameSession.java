@@ -67,13 +67,14 @@ public class GameSession {
                 if (!isTablou){
                     firstPlayer = game.nextPlayer();
                     game.updateScore(players.get(firstPlayer));
+                    System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
                 }
 
                 if (!isTablou && onHandTaken != null) {
                     onHandTaken.accept(firstPlayer);
                 }
 
-                System.out.println(">>> Player " + (firstPlayer + 1) + " took the hand! <<<");
+
 
 //                try {
 //                    Thread.sleep(3000); // Pauza de 3 secunde

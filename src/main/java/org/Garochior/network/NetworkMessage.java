@@ -7,6 +7,7 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class NetworkMessage {
@@ -85,6 +86,26 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
+    public static String gameCycleEnd(List<Integer> scores) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.GAME_CYCLE_END);
+        JsonArray arr = new JsonArray();
+        for (int score : scores) arr.add(score);
+        obj.add("scores", arr);
+        return obj.toString();
+    }
+
+    public static String gameOver(List<Integer> scores) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.GAME_CYCLE_END);
+        JsonArray arr = new JsonArray();
+        for (int score : scores) arr.add(score);
+        obj.add("scores", arr);
+        int winner = scores.indexOf(Collections.max(scores));
+        obj.addProperty("winner", winner);
+        return obj.toString();
+    }
+
 
     public static String roomReady(int playerId) {
         JsonObject obj = new JsonObject();
@@ -156,5 +177,9 @@ public final class NetworkMessage {
 
     public static boolean getIsTablouGame (JsonObject obj) {
         return obj.get("isTablouGame").getAsBoolean();
+    }
+
+    public static int  getWinner(JsonObject obj) {
+        return obj.get("winner").getAsInt();
     }
 }

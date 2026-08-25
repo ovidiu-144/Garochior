@@ -227,7 +227,7 @@ public class GamePanelController {
         }
     }
 
-    public void clearPlayedCards (){
+    public void clearPlayedCards () {
         for (int i = 0; i < centerVBox.getChildren().size(); i++) {
             if (centerVBox.getChildren().get(i) instanceof ImageView) {
                 ImageView iv = (ImageView) centerVBox.getChildren().get(i);
@@ -238,6 +238,18 @@ public class GamePanelController {
             if (centerHBox.getChildren().get(i) instanceof ImageView) {
                 ImageView iv = (ImageView) centerHBox.getChildren().get(i);
                 iv.setImage(Assets.backCardImages[0]);
+            }
+        }
+    }
+
+    public void clearTablouPlayedCards () {
+        for (ImageView[] ivType : cardGridImages){
+            for  (int i = 7 ; i <= 14; ++i) {
+                if (i != 11){
+                    ivType[i - 7].setVisible(false);
+                    ivType[i - 7].setManaged(false);
+                }
+                ivType[i - 7].setStyle("-fx-background-color: transparent; -fx-opacity: 0.4;");
             }
         }
     }
@@ -255,28 +267,6 @@ public class GamePanelController {
         System.out.println("Card is: " + player.hand.get(index));
         player.setSelectedCard(index);
     }
-
-//    public void onCardGridClicked(ActionEvent event) {
-//
-////        if (!player.myTurn.getValue()) {
-////            System.out.println("It's not your turn!");
-////            return;
-////        }
-//
-//        Button btn = (Button) event.getSource();
-//        String[] parts = ((String) btn.getUserData()).split("_");
-//        int number = Integer.parseInt(parts[0]);
-//        CardType type = CardType.valueOf(parts[1]);
-//        System.out.println("Card clicked: " + number + " " + type);
-//
-//        Card selectedCard = new Card(number, type);
-//        player.setSelectedCard(selectedCard);
-//
-//        //pentru teste
-//
-//        setCardVisibility(selectedCard);
-//        setTablouCard(selectedCard);
-//    }
 
     public void setTablouCard (Card card){
         int typeIndex = card.getType().ordinal();
