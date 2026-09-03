@@ -15,6 +15,8 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
+import java.util.List;
+
 public class GamePanelController {
 
     public VBox centerVBox;
@@ -76,6 +78,14 @@ public class GamePanelController {
 
     @FXML
     public VBox tabouGridBox;
+    public Label scoreLabel;
+    public VBox scoreTable;
+
+    //Scorurile
+    public Label scoreP0;
+    public Label scoreP1;
+    public Label scoreP2;
+    public Label scoreP3;
 
 
     private Player player;
@@ -152,7 +162,6 @@ public class GamePanelController {
     }
 
     public void setTablouMode(boolean active) {
-        System.out.println("Am apasat set TabouMode");
         tabouGridBox.setVisible(active);
         tabouGridBox.setManaged(active);
         tabouGridBox.setMouseTransparent(true);
@@ -304,6 +313,34 @@ public class GamePanelController {
         }
     }
 
+    public void setScoreLabel (int score) {
+        scoreLabel.setText("Score: " + score);
+    }
+
+    public void setScoreTable (List<Integer> scores){
+
+        scoreP0.setText(scores.get(0).toString());
+        scoreP1.setText(scores.get(1).toString());
+        scoreP2.setText(scores.get(2).toString());
+        scoreP3.setText(scores.get(3).toString());
+
+        centerVBox.setVisible(false);
+        centerVBox.setManaged(false);
+        scoreTable.setVisible(true);
+    }
+
+    public void hideScores() {
+        scoreTable.setVisible(false);
+        centerVBox.setVisible(true);
+        centerVBox.setManaged(true);
+    }
+
+    public int getScoreLabel () {
+        String fullScore = scoreLabel.getText();
+        String[] score = fullScore.split(" ");
+
+        return Integer.parseInt(score[1]);
+    }
 
     public void setTurnLabel (int id){
         turnLabel.setText("Player " + (id + 1) + "'s turn");

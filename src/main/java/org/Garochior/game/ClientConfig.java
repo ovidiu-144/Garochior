@@ -119,6 +119,16 @@ public class ClientConfig {
                 int winnerId = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
                     gamePanelController.showHandTaker(winnerId);
+
+                    if (winnerId == playerId) {
+                        int score = NetworkMessage.getScore(message);
+                        int lastScore = gamePanelController.getScoreLabel();
+
+                        if (score != lastScore) {
+                            gamePanelController.setScoreLabel(score);
+                        }
+                    }
+
                     gamePanelController.clearPlayedCards();
                 });
             }
@@ -150,10 +160,16 @@ public class ClientConfig {
 
             case MessageType.GAME_CYCLE_END -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
+                gamePanelController.setTablouMode(false);
                 Platform.runLater(() -> {
-                    //TODO Tabel cu scoruri
-                    System.out.println("Jocuri terminate!" + scores );
+                    gamePanelController.setScoreTable(scores);
                 });
+                try {
+                    Thread.sleep(3000); //lasam 3 secunde
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(gamePanelController::hideScores);
             }
 
             case MessageType.GAME_OVER -> {
@@ -165,6 +181,17 @@ public class ClientConfig {
                     System.out.println("Winner: " + winner);
                     disconnect();
                 });
+            }
+
+            case MessageType.SCORE -> {
+                int player = NetworkMessage.getPlayerId(message);
+                int score = NetworkMessage.getScore(message);
+
+                if (player == playerId) {
+                    Platform.runLater(() -> {
+                        gamePanelController.setScoreLabel(score);
+                    });
+                }
             }
 
             case MessageType.HOST_DISCONNECTED -> {

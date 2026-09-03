@@ -93,7 +93,7 @@ public class GameSession {
                 System.out.println("Player " + (i + 1) + " score: " + players.get(i).getScore());
             }
             if (onFinish != null){
-                Platform.runLater(onFinish);
+                onFinish.run();
             }
 
         });

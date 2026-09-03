@@ -33,7 +33,7 @@ public class ServerConfig {
     private int currentPlayer = 0;
     private final List<PlayedCard> currentPlayedCards = new ArrayList<>();
 
-    private int currentGame = 1;
+    private int currentGame = 0;
     private int currentCycle = 1;
 
     record PlayedCard(int playerId, Card card) {}
@@ -84,14 +84,10 @@ public class ServerConfig {
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
 
-        Platform.runLater(() -> {
-            try {
-                startGameType();
-                started = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        new Thread(() -> {
+            startGameType();
+            started = true;
+        }).start();
     }
 
 
@@ -167,8 +163,13 @@ public class ServerConfig {
         relay.send(NetworkMessage.yourTurn(currentPlayer)); // firstPlayer
 
         //TODO:
-        // ii trimitem scorul
+        // ii trimitem scorul + cartile de la Tablou
 
+        //Tablou
+        relay.send(NetworkMessage.isTablouGame(isTablou));
+
+        //scorul
+        relay.send(NetworkMessage.scoreSet(playerId, players.get(playerId).getScore()));
 
         // ii trimitem cartile jucate in runda curenta
         for (PlayedCard currentPlayedCard : currentPlayedCards) {
@@ -232,9 +233,22 @@ public class ServerConfig {
         gameSession = new GameSession(players, game);
 
         gameSession.setOnHandTaken(playerId -> {
-            Platform.runLater(gamePanelController::clearPlayedCards);
-            Platform.runLater(() -> gamePanelController.showHandTaker(playerId));
-            relay.send(NetworkMessage.handTaker(playerId));
+            int currentScore = players.get(playerId).getScore();
+            Platform.runLater(() -> {
+
+                gamePanelController.clearPlayedCards();
+                gamePanelController.showHandTaker(playerId);
+
+                int lastScore = gamePanelController.getScoreLabel();
+
+                if (lastScore != currentScore) {
+                    if (playerId == 0) {
+                        gamePanelController.setScoreLabel(currentScore);
+                    }
+                }
+            });
+            relay.send(NetworkMessage.handTaker(playerId, currentScore));
+
         });
 
 
@@ -248,26 +262,31 @@ public class ServerConfig {
         });
 
         //trimitem scorul dupa fiecare mini game
-        relay.send (NetworkMessage.gameEnd(getScores()));
 
-        if (currentGame == 5){
+        if (currentGame == 6){
             relay.send(NetworkMessage.gameCycleEnd(getScores()));
-
             System.out.println("Game cycle ended. Scores: " + getScores());
-            //TODO afisat pe interfata scorurile
+
+            //ne asiguram cu nu mai apare
+            gamePanelController.setTablouMode(false);
+//            relay.send (NetworkMessage.gameEnd(getScores()));
+            Platform.runLater(() -> {
+                List<Integer> scores = getScores();
+                gamePanelController.setScoreTable(scores);
+            });
+
 
             try {
-                Thread.sleep(5000); //timpul pentru a vedea scorurile pe tabela
+                Thread.sleep(3000); //lasam 3 secunde
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            catch  (Exception e) {
-                e.printStackTrace();
-            }
+            Platform.runLater(gamePanelController::hideScores);
+
             currentGame = 0;
             currentCycle++;
             System.out.println("Current Cycle: " + currentCycle);
         }
-
-
         gameSession.startGame(this::startGameType);
     }
 
@@ -299,7 +318,7 @@ public class ServerConfig {
             player.myTurn.addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     currentPlayer = player.getId();
-                    System.out.println("myTurn changed for player: " + player.getId() + " isHost: " + isHost);
+                    System.out.println("myTurn changed for player: " + player.getId());
                     Platform.runLater(() -> {
 //                        System.out.println("Updating turnLabel for player: " + player.getId());
                         gamePanelController.setTurnLabel(player.getId());
