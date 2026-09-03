@@ -79,7 +79,7 @@ public class ServerConfig {
         for  (int i = 1; i < 4; ++i){
             players.get(i).AiMode = aiPlayers[i];
         }
-        players.getFirst().AiMode = true; // Host is always AI for testing purposes
+//        players.getFirst().AiMode = true; // Host is always AI for testing purposes
 
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
@@ -166,10 +166,10 @@ public class ServerConfig {
         // ii trimitem scorul + cartile de la Tablou
 
         //Tablou
-//        relay.send(NetworkMessage.isTablouGame(isTablou));
-        
-        //scorul
+        relay.send(NetworkMessage.isTablouGame(isTablou));
 
+        //scorul
+        relay.send(NetworkMessage.scoreSet(playerId, players.get(playerId).getScore()));
 
         // ii trimitem cartile jucate in runda curenta
         for (PlayedCard currentPlayedCard : currentPlayedCards) {

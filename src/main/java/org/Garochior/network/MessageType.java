@@ -11,6 +11,8 @@ public class MessageType {
     public static final String CARD_PLAYED = "CARD_PLAYED";
     public static final String INVALID_CARD = "INVALID_CARD";
 
+    public static final String SCORE = "SCORE";
+
     public static final String HAND_TAKER = "HAND_TAKER";
     public static final String TABLOU_GAME = "TABLOU_GAME";
 
@@ -22,6 +24,8 @@ public class MessageType {
     //pentru deconectarea cuiva
     public static final String HOST_DISCONNECTED = "HOST_DISCONNECTED";
     public static final String CLIENT_DISCONNECTED = "CLIENT_DISCONNECTED";
+
+
 
     public static final String ROOM_FOUND = "ROOM_FOUND";
     public static final String ROOM_NOT_FOUND = "ROOM_NOT_FOUND";

@@ -183,6 +183,17 @@ public class ClientConfig {
                 });
             }
 
+            case MessageType.SCORE -> {
+                int player = NetworkMessage.getPlayerId(message);
+                int score = NetworkMessage.getScore(message);
+
+                if (player == playerId) {
+                    Platform.runLater(() -> {
+                        gamePanelController.setScoreLabel(score);
+                    });
+                }
+            }
+
             case MessageType.HOST_DISCONNECTED -> {
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);

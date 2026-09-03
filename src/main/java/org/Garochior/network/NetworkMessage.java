@@ -107,6 +107,13 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
+    public static String scoreSet (int playerId, int score) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.SCORE);
+        obj.addProperty("playerId", playerId);
+        obj.addProperty("score", score);
+        return obj.toString();
+    }
 
     public static String roomReady(int playerId) {
         JsonObject obj = new JsonObject();
