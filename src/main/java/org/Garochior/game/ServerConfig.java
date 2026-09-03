@@ -232,9 +232,23 @@ public class ServerConfig {
         gameSession = new GameSession(players, game);
 
         gameSession.setOnHandTaken(playerId -> {
-            Platform.runLater(gamePanelController::clearPlayedCards);
-            Platform.runLater(() -> gamePanelController.showHandTaker(playerId));
-            relay.send(NetworkMessage.handTaker(playerId));
+            int currentScore = players.get(playerId).getScore();
+            Platform.runLater(() -> {
+
+                gamePanelController.clearPlayedCards();
+                gamePanelController.showHandTaker(playerId);
+
+                int lastScore = gamePanelController.getScoreLabel();
+
+                if (lastScore != currentScore) {
+                    if (playerId == 0) {
+                        gamePanelController.setScoreLabel(currentScore);
+                    }
+                }
+            });
+
+
+            relay.send(NetworkMessage.handTaker(playerId, currentScore));
         });
 
 
@@ -299,7 +313,7 @@ public class ServerConfig {
             player.myTurn.addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     currentPlayer = player.getId();
-                    System.out.println("myTurn changed for player: " + player.getId() + " isHost: " + isHost);
+                    System.out.println("myTurn changed for player: " + player.getId());
                     Platform.runLater(() -> {
 //                        System.out.println("Updating turnLabel for player: " + player.getId());
                         gamePanelController.setTurnLabel(player.getId());

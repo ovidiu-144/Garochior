@@ -63,10 +63,11 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String handTaker(int playerId) {
+    public static String handTaker(int playerId, int score) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.HAND_TAKER);
         obj.addProperty("playerId", playerId);
+        obj.addProperty("score", score);
         return obj.toString();
     }
 
@@ -173,6 +174,10 @@ public final class NetworkMessage {
             scores.add(arr.get(i).getAsInt());
         }
         return scores;
+    }
+
+    public static int getScore(JsonObject obj) {
+        return obj.get("score").getAsInt();
     }
 
     public static boolean getIsTablouGame (JsonObject obj) {

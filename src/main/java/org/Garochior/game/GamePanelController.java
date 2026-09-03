@@ -76,6 +76,7 @@ public class GamePanelController {
 
     @FXML
     public VBox tabouGridBox;
+    public Label scoreLabel;
 
 
     private Player player;
@@ -304,6 +305,16 @@ public class GamePanelController {
         }
     }
 
+    public void setScoreLabel (int score) {
+        scoreLabel.setText("Score: " + score);
+    }
+
+    public int getScoreLabel () {
+        String fullScore = scoreLabel.getText();
+        String[] score = fullScore.split(" ");
+
+        return Integer.parseInt(score[1]);
+    }
 
     public void setTurnLabel (int id){
         turnLabel.setText("Player " + (id + 1) + "'s turn");

@@ -119,6 +119,16 @@ public class ClientConfig {
                 int winnerId = NetworkMessage.getPlayerId(message);
                 Platform.runLater(() -> {
                     gamePanelController.showHandTaker(winnerId);
+
+                    if (winnerId == playerId) {
+                        int score = NetworkMessage.getScore(message);
+                        int lastScore = gamePanelController.getScoreLabel();
+
+                        if (score != lastScore) {
+                            gamePanelController.setScoreLabel(score);
+                        }
+                    }
+
                     gamePanelController.clearPlayedCards();
                 });
             }

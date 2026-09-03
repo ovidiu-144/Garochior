@@ -22,6 +22,11 @@
 
     <HBox alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
         <children>
+            <Label fx:id="scoreLabel" text="Score: 0"
+                   style="-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;
+                          -fx-background-color: rgba(0, 0, 0, 0.5); -fx-padding: 10 30 10 30;
+                          -fx-background-radius: 20;" />
+
             <Label fx:id="gameLabel" text="Game: "
                    style="-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;
                           -fx-background-color: rgba(0, 0, 0, 0.5); -fx-padding: 10 30 10 30;
