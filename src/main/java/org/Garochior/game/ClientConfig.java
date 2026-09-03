@@ -160,10 +160,16 @@ public class ClientConfig {
 
             case MessageType.GAME_CYCLE_END -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
+                gamePanelController.setTablouMode(false);
                 Platform.runLater(() -> {
-                    //TODO Tabel cu scoruri
-                    System.out.println("Jocuri terminate!" + scores );
+                    gamePanelController.setScoreTable(scores);
                 });
+                try {
+                    Thread.sleep(3000); //lasam 3 secunde
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Platform.runLater(gamePanelController::hideScores);
             }
 
             case MessageType.GAME_OVER -> {

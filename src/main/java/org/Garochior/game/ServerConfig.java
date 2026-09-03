@@ -33,7 +33,7 @@ public class ServerConfig {
     private int currentPlayer = 0;
     private final List<PlayedCard> currentPlayedCards = new ArrayList<>();
 
-    private int currentGame = 1;
+    private int currentGame = 0;
     private int currentCycle = 1;
 
     record PlayedCard(int playerId, Card card) {}
@@ -79,19 +79,15 @@ public class ServerConfig {
         for  (int i = 1; i < 4; ++i){
             players.get(i).AiMode = aiPlayers[i];
         }
-//        players.getFirst().AiMode = true; // Host is always AI for testing purposes
+        players.getFirst().AiMode = true; // Host is always AI for testing purposes
 
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
 
-        Platform.runLater(() -> {
-            try {
-                startGameType();
-                started = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        new Thread(() -> {
+            startGameType();
+            started = true;
+        }).start();
     }
 
 
@@ -167,7 +163,12 @@ public class ServerConfig {
         relay.send(NetworkMessage.yourTurn(currentPlayer)); // firstPlayer
 
         //TODO:
-        // ii trimitem scorul
+        // ii trimitem scorul + cartile de la Tablou
+
+        //Tablou
+//        relay.send(NetworkMessage.isTablouGame(isTablou));
+        
+        //scorul
 
 
         // ii trimitem cartile jucate in runda curenta
@@ -246,9 +247,8 @@ public class ServerConfig {
                     }
                 }
             });
-
-
             relay.send(NetworkMessage.handTaker(playerId, currentScore));
+
         });
 
 
@@ -262,26 +262,31 @@ public class ServerConfig {
         });
 
         //trimitem scorul dupa fiecare mini game
-        relay.send (NetworkMessage.gameEnd(getScores()));
 
-        if (currentGame == 5){
+        if (currentGame == 6){
             relay.send(NetworkMessage.gameCycleEnd(getScores()));
-
             System.out.println("Game cycle ended. Scores: " + getScores());
-            //TODO afisat pe interfata scorurile
+
+            //ne asiguram cu nu mai apare
+            gamePanelController.setTablouMode(false);
+//            relay.send (NetworkMessage.gameEnd(getScores()));
+            Platform.runLater(() -> {
+                List<Integer> scores = getScores();
+                gamePanelController.setScoreTable(scores);
+            });
+
 
             try {
-                Thread.sleep(5000); //timpul pentru a vedea scorurile pe tabela
+                Thread.sleep(3000); //lasam 3 secunde
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            catch  (Exception e) {
-                e.printStackTrace();
-            }
+            Platform.runLater(gamePanelController::hideScores);
+
             currentGame = 0;
             currentCycle++;
             System.out.println("Current Cycle: " + currentCycle);
         }
-
-
         gameSession.startGame(this::startGameType);
     }
 
