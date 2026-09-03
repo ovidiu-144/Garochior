@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,14 +29,31 @@ import java.util.List;
 
 public class MainMenu {
 
-    public void start (Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainMenu.fxml"));
         AnchorPane root = loader.load();
 
-        // 3. Pune rădăcina într-o scenă
-        Scene scene = new Scene(root);
+        Group scalableGroup = new Group(root);
+        StackPane rootPane = new StackPane(scalableGroup);
+        rootPane.setStyle("-fx-background-color: black;");
 
-        // 4. Configurează stage-ul
+        Scene scene = new Scene(rootPane);
+
+        Runnable updateScale = () -> {
+            double w = rootPane.getWidth();
+            double h = rootPane.getHeight();
+            if (w == 0 || h == 0) return;
+
+            double scaleX = w / 1920.0;
+            double scaleY = h / 1080.0;
+            double scale = Math.min(scaleX, scaleY);
+
+            scalableGroup.setScaleX(scale);
+            scalableGroup.setScaleY(scale);
+        };
+
+        rootPane.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> updateScale.run());
+
         stage.setTitle("Garochior");
         stage.setScene(scene);
 
@@ -43,14 +61,12 @@ public class MainMenu {
             System.out.println("Fereastra a fost inchisa de jucator. Opresc aplicatia...");
             Platform.exit();
             System.exit(0);
-            // Add any additional cleanup code here
         });
 
         stage.setMaximized(true);
-
-        /// pentru test sa vedem ca nu crapa
-
         stage.show();
+
+        Platform.runLater(() -> Platform.runLater(updateScale));
     }
 
 //    public void start1 (Stage stage) throws Exception {

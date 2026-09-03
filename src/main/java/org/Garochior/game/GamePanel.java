@@ -21,23 +21,15 @@ public class GamePanel {
                 AnchorPane root = loader.load();
 
                 GamePanelController gameCtrl = loader.getController();
-                //gameCtrl.testCarti();
-
                 gameCtrl.setPlayer(player);
-                // 3. Pune rădăcina într-o scenă
+
 
                 Group scalableGroup = new javafx.scene.Group(root);
                 StackPane rootPane = new javafx.scene.layout.StackPane(scalableGroup);
-                rootPane.setStyle("-fx-background-color: black;"); // adaugă benzi negre (letterboxing) dacă aspect ratio diferă
-
+                rootPane.setStyle("-fx-background-color: black;");
 
                 Scene scene = new Scene(rootPane);
 
-//                rootPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-//                    double scale = newVal.doubleValue() / 1920.0;
-//                    scalableGroup.setScaleX(scale);
-//                    scalableGroup.setScaleY(scale);
-//                });
                 Runnable updateScale = () -> {
                     double w = rootPane.getWidth();
                     double h = rootPane.getHeight();
@@ -46,7 +38,7 @@ public class GamePanel {
                     if (w == 0 || h == 0) return;
 
                     double scaleX = w / 1920.0;
-                    double scaleY = h / 1080.0; // Actualizat pentru 1080 conform modificării tale
+                    double scaleY = h / 1080.0;
 
                     double scale = Math.min(scaleX, scaleY);
 
@@ -54,10 +46,8 @@ public class GamePanel {
                     scalableGroup.setScaleY(scale);
                 };
 
-    // Ascultăm modificările de dimensiune și apelăm logica
                 rootPane.layoutBoundsProperty().addListener((obs, oldBounds, newBounds) -> updateScale.run());
 
-                // 4. Configurează stage-ul
                 stage.setTitle("Player " + (player.getId() + 1 ));
                 stage.setScene(scene);
                 stage.setMaximized(true);
