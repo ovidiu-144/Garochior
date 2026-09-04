@@ -7,6 +7,7 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class NetworkMessage {
@@ -62,10 +63,11 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String handTaker(int playerId) {
+    public static String handTaker(int playerId, int score) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.HAND_TAKER);
         obj.addProperty("playerId", playerId);
+        obj.addProperty("score", score);
         return obj.toString();
     }
 
@@ -85,11 +87,45 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
+    public static String gameCycleEnd(List<Integer> scores) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.GAME_CYCLE_END);
+        JsonArray arr = new JsonArray();
+        for (int score : scores) arr.add(score);
+        obj.add("scores", arr);
+        return obj.toString();
+    }
+
+    public static String gameOver(List<Integer> scores) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.GAME_CYCLE_END);
+        JsonArray arr = new JsonArray();
+        for (int score : scores) arr.add(score);
+        obj.add("scores", arr);
+        int winner = scores.indexOf(Collections.max(scores));
+        obj.addProperty("winner", winner);
+        return obj.toString();
+    }
+
+    public static String scoreSet (int playerId, int score) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.SCORE);
+        obj.addProperty("playerId", playerId);
+        obj.addProperty("score", score);
+        return obj.toString();
+    }
 
     public static String roomReady(int playerId) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.ROOM_READY);
         obj.addProperty("playerId", playerId);
+        return obj.toString();
+    }
+
+    public static String isTablouGame (boolean isTablouGame) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", MessageType.TABLOU_GAME);
+        obj.addProperty("isTablouGame", isTablouGame);
         return obj.toString();
     }
 
@@ -145,5 +181,17 @@ public final class NetworkMessage {
             scores.add(arr.get(i).getAsInt());
         }
         return scores;
+    }
+
+    public static int getScore(JsonObject obj) {
+        return obj.get("score").getAsInt();
+    }
+
+    public static boolean getIsTablouGame (JsonObject obj) {
+        return obj.get("isTablouGame").getAsBoolean();
+    }
+
+    public static int  getWinner(JsonObject obj) {
+        return obj.get("winner").getAsInt();
     }
 }

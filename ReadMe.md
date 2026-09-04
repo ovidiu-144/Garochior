@@ -34,7 +34,7 @@ Sau direct de pe <a href="https://maven.apache.org/download.cgi" target="_blank"
 ## Rulare joc
 
 ```powershell
-git clone https://github.com/tu/garochior.git
+git clone (https://github.com/ovidiu-144/Garochior)
 cd garochior
 mvn clean javafx:run
 ```

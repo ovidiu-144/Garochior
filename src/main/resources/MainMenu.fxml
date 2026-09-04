@@ -35,7 +35,31 @@
                            </children>
                         </HBox>
                         <Button fx:id="confirmServerBtn" mnemonicParsing="false" onAction="#onConfirmServerClicked" text="Confirm" />
-                     </children></VBox>
+                     </children>
+                     <HBox fx:id="serverSlots" spacing="10" alignment="CENTER_LEFT" visible="false">
+                        <Button userData="0" prefWidth="80" prefHeight="80" text="HOST"
+                                style="-fx-background-color: #888; -fx-text-fill: white; -fx-font-size: 12px;
+                          -fx-background-radius: 10;" disable="true" />
+                        <Button fx:id="player2BtnSv" prefWidth="80" prefHeight="80" text="Set AI"
+                                onAction="#onAddAiClientClicked" userData="1"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                          -fx-background-radius: 10;" />
+                        <Button fx:id="player3BtnSv" prefWidth="80" prefHeight="80" text="Set AI"
+                                onAction="#onAddAiClientClicked" userData="2"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                          -fx-background-radius: 10;" />
+                        <Button fx:id="player4BtnSv" prefWidth="80" prefHeight="80" text="Set AI"
+                                onAction="#onAddAiClientClicked" userData="3"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px;
+                          -fx-background-radius: 10;" />
+                     </HBox>
+                     <Button fx:id="startServerBtn" mnemonicParsing="false" onAction="#onStartServerClicked" text="Start Server" visible="false" />
+                     <Button fx:id="cancelServerBtn" mnemonicParsing="false" onAction="#onCancelServerClicked" text="Cancel Server" visible="false" />
+
+                  </VBox>
+
+
+
                   <VBox fx:id="clientLayout" prefHeight="300.0" prefWidth="370.0" spacing="15" visible="false">
                      <HBox prefHeight="34.0" prefWidth="370.0" spacing="10">
                         <Label alignment="CENTER" prefHeight="34.0" prefWidth="57.0"

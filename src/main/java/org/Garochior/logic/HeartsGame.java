@@ -6,6 +6,11 @@ import org.Garochior.model.Player;
 
 public class HeartsGame extends ValidationLogic{
     int totalHearts = 0;
+
+    public HeartsGame(int playerTurn) {
+        super(playerTurn);
+    }
+
     @Override
     public String getName() {
         return "Hearts Game";
