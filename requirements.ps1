@@ -10,12 +10,23 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 
 Write-Host "=== Instalare Garochior ===" -ForegroundColor Cyan
 
-# Verifică dacă java e deja instalat
 if (Get-Command java -ErrorAction SilentlyContinue) {
     Write-Host "Java este deja instalat." -ForegroundColor Green
 } else {
     Write-Host "Instalare Java 21..." -ForegroundColor Yellow
-    winget install EclipseAdoptium.Temurin.21.JDK --silent --accept-package-agreements --accept-source-agreements
+
+    # Încearcă winget mai întâi
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        winget install EclipseAdoptium.Temurin.21.JDK --silent --accept-package-agreements --accept-source-agreements
+    } else {
+        # Fallback - download direct MSI
+        Write-Host "winget nu e disponibil, descărcare directă..." -ForegroundColor Yellow
+        $javaUrl = "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.7%2B6/OpenJDK21U-jdk_x64_windows_hotspot_21.0.7_6.msi"
+        $javaInstaller = "$env:TEMP\java21.msi"
+        Invoke-WebRequest -Uri $javaUrl -OutFile $javaInstaller
+        Start-Process msiexec.exe -ArgumentList "/i `"$javaInstaller`" /quiet ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJavaHome" -Wait
+        Remove-Item $javaInstaller
+    }
     Write-Host "Java instalat." -ForegroundColor Green
 }
 
