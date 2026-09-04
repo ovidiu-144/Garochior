@@ -1,51 +1,58 @@
 # Garochior — Instalare și Rulare
 
-## Instructiuni de instalare pw Windows 10/11
+## Instrucțiuni de instalare pe Windows 10/11
 
-## Instalare Java 21
+### Instalare automată (recomandat)
+
+1. Descarcă proiectul (`Code -> Download ZIP`) și dezarhivează
+2. Dă dublu click pe **`install.bat`** — instalează Java 21 și Maven automat
+3. După instalare, dă dublu click pe **`open_game.bat`** pentru a porni jocul
+
+---
+
+### Instalare manuală (dacă instalarea automată nu a funcționat)
+
+#### Instalare Java 21
 
 1. Deschide PowerShell ca Administrator
 2. Rulează:
 ```powershell
 winget install EclipseAdoptium.Temurin.21.JDK
 ```
-Sau direct de pe <a href="https://www.oracle.com/java/technologies/downloads/#java21" target="_blank">link</a>
+Sau descarcă direct de pe <a href="https://www.oracle.com/java/technologies/downloads/#java21" target="_blank">link</a>
 
 3. Închide și redeschide PowerShell
 4. Verifică: `java -version`
 
 ---
 
-## Instalare Maven
+#### Instalare Maven
 
 1. Rulează în PowerShell:
 ```powershell
 winget install Chocolatey.Chocolatey
 choco install maven
 ```
-
-Sau direct de pe <a href="https://maven.apache.org/download.cgi" target="_blank">link</a>
+Sau descarcă direct de pe <a href="https://maven.apache.org/download.cgi" target="_blank">link</a>
 
 2. Închide și redeschide PowerShell
 3. Verifică: `mvn -version`
 
 ---
 
-## Rulare joc
+#### Rulare manuală
 
 ```powershell
-git clone (https://github.com/ovidiu-144/Garochior)
-cd garochior
+cd calea/spre/folderul/proiectului
 mvn clean javafx:run
 ```
-### Instalare Zip
-1. Descarcă ultima versiune `Code -> Download ZIP`
-2. Dezarhivează fișierul într-un folder
-3. Deschide PowerShell în folderul dezarhivat
-4. Ruleaza (dupa ce ai instalat Java 21 și Maven):
+
+Sau prin git:
 ```powershell
+git clone https://github.com/ovidiu-144/Garochior
+cd Garochior
 mvn clean javafx:run
-``` 
+```
 
 ---
 
