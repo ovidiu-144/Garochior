@@ -41,14 +41,51 @@ public class HandsGame extends ValidationLogic{
                         .max(Comparator.comparingInt(Card::getNumber))
                         .orElse(player.hand.getFirst());
             } else {
-                selectedCard = player.hand.stream()
+                ///Avem carte sa punem
+                int biggestPlayedCard = biggestCard();
+
+                Card smallestCard = player.hand.stream()
                         .filter(c -> c.getType() == firstCard.getType())
                         .min(Comparator.comparingInt(Card::getNumber))
-                        .orElse(player.hand.getFirst());
+                        .orElse(player.hand.getFirst());  ///Cea mai mica carte din mana
+
+                if (biggestPlayedCard > smallestCard.getNumber()) {
+                    selectedCard = player.hand.stream()
+                            .filter(c -> c.getType() == firstCard.getType() && c.getNumber() < biggestPlayedCard)
+                            .max(Comparator.comparingInt(Card::getNumber))
+                            .orElse(player.hand.getFirst());
+                }
+                else {
+
+                    if (smallestCard.getNumber() > biggestPlayedCard && selectedCards.size() == 3) {
+                        selectedCard = player.hand.stream()
+                                .filter(c -> c.getType() == firstCard.getType())
+                                .max(Comparator.comparingInt(Card::getNumber))
+                                .orElse(player.hand.getFirst());
+                    }
+                    else {
+                        selectedCard = player.hand.stream()
+                                .filter(c -> c.getType() == firstCard.getType())
+                                .min(Comparator.comparingInt(Card::getNumber))
+                                .orElse(player.hand.getFirst());
+                    }
+                }
+
             }
         }
         player.removeCardFromHand(selectedCard);
         selectedCards.add(selectedCard);
         return selectedCard;
     }
+
+    private int biggestCard (){
+        int biggest = 0;
+        Card firstCard = selectedCards.getFirst();
+        for (Card card : selectedCards){
+            if ( card.getType() == firstCard.getType() && card.getNumber() > biggest)
+                biggest = card.getNumber();
+        }
+        return biggest;
+    }
 }
+
