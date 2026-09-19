@@ -60,8 +60,6 @@ public class GameSession {
                     if (!player.AiMode)
                         game.validateMove(player);
                     else {
-
-                        System.out.println("AI ul alege o carte");
                         //simulare gandire
                         try {
                             Thread.sleep(2000);
@@ -76,7 +74,7 @@ public class GameSession {
                 }
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -90,14 +88,6 @@ public class GameSession {
                 if (!isTablou && onHandTaken != null) {
                     onHandTaken.accept(firstPlayer);
                 }
-
-
-
-//                try {
-//                    Thread.sleep(3000); // Pauza de 3 secunde
-//                } catch (InterruptedException e) {
-//                    Thread.currentThread().interrupt();
-//                }
 
                 if (game.isOver()){
 

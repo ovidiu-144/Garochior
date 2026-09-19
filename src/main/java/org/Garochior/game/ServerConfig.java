@@ -76,12 +76,15 @@ public class ServerConfig {
 
         System.out.println("Starting server with AI players: " + Arrays.toString(aiPlayers));
         //setam daca sunt AI
+
+        ///NU UITA SA SCOTI
+
         for  (int i = 1; i < 4; ++i){
             players.get(i).AiMode = aiPlayers[i];
         }
 
         ///NU UITA SA SCOTI
-        players.getFirst().AiMode = true; // Host is always AI for testing purposes
+//        players.getFirst().AiMode = true; // Host is always AI for testing purposes
 
         gamePanelController = gamePanel.start(serverStage, players.getFirst());
         gamePanelController.setOnDisconnect(this::disconnect);
@@ -175,10 +178,11 @@ public class ServerConfig {
     }
 
     private void initGamesQueue (int playerTurn){
-//        gamesQueue.add(new HandsGame(playerTurn));
         gamesQueue.add(new HeartsGame(playerTurn));
+        gamesQueue.add(new HandsGame(playerTurn));
         gamesQueue.add(new QueensGame(playerTurn));
         gamesQueue.add(new KingGame(playerTurn));
+
         gamesQueue.add(new TablouGame(playerTurn));
     }
 
