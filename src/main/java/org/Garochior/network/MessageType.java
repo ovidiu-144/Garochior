@@ -17,7 +17,6 @@ public class MessageType {
     public static final String TABLOU_GAME = "TABLOU_GAME";
 
     public static final String GAME_START = "GAME_START";
-    public static final String GAME_END = "GAME_END";
     public static final String GAME_CYCLE_END = "GAME_CYCLE_END";
     public static final String GAME_OVER = "GAME_OVER";  //cand se termina toate jocurile
 

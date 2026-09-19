@@ -25,57 +25,6 @@ public class GamePanelController {
     public Label gameLabel;
     public VBox pauseMenu;
 
-//    ///-------Buttons for cards
-//
-//    /// A
-//    public Button btnA_DIAMONDS;
-//    public Button btnA_CLUBS;
-//    public Button btnA_HEARTS;
-//    public Button btnA_SPADES;
-//
-//    /// K
-//    public Button btnK_DIAMONDS;
-//    public Button btnK_CLUBS;
-//    public Button btnK_HEARTS;
-//    public Button btnK_SPADES;
-//
-//    /// Q
-//    public Button btnQ_DIAMONDS;
-//    public Button btnQ_CLUBS;
-//    public Button btnQ_HEARTS;
-//    public Button btnQ_SPADES;
-//
-//    /// J
-//    public Button btnJ_DIAMONDS;
-//    public Button btnJ_CLUBS;
-//    public Button btnJ_HEARTS;
-//    public Button btnJ_SPADES;
-//
-//    /// 10
-//    public Button btn10_DIAMONDS;
-//    public Button btn10_CLUBS;
-//    public Button btn10_HEARTS;
-//    public Button btn10_SPADES;
-//
-//    /// 9
-//    public Button btn9_DIAMONDS;
-//    public Button btn9_CLUBS;
-//    public Button btn9_HEARTS;
-//    public Button btn9_SPADES;
-//
-//    /// 8
-//    public Button btn8_DIAMONDS;
-//    public Button btn8_CLUBS;
-//    public Button btn8_HEARTS;
-//    public Button btn8_SPADES;
-//
-//    /// 7
-//    public Button btn7_DIAMONDS;
-//    public Button btn7_CLUBS;
-//    public Button btn7_HEARTS;
-//    public Button btn7_SPADES;
-//    public VBox tablouBox;
-
     @FXML
     public VBox tabouGridBox;
     public Label scoreLabel;
@@ -86,6 +35,8 @@ public class GamePanelController {
     public Label scoreP1;
     public Label scoreP2;
     public Label scoreP3;
+    public Button backToMainMenuButton;
+    public Label titleScore;
 
 
     private Player player;
@@ -327,6 +278,20 @@ public class GamePanelController {
         centerVBox.setVisible(false);
         centerVBox.setManaged(false);
         scoreTable.setVisible(true);
+    }
+
+    public void gameIsOver (List<Integer> scores, int winner){
+        hideEverything();
+        setScoreTable(scores);
+        titleScore.setText("Winner is Player " + winner);
+        backToMainMenuButton.setVisible(true);
+    }
+
+    private void hideEverything() {
+        tabouGridBox.setVisible(false);
+        tabouGridBox.setManaged(false);
+        centerVBox.setVisible(false);
+        centerVBox.setManaged(false);
     }
 
     public void hideScores() {
