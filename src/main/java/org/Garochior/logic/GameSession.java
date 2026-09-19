@@ -53,8 +53,25 @@ public class GameSession {
                 System.out.println("Round " + (currentRound + 1));
                 for (int i = 0; i < 4; ++i){
                     int currentPlayer = (firstPlayer + i) % 4;
-                    players.get(currentPlayer).myTurn.set(true);
-                    game.validateMove(players.get(currentPlayer));
+                    Player player = players.get(currentPlayer);
+
+                    player.myTurn.set(true);
+
+                    if (!player.AiMode)
+                        game.validateMove(player);
+                    else {
+
+                        System.out.println("AI ul alege o carte");
+                        //simulare gandire
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        Card selectedCard = game.selectAICard(player);
+                        player.setSelectedCard(selectedCard);
+                    }
                     players.get(currentPlayer).myTurn.set(false);
                 }
 

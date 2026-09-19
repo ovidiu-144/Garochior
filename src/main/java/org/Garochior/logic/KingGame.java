@@ -5,6 +5,8 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
+import java.util.List;
+
 public class KingGame extends ValidationLogic{
     Card card = new Card(ModelConfig.K, CardType.HEARTS);
 
@@ -27,5 +29,10 @@ public class KingGame extends ValidationLogic{
         clearSelectedCard();
 
         System.out.println(selectedCards);
+    }
+
+    @Override
+    public Card selectAICard(Player player) {
+        return null;
     }
 }

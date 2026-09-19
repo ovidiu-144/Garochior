@@ -66,21 +66,28 @@ public class Player {
         //selectedCard = hand.get(index);
     }
 
+    public void setSelectedCard (Card card){
+        synchronized (lockCardSelect){
+            selectedCard = card;
+            lockCardSelect.notifyAll();
+        }
+    }
+
     public Card selectCard (Card firstCard){
         synchronized (lockCardSelect){
             selectedCard = null;
-            if (AiMode){
-                //sa para ca gandeste
-
-                //Ai ul meu frumi
-                try {
-                    Thread.sleep(1000);
-//                    selectedCard = selectAiCard(firstCard);
-                    selectedCard = selectRandomCard();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+//            if (AiMode){
+//                //sa para ca gandeste
+//
+//                //Ai ul meu frumi
+//                try {
+//                    Thread.sleep(1000);
+////                    selectedCard = selectAiCard(firstCard);
+//                    selectedCard = selectRandomCard();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
             while (selectedCard == null){
                 try {
@@ -89,17 +96,17 @@ public class Player {
                     e.printStackTrace();
                 }
 
-                if (AiMode){
-                    //sa para ca gandeste
-
-                    //Ai ul meu frumi
-                    try {
-                        //Thread.sleep(1500);
-                        selectedCard = selectAiCard(firstCard);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+//                if (AiMode){
+//                    //sa para ca gandeste
+//
+//                    //Ai ul meu frumi
+//                    try {
+//                        //Thread.sleep(1500);
+//                        selectedCard = selectAiCard(firstCard);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 
             }
         }
@@ -107,37 +114,35 @@ public class Player {
         return selectedCard;
     }
 
-    private Card selectAiCard(Card firstCard) {
-        if (firstCard == null) {
-            return hand.stream()
-                    .min(Comparator.comparingInt(Card::getNumber))
-                    .orElse(hand.getFirst());
-        }
-
-        if (!hasCard(firstCard.getType())) {
-            return hand.stream()
-                    .max(Comparator.comparingInt(Card::getNumber))
-                    .orElse(hand.getFirst());
-        }
-
-        return hand.stream()
-                .filter(c -> c.getType() == firstCard.getType())
-                .min(Comparator.comparingInt(Card::getNumber))
-                .orElse(hand.getFirst());
-    }
-
-//    private Card selecteSmallestPossibleCard (Card firstCard){
-//        Card card = null;
-//
-//        for (Card c: hand){
-//            if (c.getType() == firstCard.getType()){
-//                if (card == null || c.getNumber() < card.getNumber()){
-//                    card = c;
-//                }
-//            }
+//    private Card selectAiCard(Card firstCard) {
+//        if (firstCard == null) {
+//            return hand.stream()
+//                    .min(Comparator.comparingInt(Card::getNumber))
+//                    .orElse(hand.getFirst());
 //        }
-//        return card;
+//
+//        if (!hasCard(firstCard.getType())) {
+//            return hand.stream()
+//                    .max(Comparator.comparingInt(Card::getNumber))
+//                    .orElse(hand.getFirst());
+//        }
+//
+//        return hand.stream()
+//                .filter(c -> c.getType() == firstCard.getType())
+//                .min(Comparator.comparingInt(Card::getNumber))
+//                .orElse(hand.getFirst());
 //    }
+//
+//    public Card selectRandomCard (){
+//        //pauza pentru a simula timpul de gandire al AI-ului
+//
+//        Random rand = new Random();
+//        int size = hand.size();
+//        int n = rand.nextInt(size);
+//        //System.out.println("Player " + (id + 1) + " selected card: " + hand.get(n));
+//        return hand.get(n);
+//    }
+
 
     private boolean hasCard (CardType cardType){
         for (Card c : hand){
@@ -145,18 +150,6 @@ public class Player {
                 return true;
         }
         return false;
-    }
-
-
-
-    public Card selectRandomCard (){
-        //pauza pentru a simula timpul de gandire al AI-ului
-
-        Random rand = new Random();
-        int size = hand.size();
-        int n = rand.nextInt(size);
-        //System.out.println("Player " + (id + 1) + " selected card: " + hand.get(n));
-        return hand.get(n);
     }
 
     public void removeCardFromHand (Card card){

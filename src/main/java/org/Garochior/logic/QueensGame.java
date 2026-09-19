@@ -5,6 +5,8 @@ import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
 import org.Garochior.model.Player;
 
+import java.util.List;
+
 public class QueensGame extends ValidationLogic{
     int totalQueens = 0;
 
@@ -32,5 +34,10 @@ public class QueensGame extends ValidationLogic{
             isOver = true;
         player.updateScore(-(numberOfQueens * 2));
         clearSelectedCard();
+    }
+
+    @Override
+    public Card selectAICard(Player player) {
+        return null;
     }
 }

@@ -126,4 +126,9 @@ public class TablouGame implements GameLogic {
     public boolean isOver() {
         return playerOver <= 0;
     }
+
+    @Override
+    public Card selectAICard(Player player) {
+        return null;
+    }
 }
