@@ -65,11 +65,35 @@ public class HeartsGame extends ValidationLogic{
                             .orElse(player.hand.getFirst());
                 }
 
-            } else {
-                selectedCard = player.hand.stream()
+            } else { ///Daca avem carte
+                int biggestPlayedCard = biggestCard();
+
+                Card smallestCard = player.hand.stream()
                         .filter(c -> c.getType() == firstCard.getType())
                         .min(Comparator.comparingInt(Card::getNumber))
-                        .orElse(player.hand.getFirst());
+                        .orElse(player.hand.getFirst());  ///Cea mai mica carte din mana
+
+                if (biggestPlayedCard > smallestCard.getNumber()) { ///cea mai mare jucata > cea mai mica din mana
+                    selectedCard = player.hand.stream()
+                            .filter(c -> c.getType() == firstCard.getType() && c.getNumber() < biggestPlayedCard)
+                            .max(Comparator.comparingInt(Card::getNumber))   ///punem cea mai mare din mana mai mica decat cea mai mare jucata
+                            .orElse(player.hand.getFirst());
+                }
+                else {
+
+                    if (smallestCard.getNumber() > biggestPlayedCard && selectedCards.size() == 3) {  ///punem cea mai mare carte daca este ultima tura
+                        selectedCard = player.hand.stream()
+                                .filter(c -> c.getType() == firstCard.getType())
+                                .max(Comparator.comparingInt(Card::getNumber))
+                                .orElse(player.hand.getFirst());
+                    }
+                    else {
+                        selectedCard = player.hand.stream()
+                                .filter(c -> c.getType() == firstCard.getType())
+                                .min(Comparator.comparingInt(Card::getNumber))
+                                .orElse(player.hand.getFirst());
+                    }
+                }
             }
         }
         player.removeCardFromHand(selectedCard);
@@ -83,6 +107,16 @@ public class HeartsGame extends ValidationLogic{
                 return true;
         }
         return false;
+    }
+
+    private int biggestCard (){
+        int biggest = 0;
+        Card firstCard = selectedCards.getFirst();
+        for (Card card : selectedCards){
+            if ( card.getType() == firstCard.getType() && card.getNumber() > biggest)
+                biggest = card.getNumber();
+        }
+        return biggest;
     }
 
 }
