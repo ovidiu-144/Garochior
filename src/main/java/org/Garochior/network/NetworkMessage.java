@@ -78,15 +78,6 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String gameEnd(List<Integer> scores) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.GAME_END);
-        JsonArray arr = new JsonArray();
-        for (int score : scores) arr.add(score);
-        obj.add("scores", arr);
-        return obj.toString();
-    }
-
     public static String gameCycleEnd(List<Integer> scores) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", MessageType.GAME_CYCLE_END);
@@ -96,16 +87,17 @@ public final class NetworkMessage {
         return obj.toString();
     }
 
-    public static String gameOver(List<Integer> scores) {
+    public static String gameOver(List<Integer> scores, int winner) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("type", MessageType.GAME_CYCLE_END);
+        obj.addProperty("type", MessageType.GAME_OVER);
         JsonArray arr = new JsonArray();
         for (int score : scores) arr.add(score);
         obj.add("scores", arr);
-        int winner = scores.indexOf(Collections.max(scores));
         obj.addProperty("winner", winner);
         return obj.toString();
     }
+
+
 
     public static String scoreSet (int playerId, int score) {
         JsonObject obj = new JsonObject();
@@ -128,6 +120,9 @@ public final class NetworkMessage {
         obj.addProperty("isTablouGame", isTablouGame);
         return obj.toString();
     }
+
+
+
 
     //PARSARE MESAJE
 

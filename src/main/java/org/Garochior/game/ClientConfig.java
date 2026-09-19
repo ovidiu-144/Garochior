@@ -147,17 +147,6 @@ public class ClientConfig {
                 gamePanelController.setTablouMode(isTablou);
             }
 
-            case MessageType.GAME_END -> {
-                List<Integer> scores = NetworkMessage.getScores(message);
-
-                Platform.runLater(() -> {
-                    // Actualizare scor
-                    int score = scores.get(playerId);
-                    ///Actualizare interfata cu scorul stanga sus sau ceva la stilu
-                    System.out.println("Joc terminat! Scorul tau:  " + score );
-                });
-            }
-
             case MessageType.GAME_CYCLE_END -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
                 gamePanelController.setTablouMode(false);
@@ -172,14 +161,12 @@ public class ClientConfig {
                 Platform.runLater(gamePanelController::hideScores);
             }
 
+            //S-au terminat toate jocurile
             case MessageType.GAME_OVER -> {
                 List<Integer> scores = NetworkMessage.getScores(message);
                 int winner = NetworkMessage.getWinner(message);
                 Platform.runLater(() -> {
-                    // TODO: afișează scorurile finale + interfata de back
-                    System.out.println("Joc terminat! Scoruri: " + scores);
-                    System.out.println("Winner: " + winner);
-                    disconnect();
+                    gamePanelController.gameIsOver (scores, winner);
                 });
             }
 

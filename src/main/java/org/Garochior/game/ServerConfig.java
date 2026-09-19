@@ -125,13 +125,6 @@ public class ServerConfig {
                 }
 
                 System.out.println("Player " + (playerId + 1) + " disconnected.");
-                // Handle player disconnection logic here
-//                Platform.runLater(() -> {
-//                    Alert alert = new Alert(Alert.AlertType.WARNING);
-//                    alert.setTitle("Jucător deconectat");
-//                    alert.setContentText("Jucatorul " + (playerId + 1) + " s-a deconectat.");
-//                    alert.show();
-//                });
             }
 
             case MessageType.CARD_SELECTED -> {
@@ -192,10 +185,14 @@ public class ServerConfig {
 
         if (gamesQueue.isEmpty()){
             System.out.println("No more games in queue.");
-            relay.send(NetworkMessage.gameOver(getScores()));
 
-            System.out.println("Game over. Scores: " + getScores());
-            //TODO interfata pentru scor, Winner - ul, buton de back to mainMenu, deconectare de la relay
+            List<Integer> scores = getScores();
+
+            int winner = scores.indexOf(Collections.max(scores));
+
+            relay.send(NetworkMessage.gameOver(scores, winner));
+
+            Platform.runLater(() -> gamePanelController.gameIsOver(scores, winner));
             return;
         }
 
