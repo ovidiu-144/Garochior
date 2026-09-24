@@ -1,4 +1,4 @@
-## Inapoi la [Pagina principală](../README.ro.md)
+## Inapoi la [Pagina principală](../../README.ro.md)
 
 
 ## Instrucțiuni de instalare pe Windows 10/11

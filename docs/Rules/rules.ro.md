@@ -1,4 +1,4 @@
-## [Înapoi la Pagina principală](../README.ro.md)
+## [Înapoi la Pagina principală](../../README.ro.md)
 
 ##  Regulamentul Jocului
 

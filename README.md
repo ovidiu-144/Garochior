@@ -5,11 +5,11 @@
 
 ---
 
-## [Rules](Rules/rules.md)
+## [Rules](docs/Rules/rules.md)
 
 ---
 
-## [Installation Instructions for Windows 10/11](Install/install.md)
+## [Installation Instructions for Windows 10/11](docs/Install/install.md)
 
 ---
 

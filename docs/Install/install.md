@@ -1,4 +1,4 @@
-## Back to [Main page](../README.md)
+## Back to [Main page](../../README.md)
 
 ## Installation instructions for Windows 10/11
 
