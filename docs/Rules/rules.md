@@ -1,39 +1,39 @@
-⬅️ [Înapoi la Pagina principală](../README.ro.md)
+## [Back to Main Page](../README.md)
 
-##  Regulamentul Jocului
+## Game Rules
 
-O partidă completă este formată din **4 cicluri**, iar fiecare ciclu conține **5 sub-jocuri** diferite. La finalul tuturor ciclurilor, câștigă jucătorul care a acumulat cel mai mare punctaj.
-
----
-
-### Reguli Generale (Cum se joacă o mână)
-
-* **Cărțile folosite:** Se joacă în **4 jucători**, folosind pachetul redus de cărți (de la **7 la As**). Toate cărțile se împart în mod egal la începutul jocului.
-* **Începerea rundei:** Primul jucător poate pune jos orice carte dorește.
-* **Obligația de culoare:** Ceilalți jucători **sunt obligați** să joace o carte de același simbol (culoare) cu prima carte pusă. Dacă un jucător nu are acel simbol, poate juca *orice altă carte*.
-* **Câștigarea mâinii (levatei):** Mâna este luată de jucătorul care a pus **cea mai mare carte de simbolul cerut** inițial. Cel care ia mâna va fi primul care joacă în runda următoare.
-
-> **Exemplu:** Dacă primul jucător joacă 8 de Inimă Roșie, iar ceilalți pun J de Inimă Roșie, A de Treflă  și 7 de Inimă Roșie, cărțile vor fi luate de cel care a pus J de Inimă Roșie (cea mai mare carte din culoarea cerută). Asul de treflă nu contează, deoarece nu a respectat simbolul de start.
+A complete game consists of **4 cycles**, and each cycle contains **5 different sub-games**. At the end of all cycles, the player who has accumulated the highest score wins.
 
 ---
 
-### Cele 5 Sub-jocuri
+### General Rules (How to play a trick)
 
-Pentru primele 4 jocuri, scopul este să **eviți** luarea anumitor cărți, deoarece acestea aduc puncte negative:
+* **Cards used:** Played with **4 players**, using a reduced deck of cards (from **7 to Ace**). All cards are dealt equally at the beginning of the game.
+* **Starting the round:** The first player can play any card they want.
+* **Following suit:** The other players **must** play a card of the same suit as the first card played. If a player does not have that suit, they can play *any other card*.
+* **Winning the trick:** The trick is taken by the player who played the **highest card of the led suit**. The player who takes the trick will be the first to play in the next round.
 
-1.  **Mâini:** Fiecare mână (levată) pe care o iei îți aduce **-1 punct** la scorul total.
-2.  **Inimă Roșie:** Nu mai contează câte mâini iei în total, ci doar câte inimi roșii aduni. Fiecare carte de Inimă Roșie luată aduce **-1 punct**.
-3.  **Dame:** Fiecare Damă (Q) pe care o iei îți aduce **-2 puncte**.
-4.  **Popa de Inimă Roșie:** Luarea Popei de Inimă Roșie (K) aduce o penalizare drastică de **-8 puncte**.
+> **Example:** If the first player plays the 8 of Hearts, and the others play the J of Hearts, A of Clubs, and 7 of Hearts, the cards will be taken by the one who played the J of Hearts (the highest card of the led suit). The Ace of Clubs does not count because it did not follow the starting suit.
 
-#### 5. Tablou
-Acest joc are o mecanică complet diferită. **Nu se mai iau mâini**, ci scopul este să scapi de cărți cât mai repede prin construirea unui „tablou” pe masă.
+---
 
-* **Regula de start:** Ai voie să începi o suită punând jos doar un **Valet (J)**.
-* **Construcția:** După ce un Valet dintr-un anumit simbol a fost pus pe masă, poți continua secvența (în sus sau în jos). Pe acel Valet poți pune **Dama (Q)** sau **10**-le de același simbol. După ce se pune 10, se poate pune 9... și tot așa, până se completează linia în forma: `7 - 8 - 9 - 10 - J - Q - K - A`.
-* **Pas:** Dacă la rândul tău nu ai nicio carte validă pe care să o joci, rândul tău este sărit și continuă următorul jucător.
-* **Punctaj Tablou (puncte pozitive):**
-    * Locul 1 (primul care termină cărțile): **+16 puncte**
-    * Locul 2: **+8 puncte**
-    * Locul 3: **+4 puncte**
-    * Locul 4 (ultimul): **0 puncte**
+### The 5 Sub-games
+
+For the first 4 games, the goal is to **avoid** taking certain cards, as they bring negative points:
+
+1.  **Tricks:** Each trick you take brings you **-1 point** to your total score.
+2.  **Hearts:** It no longer matters how many tricks you take in total, but only how many Hearts you collect. Each Heart card taken brings **-1 point**.
+3.  **Queens:** Each Queen (Q) you take brings you **-2 points**.
+4.  **King of Hearts:** Taking the King of Hearts (K) brings a drastic penalty of **-8 points**.
+
+#### 5. Tableau (Board)
+This game has a completely different mechanic. **No more tricks are taken**; the goal is to get rid of your cards as quickly as possible by building a "tableau" on the table.
+
+* **Starting rule:** You are only allowed to start a suit by playing a **Jack (J)**.
+* **Building:** Once a Jack of a certain suit has been placed on the table, you can continue the sequence (upwards or downwards). On that Jack, you can play the **Queen (Q)** or the **10** of the same suit. After the 10 is played, the 9 can be played... and so on, until the line is completed in the format: `7 - 8 - 9 - 10 - J - Q - K - A`.
+* **Pass:** If it is your turn and you have no valid card to play, your turn is skipped, and the next player continues.
+* **Tableau Scoring (positive points):**
+    * 1st place (first to finish their cards): **+16 points**
+    * 2nd place: **+8 points**
+    * 3rd place: **+4 points**
+    * 4th place (last): **0 points**
