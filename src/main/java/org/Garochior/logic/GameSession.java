@@ -68,7 +68,8 @@ public class GameSession {
                         }
 
                         Card selectedCard = game.selectAICard(player);
-                        player.setSelectedCard(selectedCard);
+                        if (selectedCard != null)
+                            player.setSelectedCard(selectedCard);
                     }
                     players.get(currentPlayer).myTurn.set(false);
                 }

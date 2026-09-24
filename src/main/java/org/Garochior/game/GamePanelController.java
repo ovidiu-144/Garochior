@@ -159,9 +159,6 @@ public class GamePanelController {
     }
 
     public void setPlayedCards (Card card, int index, boolean isTablou){
-
-
-
         if (!isTablou) {
             //daca index ul e acelasi cu al meu pun cartea in fata, restu punem in funcite de index u propriu
             int id = player.getId();
@@ -242,8 +239,6 @@ public class GamePanelController {
     public void setCardVisibility (Card card) {
 //        CardType[] types = CardType.values(); // DIAMONDS, CLUBS, HEARTS, SPADES
 //        int[] numbers = {7, 8, 9, 10, 11, 12, 13, 14}; // 7 → A
-
-        System.out.println("Hai sa vedem de ce am ajuns aici: " + "cu cartea: " + card);
         int typeIndex = card.getType().ordinal();
         int numberIndex = card.getNumber() - 7;
 

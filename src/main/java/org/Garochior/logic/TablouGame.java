@@ -11,7 +11,6 @@ import java.util.List;
 public class TablouGame implements GameLogic {
 
     public final List<Card> tablouCards = new ArrayList<>();
-    private int cardCount = 4;
 
     private int playerTurn = 0;
 
@@ -55,9 +54,6 @@ public class TablouGame implements GameLogic {
     @Override
     public void validateMove(Player player) {
         //avem lista de carti selectate, verificam daca sunt valide pentru jocul respectiv
-
-
-
         if (!hasCard(player)) {
             //Nu are carte, dam skip la tura
             //ceva sa pun ca dau skip maybe
@@ -129,6 +125,33 @@ public class TablouGame implements GameLogic {
 
     @Override
     public Card selectAICard(Player player) {
+        if (!hasCard(player)) {
+            //Nu are carte, dam skip la tura
+            //ceva sa pun ca dau skip maybe
+            System.out.println("Player " + player.getId() + " nu are carte sa puna");
+//            System.out.println("Mana lui: " + player.hand);
+
+            return null;
+        }
+        ///Cautam cartile care le putem pune, J-ul incercam sa fie mereu la final
+        ///Altfel incercam sa punem cartile care dau drumul la cat mai putine Ordine 7, A, 8, K, 9, Q, 10, J
+        int[] priority = {7, ModelConfig.A, 8, ModelConfig.K, 9, ModelConfig.Q, 10, ModelConfig.J};
+
+        for (int number : priority) {
+            for (CardType type : CardType.values()){
+                Card card = new Card (number, type);
+
+                if (tablouCards.contains(card) && player.hand.contains(card)) {
+                    System.out.println("Am selectat cartea: " + card);
+                    player.removeCardFromHand(card);
+                    addCardToList(card);
+                    updateScore(player);
+
+                    return card;
+                }
+
+            }
+        }
         return null;
     }
 }
