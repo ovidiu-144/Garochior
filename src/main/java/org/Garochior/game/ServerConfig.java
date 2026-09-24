@@ -212,10 +212,16 @@ public class ServerConfig {
                 relay.send(NetworkMessage.invalidCard(playerId));
             });
             // le scoatem inainte sa il setam
-            gamePanelController.clearTablouPlayedCards();
-            gamePanelController.setTablouMode(true);
-            isTablou = true;
-            relay.send(NetworkMessage.isTablouGame(isTablou));
+
+            Platform.runLater(() -> {
+                currentPlayedCards.clear();
+
+                gamePanelController.clearPlayedCards();
+                gamePanelController.clearTablouPlayedCards();
+                gamePanelController.setTablouMode(true);
+                isTablou = true;
+                relay.send(NetworkMessage.isTablouGame(isTablou));
+            });
         }
 
 
@@ -302,6 +308,8 @@ public class ServerConfig {
             player.hand.addListener((ListChangeListener<Card>) change -> {
                 while (change.next()) {
                     if (change.wasRemoved()) {
+                        if (change.wasAdded()) continue;
+
                         Card removedCard = change.getRemoved().getLast();
                         currentPlayedCards.add(new PlayedCard(player.getId(), removedCard));
                         if (currentPlayedCards.size() == 4 && !isTablou) {
