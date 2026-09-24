@@ -1,4 +1,5 @@
-# Garochior — Instalare și Rulare
+## Inapoi la [Pagina principală](../../README.ro.md)
+
 
 ## Instrucțiuni de instalare pe Windows 10/11
 
@@ -39,31 +40,3 @@ Sau descarcă direct de pe <a href="https://maven.apache.org/download.cgi" targe
 3. Verifică: `mvn -version`
 
 ---
-
-#### Rulare manuală
-
-```powershell
-cd calea/spre/folderul/proiectului
-mvn clean javafx:run
-```
-
-Sau prin git:
-```powershell
-git clone https://github.com/ovidiu-144/Garochior
-cd Garochior
-mvn clean javafx:run
-```
-
----
-
-## Cum pornești un joc
-
-**Host:**
-1. Apasă **Create Server**
-2. Introdu un cod de cameră, ex: `GAME-1234`
-3. Trimite codul celorlalți 3 jucători
-
-**Clienți:**
-1. Apasă **Join Server**
-2. Introdu codul primit de la host
-3. Apasă **Confirm**
