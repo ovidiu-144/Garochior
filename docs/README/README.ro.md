@@ -1,4 +1,4 @@
->🇬🇧 <span style="font-size: 20px;">[English version](README.md)</span>
+>en <span style="font-size: 20px;">[English version](README.md)</span>
 
 # Garochior 
 
