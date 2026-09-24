@@ -5,7 +5,7 @@
 
 ---
 
-## [Rules](rules.md)
+## [Rules](Rules/rules.md)
 
 ---
 

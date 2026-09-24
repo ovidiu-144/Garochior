@@ -6,7 +6,7 @@
 
 ---
 
-## [Reguli de joc](rules.ro.md)
+## [Reguli de joc](Rules/rules.ro.md)
 
 ---
 
