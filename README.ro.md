@@ -6,11 +6,11 @@
 
 ---
 
-## [Reguli de joc](Rules/rules.ro.md)
+## [Reguli de joc](docs/Rules/rules.ro.md)
 
 ---
 
-## [Instrucțiuni de instalare pe Windows 10/11](Install/install.ro.md)
+## [Instrucțiuni de instalare pe Windows 10/11](docs/Install/install.ro.md)
 
 ---
 
