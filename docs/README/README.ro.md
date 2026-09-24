@@ -1,5 +1,5 @@
 >🇬🇧 <span style="font-size: 20px;">[English version](README.md)</span>
----
+
 # Garochior 
 
 ###  Joc de cărți invățat de la tata
