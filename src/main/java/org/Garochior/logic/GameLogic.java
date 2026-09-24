@@ -3,6 +3,8 @@ package org.Garochior.logic;
 import org.Garochior.model.Card;
 import org.Garochior.model.Player;
 
+import java.util.List;
+
 public interface GameLogic {
     String getName();
     void updateScore(Player player);
@@ -11,4 +13,6 @@ public interface GameLogic {
     void validateMove(Player player);
     int nextPlayer ();
     boolean isOver();
+
+    Card selectAICard (Player player);
 }

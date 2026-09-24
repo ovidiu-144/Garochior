@@ -13,7 +13,7 @@ public abstract class ValidationLogic implements GameLogic{
 
     public List<Card> selectedCards = new ArrayList<>();
     public boolean isOver = false;
-    private int firstPlayer = 0;
+    protected int firstPlayer = 0;
     //ceva sa selectam cartile, pe care le adaugam in lista, ca sa stim ordinea lor, prima carte mereu fiind a jucatorului care a inceput tura
 
     public void setOnInvalidCard(java.util.function.Consumer<Integer> callback) {
@@ -96,5 +96,14 @@ public abstract class ValidationLogic implements GameLogic{
     //functie care sa goleasca lista de carti selectate dupa fiecare tura
     public void clearSelectedCard(){
         selectedCards.clear();
+    }
+
+    public boolean hasCard (List<Card> hand){
+        Card firstCard = selectedCards.getFirst();
+        for (Card card : hand){
+            if (card.getType().equals(firstCard.getType()))
+                return true;
+        }
+        return false;
     }
 }

@@ -143,8 +143,12 @@ public class ClientConfig {
 
             case MessageType.TABLOU_GAME -> {
                 isTablou = NetworkMessage.getIsTablouGame(message);
-                gamePanelController.clearTablouPlayedCards();
-                gamePanelController.setTablouMode(isTablou);
+
+                Platform.runLater(() -> {
+                    gamePanelController.clearPlayedCards();
+                    gamePanelController.clearTablouPlayedCards();
+                    gamePanelController.setTablouMode(isTablou);
+                });
             }
 
             case MessageType.GAME_CYCLE_END -> {

@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.Garochior.constants.ModelConfig;
 import org.Garochior.graphics.Assets;
 import org.Garochior.model.Card;
 import org.Garochior.model.CardType;
@@ -158,7 +159,6 @@ public class GamePanelController {
     }
 
     public void setPlayedCards (Card card, int index, boolean isTablou){
-
         if (!isTablou) {
             //daca index ul e acelasi cu al meu pun cartea in fata, restu punem in funcite de index u propriu
             int id = player.getId();
@@ -204,8 +204,8 @@ public class GamePanelController {
 
     public void clearTablouPlayedCards () {
         for (ImageView[] ivType : cardGridImages){
-            for  (int i = 7 ; i <= 14; ++i) {
-                if (i != 11){
+            for  (int i = 7; i <= ModelConfig.A; ++i) {
+                if (i != ModelConfig.J){
                     ivType[i - 7].setVisible(false);
                     ivType[i - 7].setManaged(false);
                 }
@@ -239,7 +239,6 @@ public class GamePanelController {
     public void setCardVisibility (Card card) {
 //        CardType[] types = CardType.values(); // DIAMONDS, CLUBS, HEARTS, SPADES
 //        int[] numbers = {7, 8, 9, 10, 11, 12, 13, 14}; // 7 → A
-
         int typeIndex = card.getType().ordinal();
         int numberIndex = card.getNumber() - 7;
 
